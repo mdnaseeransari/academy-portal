@@ -196,7 +196,7 @@ class StudentController extends Controller
         $class = $student->academicClass;
 
         $timetable = Timetable::where('class_id', $student->class_id)
-            ->with('teacher.user')
+            ->with('teacher')
             ->orderBy('time_start')
             ->get()
             ->groupBy('day');

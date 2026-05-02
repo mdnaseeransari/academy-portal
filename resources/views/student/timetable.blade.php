@@ -57,7 +57,7 @@
 </div>
 
 @php
-    $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     
     // Flatten the grouped collection to find all unique time slots
     $allSlots = collect();

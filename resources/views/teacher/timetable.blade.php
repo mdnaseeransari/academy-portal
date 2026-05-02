@@ -65,7 +65,7 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 min-w-[150px]">Time Slot</th>
-                        @foreach(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $day)
+                        @foreach(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $day)
                             <th class="day-header px-6 py-4 text-sm font-bold text-gray-600 border-r border-gray-100 text-center min-w-[160px]" data-day="{{ $day }}">
                                 {{ $day }}
                             </th>
@@ -77,7 +77,7 @@
                         $time_slots = $timetable->flatten()->sortBy('time_start')->unique(function ($item) {
                             return $item->time_start . $item->time_end;
                         });
-                        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                        $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                     @endphp
 
                     @foreach($time_slots as $slot)

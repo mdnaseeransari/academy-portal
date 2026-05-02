@@ -164,9 +164,10 @@
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Exam Type</label>
                 <select name="exam_type" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition">
                     <option value="">All Exams</option>
-                    <option value="weekly_test" {{ request('exam_type') == 'weekly_test' ? 'selected' : '' }}>Weekly Test</option>
-                    <option value="monthly_exam" {{ request('exam_type') == 'monthly_exam' ? 'selected' : '' }}>Monthly Exam</option>
-                    <option value="final_exam" {{ request('exam_type') == 'final_exam' ? 'selected' : '' }}>Final Exam</option>
+                    <option value="unit_test" {{ request('exam_type') == 'unit_test' ? 'selected' : '' }}>Unit Test</option>
+                    <option value="half_yearly" {{ request('exam_type') == 'half_yearly' ? 'selected' : '' }}>Half Yearly</option>
+                    <option value="final" {{ request('exam_type') == 'final' ? 'selected' : '' }}>Final</option>
+                    <option value="other" {{ request('exam_type') == 'other' ? 'selected' : '' }}>Other</option>
                 </select>
             </div>
             <div class="flex items-end">

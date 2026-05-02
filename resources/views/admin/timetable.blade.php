@@ -76,7 +76,7 @@
                     <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Select Day*</label>
                     <select name="day" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition">
                         <option value="">Choose day</option>
-                        @foreach(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $day)
+                        @foreach(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $day)
                             <option value="{{ $day }}" {{ old('day') == $day ? 'selected' : '' }}>{{ $day }}</option>
                         @endforeach
                     </select>
@@ -92,7 +92,7 @@
                     <select name="teacher_id" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition">
                         <option value="">Select teacher</option>
                         @foreach($teachers as $teacher)
-                            <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>{{ $teacher->user->name }} ({{ $teacher->subject }})</option>
+                            <option value="{{ $teacher->user_id }}" {{ old('teacher_id') == $teacher->user_id ? 'selected' : '' }}>{{ $teacher->user->name }} ({{ $teacher->subject }})</option>
                         @endforeach
                     </select>
                 </div>
@@ -139,7 +139,7 @@
                     <thead>
                         <tr>
                             <th class="p-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b">Time Slot</th>
-                            @foreach(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $day)
+                            @foreach(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $day)
                                 <th class="p-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b day-header" data-day="{{ $day }}">
                                     {{ $day }}
                                 </th>
@@ -154,7 +154,7 @@
                         @forelse($timeSlots as $slot)
                         <tr>
                             <td class="p-4 text-xs font-bold text-gray-400 bg-gray-50/50">{{ \Carbon\Carbon::parse($slot)->format('h:i A') }}</td>
-                            @foreach(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $day)
+                            @foreach(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $day)
                                 @php
                                     $entry = collect($timetable[$day] ?? [])->firstWhere('time_start', $slot);
                                 @endphp
@@ -162,7 +162,7 @@
                                     @if($entry)
                                         <div class="bg-blue-50/50 rounded-lg p-2 relative group min-h-[60px]">
                                             <p class="text-xs font-bold text-[#2c3e80] mb-1">{{ $entry->subject }}</p>
-                                            <p class="text-[9px] font-bold text-gray-500 uppercase">{{ $entry->teacher->user->name }}</p>
+                                            <p class="text-[9px] font-bold text-gray-500 uppercase">{{ $entry->teacher->name ?? 'Unknown' }}</p>
                                             
                                             <form method="POST" action="{{ route('admin.timetable.delete', $entry->id) }}" onsubmit="return confirm('Delete this entry?')" class="mt-2">
                                                 @csrf

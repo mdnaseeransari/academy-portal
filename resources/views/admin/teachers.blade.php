@@ -103,7 +103,7 @@
                     data-subject="{{ $teacher->subject }}"
                     data-phone="{{ $teacher->phone }}"
                     data-qualification="{{ $teacher->qualification }}"
-                    data-class="{{ $teacher->academic_class_id }}">
+                    data-class="{{ $teacher->classes->first()->id ?? '' }}">
                     <td class="px-6 py-4 text-sm font-bold text-gray-400">{{ $teachers->firstItem() + $index }}</td>
                     <td class="px-6 py-4">
                         <div class="text-sm font-bold text-gray-800">{{ $teacher->user->name }}</div>
@@ -112,7 +112,7 @@
                     <td class="px-6 py-4 text-sm font-bold text-[#2c3e80]">{{ $teacher->subject }}</td>
                     <td class="px-6 py-4 text-sm font-medium text-gray-600">{{ $teacher->phone }}</td>
                     <td class="px-6 py-4 text-sm font-medium text-gray-600">{{ $teacher->qualification ?? 'N/A' }}</td>
-                    <td class="px-6 py-4 text-sm font-bold text-gray-600">{{ $teacher->academicClass->name ?? 'None' }}</td>
+                    <td class="px-6 py-4 text-sm font-bold text-gray-600">{{ $teacher->classes->first()->name ?? 'None' }}</td>
                     <td class="px-6 py-4 text-center">
                         @if($teacher->user->is_active)
                             <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-green-100 text-green-700">Active</span>

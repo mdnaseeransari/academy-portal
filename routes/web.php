@@ -74,6 +74,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
     Route::get('/contacts', [AdminController::class, 'contacts'])->name('contacts');
     Route::post('/contacts/{id}/read', [AdminController::class, 'markRead'])->name('contacts.read');
+    Route::delete('/contacts/{id}', [AdminController::class, 'deleteContact'])->name('contacts.delete');
     Route::get('/timetable', [AdminController::class, 'timetable'])->name('timetable');
     Route::post('/timetable/add', [AdminController::class, 'addTimetable'])->name('timetable.add');
     Route::delete('/timetable/{id}', [AdminController::class, 'deleteTimetable'])->name('timetable.delete');
