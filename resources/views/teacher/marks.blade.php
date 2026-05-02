@@ -31,6 +31,12 @@
         My Students
     </a>
     
+    <!-- Assignments -->
+    <a href="{{ route('teacher.assignments') }}" class="flex items-center gap-3 px-4 py-2.5 {{ request()->routeIs('teacher.assignments*') ? 'text-white bg-white/20 font-medium' : 'text-white/80 hover:text-white hover:bg-white/10' }} rounded-lg mx-2 text-sm transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+        Assignments
+    </a>
+    
     <!-- Timetable -->
     <a href="{{ route('teacher.timetable') }}" class="flex items-center gap-3 px-4 py-2.5 text-white/80 hover:text-white hover:bg-white/10 rounded-lg mx-2 text-sm transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -77,18 +83,13 @@
             <input type="number" name="total_marks" value="{{ $total_marks ?? 100 }}" class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm">
         </div>
 
-        <div>
-            <label class="block text-sm font-bold text-gray-700 mb-2">Exam Date</label>
-            <input type="date" name="exam_date" value="{{ date('Y-m-d') }}" class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm">
-        </div>
-
         <button type="submit" class="bg-[#2c3e80] text-white px-6 py-2.5 rounded-lg hover:bg-[#1e2d5e] transition font-bold text-sm">
             Load Students
         </button>
     </form>
 </div>
 
-@if($students)
+@if($students->isNotEmpty())
     <!-- Marks Entry Form -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
         <div class="p-6 border-b border-gray-100">
@@ -103,13 +104,13 @@
             </div>
         @endif
 
-        <form action="{{ route('teacher.marks.upload') }}" method="POST">
+        <form action="{{ route('teacher.saveMarks') }}" method="POST">
             @csrf
             <input type="hidden" name="class_id" value="{{ $selected_class }}">
             <input type="hidden" name="exam_type" value="{{ $exam_type }}">
             <input type="hidden" name="subject" value="{{ $teacher->subject }}">
             <input type="hidden" name="total_marks" value="{{ $total_marks }}">
-            <input type="hidden" name="exam_date" value="{{ request('exam_date') }}">
+
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
@@ -136,6 +137,7 @@
                                     <input type="number" 
                                            name="marks[{{ $student->id }}][marks_obtained]" 
                                            min="0" max="{{ $total_marks }}"
+                                           value="{{ $previous_marks[$student->id]->marks_obtained ?? '' }}"
                                            class="w-20 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-[#2c3e80] focus:border-[#2c3e80] transition"
                                            placeholder="0">
                                     <span class="text-xs text-gray-400 font-bold">/ {{ $total_marks }}</span>
@@ -145,12 +147,14 @@
                                 <input type="checkbox" 
                                        name="marks[{{ $student->id }}][absent]" 
                                        id="absent_{{ $student->id }}"
+                                       {{ isset($previous_marks[$student->id]) && $previous_marks[$student->id]->marks_obtained == 0 ? 'checked' : '' }}
                                        class="w-5 h-5 rounded border-gray-300 text-[#2c3e80] focus:ring-[#2c3e80] transition accent-[#2c3e80]"
                                        onchange="toggleMarks({{ $student->id }})">
                             </td>
                             <td class="px-6 py-4">
                                 <input type="text" 
                                        name="marks[{{ $student->id }}][remarks]" 
+                                       value="{{ $previous_marks[$student->id]->remarks ?? '' }}"
                                        placeholder="Feedback..."
                                        class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-[#2c3e80] focus:border-[#2c3e80] transition">
                             </td>
@@ -197,14 +201,14 @@
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Marks</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Total</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Percentage</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Remarks</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @foreach($previous_marks as $mark)
                     @php
-                        $percentage = ($mark->marks_obtained / $mark->total_marks) * 100;
+                        $percentage = $mark->total_marks > 0 ? ($mark->marks_obtained / $mark->total_marks) * 100 : 0;
                         $badgeColor = match(true) {
                             $percentage >= 75 => 'bg-green-100 text-green-700',
                             $percentage >= 50 => 'bg-yellow-100 text-yellow-700',
@@ -216,7 +220,18 @@
                             <span class="text-sm font-medium text-gray-800">{{ $mark->student->user->name }}</span>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="text-sm font-bold text-gray-800">{{ $mark->marks_obtained }}</span>
+                            <form action="{{ route('teacher.saveMarks') }}" method="POST" class="flex items-center gap-2">
+                                @csrf
+                                <input type="hidden" name="class_id" value="{{ $selected_class }}">
+                                <input type="hidden" name="exam_type" value="{{ $exam_type }}">
+                                <input type="hidden" name="subject" value="{{ $teacher->subject }}">
+                                <input type="hidden" name="total_marks" value="{{ $mark->total_marks }}">
+                                <input type="hidden" name="marks[{{ $mark->student_id }}][remarks]" value="{{ $mark->remarks }}">
+                                <input type="number"
+                                       name="marks[{{ $mark->student_id }}][marks_obtained]"
+                                       value="{{ $mark->marks_obtained }}"
+                                       min="0" max="{{ $mark->total_marks }}"
+                                       class="w-20 border border-gray-300 rounded-lg px-2 py-1 text-sm focus:ring-2 focus:ring-[#2c3e80] focus:border-[#2c3e80]">
                         </td>
                         <td class="px-6 py-4">
                             <span class="text-sm text-gray-500">{{ $mark->total_marks }}</span>
@@ -227,12 +242,17 @@
                             </span>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="text-sm text-gray-400 italic">{{ \Carbon\Carbon::parse($mark->exam_date)->format('d M Y') }}</span>
+                            <input type="text"
+                                   name="marks[{{ $mark->student_id }}][remarks]"
+                                   value="{{ $mark->remarks }}"
+                                   placeholder="Feedback..."
+                                   class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm focus:ring-2 focus:ring-[#2c3e80] focus:border-[#2c3e80]">
                         </td>
                         <td class="px-6 py-4 text-center">
-                            <button disabled class="opacity-50 cursor-not-allowed bg-white text-gray-700 border border-gray-300 px-3 py-1 rounded-lg text-xs font-bold">
-                                Edit
-                            </button>
+                                <button type="submit" class="bg-[#2c3e80] hover:bg-[#1e2d5e] text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                                    Update
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     @endforeach

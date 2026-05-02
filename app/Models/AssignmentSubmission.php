@@ -9,6 +9,8 @@ class AssignmentSubmission extends Model
 {
     use HasFactory;
 
+    protected $table = 'assignment_submissions';
+
     protected $fillable = [
         'assignment_id',
         'student_id',

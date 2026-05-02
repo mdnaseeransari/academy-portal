@@ -46,10 +46,13 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->name('teacher.')
     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
     Route::get('/attendance', [TeacherController::class, 'showAttendance'])->name('attendance');
     Route::post('/attendance/mark', [TeacherController::class, 'markAttendance'])->name('attendance.mark');
-    Route::get('/marks', [TeacherController::class, 'showMarks'])->name('marks');
-    Route::post('/marks/upload', [TeacherController::class, 'uploadMarks'])->name('marks.upload');
+    Route::get('/marks', [TeacherController::class, 'marks'])->name('marks');
+    Route::post('/marks/save', [TeacherController::class, 'saveMarks'])->name('saveMarks');
     Route::get('/assignments', [TeacherController::class, 'assignments'])->name('assignments');
     Route::post('/assignments/create', [TeacherController::class, 'createAssignment'])->name('assignments.create');
+    Route::delete('/assignments/{id}', [TeacherController::class, 'deleteAssignment'])->name('assignments.delete');
+    Route::get('/assignments/{id}/submissions', [TeacherController::class, 'viewSubmissions'])->name('submissions');
+    Route::patch('/submissions/{id}/marks', [TeacherController::class, 'updateMarks'])->name('updateMarks');
     Route::get('/remarks', [TeacherController::class, 'showRemarks'])->name('remarks');
     Route::post('/remarks/add', [TeacherController::class, 'addRemark'])->name('remarks.add');
     Route::delete('/remarks/{id}', [TeacherController::class, 'deleteRemark'])->name('remarks.delete');

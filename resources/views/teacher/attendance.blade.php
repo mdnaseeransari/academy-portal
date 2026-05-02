@@ -31,6 +31,12 @@
         My Students
     </a>
     
+    <!-- Assignments -->
+    <a href="{{ route('teacher.assignments') }}" class="flex items-center gap-3 px-4 py-2.5 {{ request()->routeIs('teacher.assignments*') ? 'text-white bg-white/20 font-medium' : 'text-white/80 hover:text-white hover:bg-white/10' }} rounded-lg mx-2 text-sm transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+        Assignments
+    </a>
+    
     <!-- Timetable -->
     <a href="{{ route('teacher.timetable') }}" class="flex items-center gap-3 px-4 py-2.5 text-white/80 hover:text-white hover:bg-white/10 rounded-lg mx-2 text-sm transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -76,7 +82,8 @@
     @endif
 </div>
 
-@if($students && !$already_marked)
+@php $editing = request('edit') == '1'; @endphp
+@if($students->isNotEmpty() && (!$already_marked || $editing))
     <!-- Marking Form -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -117,17 +124,20 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-4">
                                     <label class="flex items-center gap-1 cursor-pointer group">
-                                        <input type="radio" name="attendance[{{ $student->id }}][status]" value="present" checked 
+                                        <input type="radio" name="attendance[{{ $student->id }}][status]" value="present" 
+                                               {{ (!isset($existing_attendance[$student->id]) || $existing_attendance[$student->id]->status == 'present') ? 'checked' : '' }}
                                                class="accent-green-500 w-4 h-4 border-gray-300 focus:ring-green-500">
                                         <span class="text-xs font-bold text-gray-600 group-hover:text-green-600 transition">Present</span>
                                     </label>
                                     <label class="flex items-center gap-1 cursor-pointer group">
                                         <input type="radio" name="attendance[{{ $student->id }}][status]" value="absent" 
+                                               {{ (isset($existing_attendance[$student->id]) && $existing_attendance[$student->id]->status == 'absent') ? 'checked' : '' }}
                                                class="accent-red-500 w-4 h-4 border-gray-300 focus:ring-red-500">
                                         <span class="text-xs font-bold text-gray-600 group-hover:text-red-600 transition">Absent</span>
                                     </label>
                                     <label class="flex items-center gap-1 cursor-pointer group">
                                         <input type="radio" name="attendance[{{ $student->id }}][status]" value="late" 
+                                               {{ (isset($existing_attendance[$student->id]) && $existing_attendance[$student->id]->status == 'late') ? 'checked' : '' }}
                                                class="accent-yellow-500 w-4 h-4 border-gray-300 focus:ring-yellow-500">
                                         <span class="text-xs font-bold text-gray-600 group-hover:text-yellow-600 transition">Late</span>
                                     </label>

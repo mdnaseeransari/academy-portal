@@ -109,9 +109,9 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        @foreach($recentMarks as $mark)
+                        @forelse($recentMarks as $mark)
                         @php
-                            $percentage = ($mark->marks_obtained / $mark->total_marks) * 100;
+                            $percentage = $mark->total_marks > 0 ? ($mark->marks_obtained / $mark->total_marks) * 100 : 0;
                             $badgeClass = $percentage >= 75 ? 'bg-green-100 text-green-700' : ($percentage >= 50 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700');
                         @endphp
                         <tr class="hover:bg-gray-50 transition">
@@ -130,7 +130,11 @@
                                 </span>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-10 text-center text-sm text-gray-400 italic">No marks recorded yet.</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -140,17 +144,17 @@
     <!-- Recent Remarks -->
     <div class="space-y-6">
         <h3 class="text-lg font-bold text-gray-800 px-2">Teacher Remarks</h3>
-        @foreach($recentRemarks as $remark)
+        @forelse($recentRemarks as $remark)
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 relative overflow-hidden">
             <!-- Decorative accent -->
             <div class="absolute top-0 right-0 w-2 h-full bg-[#2c3e80]/10"></div>
             
             <div class="flex items-center gap-3 mb-4">
                 <div class="w-10 h-10 rounded-full bg-[#2c3e80] text-white flex items-center justify-center font-bold text-sm">
-                    {{ substr($remark->teacher->name, 0, 1) }}
+                    {{ substr($remark->teacher->name ?? 'T', 0, 1) }}
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-gray-800">{{ $remark->teacher->name }}</h4>
+                    <h4 class="text-sm font-bold text-gray-800">{{ $remark->teacher->name ?? 'Teacher' }}</h4>
                     <p class="text-xs text-gray-400">{{ \Carbon\Carbon::parse($remark->date)->format('M d, Y') }}</p>
                 </div>
             </div>
@@ -158,7 +162,11 @@
                 "{{ $remark->remark_text }}"
             </p>
         </div>
-        @endforeach
+        @empty
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
+            <p class="text-sm text-gray-400 italic">No remarks from teachers yet.</p>
+        </div>
+        @endforelse
         
         <a href="{{ route('student.remarks') }}" class="block text-center py-3 bg-gray-50 text-gray-600 rounded-xl border border-dashed border-gray-300 hover:bg-gray-100 transition text-sm font-medium">
             View All Remarks

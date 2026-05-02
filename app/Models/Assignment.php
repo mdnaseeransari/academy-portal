@@ -30,6 +30,6 @@ class Assignment extends Model
 
     public function submissions()
     {
-        return $this->hasMany(AssignmentSubmission::class);
+        return $this->hasMany(AssignmentSubmission::class, 'assignment_id');
     }
 }
