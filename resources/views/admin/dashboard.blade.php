@@ -143,7 +143,7 @@
                     </div>
                     <div class="text-right">
                         <p class="text-xs font-bold text-gray-400 uppercase tracking-tighter">
-                            {{ \Carbon\Carbon::parse($student->created_at)->format('d Jan Y') }}
+                            {{ \Carbon\Carbon::parse($student->created_at)->format('d M Y') }}
                         </p>
                     </div>
                 </div>

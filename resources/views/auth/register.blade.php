@@ -33,10 +33,55 @@
         </div>
 
         <!-- Confirm Password -->
-        <div class="mb-6">
+        <div class="mb-4">
             <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
             <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password"
                 class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80] focus:border-transparent">
+        </div>
+
+        <!-- Phone -->
+        <div class="mb-4">
+            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number (Optional)</label>
+            <input id="phone" type="text" name="phone" value="{{ old('phone') }}" autocomplete="tel"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80] focus:border-transparent @error('phone') border-red-500 @enderror">
+            @error('phone')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <!-- Class -->
+        <div class="mb-4">
+            <label for="class_id" class="block text-sm font-medium text-gray-700 mb-1">Class</label>
+            <select id="class_id" name="class_id" required
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80] focus:border-transparent @error('class_id') border-red-500 @enderror">
+                <option value="">Select your class</option>
+                @foreach($classes as $class)
+                    <option value="{{ $class->id }}" {{ old('class_id') == $class->id ? 'selected' : '' }}>{{ $class->name }}</option>
+                @endforeach
+            </select>
+            @error('class_id')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <!-- Parent Name -->
+        <div class="mb-4">
+            <label for="parent_name" class="block text-sm font-medium text-gray-700 mb-1">Parent's Name</label>
+            <input id="parent_name" type="text" name="parent_name" value="{{ old('parent_name') }}" required
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80] focus:border-transparent @error('parent_name') border-red-500 @enderror">
+            @error('parent_name')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <!-- Parent Phone -->
+        <div class="mb-6">
+            <label for="parent_phone" class="block text-sm font-medium text-gray-700 mb-1">Parent's Phone</label>
+            <input id="parent_phone" type="text" name="parent_phone" value="{{ old('parent_phone') }}" required
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80] focus:border-transparent @error('parent_phone') border-red-500 @enderror">
+            @error('parent_phone')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="flex flex-col gap-4">

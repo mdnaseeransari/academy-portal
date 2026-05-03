@@ -55,6 +55,7 @@
     <div class="lg:col-span-2">
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-6">
             <h3 class="text-lg font-bold text-gray-800 mb-4">Create New Assignment</h3>
+            <p class="text-sm text-gray-500 mb-4">Assignments for: {{ $teacherClass->name ?? 'Your Class' }}</p>
 
             @if(session('success'))
                 <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-4 text-sm font-medium">
