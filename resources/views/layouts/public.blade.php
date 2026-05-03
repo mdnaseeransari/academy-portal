@@ -13,7 +13,7 @@
     <!-- Navbar -->
     <nav class="bg-white border-b border-gray-100 h-16 flex items-center justify-between px-6 sticky top-0 z-50 shadow-sm">
         <div class="flex items-center gap-2">
-            <span class="text-xl font-bold text-[#2c3e80]">Optimal Classes</span>
+            <img src="{{ asset('images/logo-optimal-classes.png') }}" alt="Optimal Classes" class="h-10">
         </div>
 
         <!-- Desktop Navigation -->
