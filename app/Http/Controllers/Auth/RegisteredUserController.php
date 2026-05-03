@@ -35,16 +35,22 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'phone' => ['nullable', 'string', 'max:20'],
-            'class_id' => ['required', 'exists:classes,id'],
-            'parent_name' => ['required', 'string', 'max:255'],
-            'parent_phone' => ['required', 'string', 'max:20'],
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|confirmed|min:8',
+            'phone' => 'nullable|string|max:20',
+            'class_id' => 'required|exists:classes,id',
+            'parent_name' => 'required|string|max:255',
+            'parent_phone' => 'required|string|max:20',
         ]);
 
-        $user = DB::transaction(function () use ($request) {
+        $class = AcademicClass::find($request->class_id);
+        $studentCount = Student::where('class_id', $request->class_id)->count() + 1;
+        $prefix = strtoupper(str_replace(['Class ', ' ', '-'], ['', '', ''], $class->name));
+        $rollNumber = $prefix . '-' . str_pad($studentCount, 3, '0', STR_PAD_LEFT);
+
+        $user = null;
+        DB::transaction(function() use ($request, &$user, $rollNumber) {
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -53,26 +59,20 @@ class RegisteredUserController extends Controller
                 'phone' => $request->phone,
             ]);
 
-            $academicClass = AcademicClass::findOrFail($request->class_id);
-            $studentCount = Student::withTrashed()->where('class_id', $request->class_id)->count() + 1;
-            $rollNumber = $academicClass->name . '-' . sprintf('%03d', $studentCount);
-
             Student::create([
                 'user_id' => $user->id,
                 'class_id' => $request->class_id,
                 'roll_number' => $rollNumber,
                 'parent_name' => $request->parent_name,
                 'parent_phone' => $request->parent_phone,
-                'admission_date' => now()->toDateString(),
+                'admission_date' => now(),
             ]);
-
-            return $user;
         });
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect('/student/dashboard');
     }
 }

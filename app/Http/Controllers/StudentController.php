@@ -20,6 +20,9 @@ class StudentController extends Controller
      */
     public function dashboard()
     {
+        $student = auth()->user()->student;
+        if (!$student) abort(403, 'No student profile found.');
+        
         $student = Auth::user()->student()->with(['user', 'academicClass'])->first();
         
         $presentCount = Attendance::where('student_id', $student->id)->where('status', 'present')->count();
@@ -61,7 +64,8 @@ class StudentController extends Controller
      */
     public function attendance(Request $request)
     {
-        $student = Auth::user()->student;
+        $student = auth()->user()->student;
+        if (!$student) abort(403, 'No student profile found.');
         $selected_month = $request->get('month', date('m'));
         $selected_year = $request->get('year', date('Y'));
 
@@ -94,7 +98,8 @@ class StudentController extends Controller
      */
     public function marks(Request $request)
     {
-        $student = Auth::user()->student;
+        $student = auth()->user()->student;
+        if (!$student) abort(403, 'No student profile found.');
         $exam_type = $request->exam_type;
 
         $query = Mark::where('student_id', $student->id);
@@ -113,7 +118,8 @@ class StudentController extends Controller
      */
     public function assignments()
     {
-        $student = Auth::user()->student;
+        $student = auth()->user()->student;
+        if (!$student) abort(403, 'No student profile found.');
 
         $pending = Assignment::where('class_id', $student->class_id)
             ->whereDoesntHave('submissions', function($q) use ($student) {
@@ -136,6 +142,9 @@ class StudentController extends Controller
      */
     public function uploadAssignment(Request $request)
     {
+        $student = auth()->user()->student;
+        if (!$student) abort(403, 'No student profile found.');
+        
         $request->validate([
             'assignment_id' => 'required|exists:assignments,id',
             'file' => 'required|file|mimes:pdf,doc,docx|max:5120'
@@ -177,7 +186,8 @@ class StudentController extends Controller
      */
     public function remarks()
     {
-        $student = Auth::user()->student;
+        $student = auth()->user()->student;
+        if (!$student) abort(403, 'No student profile found.');
 
         $remarks = Remark::where('student_id', $student->id)
             ->with('teacher')
@@ -192,6 +202,9 @@ class StudentController extends Controller
      */
     public function timetable()
     {
+        $student = auth()->user()->student;
+        if (!$student) abort(403, 'No student profile found.');
+        
         $student = Auth::user()->student()->with('academicClass')->first();
         $class = $student->academicClass;
 

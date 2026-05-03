@@ -23,7 +23,8 @@ class TeacherController extends Controller
      */
     public function dashboard()
     {
-        $teacher = Auth::user()->teacher()->with('user')->first();
+        $teacher = auth()->user()->teacher;
+        if (!$teacher) abort(403, 'No teacher profile found.');
         $class = AcademicClass::where('teacher_id', $teacher->user_id)->first();
         
         $totalStudents = $class ? Student::where('class_id', $class->id)->count() : 0;
@@ -75,7 +76,8 @@ class TeacherController extends Controller
      */
     public function showAttendance(Request $request)
     {
-        $teacher = Auth::user()->teacher;
+        $teacher = auth()->user()->teacher;
+        if (!$teacher) abort(403, 'No teacher profile found.');
         $classes = AcademicClass::all();
         
         // Default to teacher's class if none selected
@@ -141,6 +143,7 @@ class TeacherController extends Controller
     public function marks(Request $request)
     {
         $teacher = auth()->user()->teacher;
+        if (!$teacher) abort(403, 'No teacher profile found.');
         $classes = AcademicClass::all();
         
         $selected_class = $request->get('class_id');
@@ -217,7 +220,8 @@ class TeacherController extends Controller
      */
     public function showRemarks()
     {
-        $teacher = Auth::user()->teacher;
+        $teacher = auth()->user()->teacher;
+        if (!$teacher) abort(403, 'No teacher profile found.');
         $class = AcademicClass::where('teacher_id', $teacher->user_id)->first();
         
         $students = $class ? Student::where('class_id', $class->id)->with('user')->get() : collect();
@@ -276,7 +280,8 @@ class TeacherController extends Controller
      */
     public function students(Request $request)
     {
-        $teacher = Auth::user()->teacher;
+        $teacher = auth()->user()->teacher;
+        if (!$teacher) abort(403, 'No teacher profile found.');
         $class = AcademicClass::where('teacher_id', $teacher->user_id)->first();
         $search = $request->get('search');
         
@@ -307,7 +312,8 @@ class TeacherController extends Controller
      */
     public function timetable()
     {
-        $teacher = Auth::user()->teacher;
+        $teacher = auth()->user()->teacher;
+        if (!$teacher) abort(403, 'No teacher profile found.');
         
         $timetable = Timetable::where('teacher_id', $teacher->user_id)
             ->with('academicClass')
