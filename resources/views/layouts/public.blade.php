@@ -19,8 +19,11 @@
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center gap-8">
             <a href="/#home" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Home</a>
-            <a href="/#about" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">About Us</a>
-            <a href="/#courses" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Courses & Fee</a>
+            <a href="{{ route('about') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">About Us</a>
+            <a href="{{ route('courses') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Courses & Fee</a>
+            <a href="{{ route('results') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Results</a>
+            <a href="{{ route('gallery') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Gallery</a>
+            <a href="{{ route('contact') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Contact</a>
         </div>
 
         <div class="flex items-center gap-4">
@@ -50,8 +53,11 @@
     <div id="mobile-menu" class="md:hidden bg-white border-b border-gray-100 px-6 py-4 hidden">
         <div class="flex flex-col gap-4">
             <a href="/#home" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Home</a>
-            <a href="/#about" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">About Us</a>
-            <a href="/#courses" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Courses & Fee</a>
+            <a href="{{ route('about') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">About Us</a>
+            <a href="{{ route('courses') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Courses & Fee</a>
+            <a href="{{ route('results') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Results</a>
+            <a href="{{ route('gallery') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Gallery</a>
+            <a href="{{ route('contact') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Contact</a>
             @if (Route::has('login'))
                 @auth
                     <a href="{{ url('/dashboard') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Dashboard</a>

@@ -16,6 +16,39 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Public pages routes
+Route::get('/about', function () {
+    return view('public.about');
+})->name('about');
+
+Route::get('/courses', function () {
+    return view('public.courses');
+})->name('courses');
+
+Route::get('/results', function () {
+    return view('public.results');
+})->name('results');
+
+Route::get('/gallery', function () {
+    return view('public.gallery');
+})->name('gallery');
+
+Route::get('/contact', function () {
+    return view('public.contact');
+})->name('contact');
+
+Route::post('/contact', function (Illuminate\Http\Request $request) {
+    $request->validate([
+        'first_name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'email' => 'required|email',
+        'phone' => 'required|string|max:20',
+        'message' => 'required|string|min:20|max:2000',
+    ]);
+
+    return redirect()->back()->with('success', 'Thank you! Your message has been sent.');
+})->name('contact.submit');
+
 // Fix: Add a generic dashboard route that redirects based on role
 Route::get('/dashboard', function () {
     $role = auth()->user()->role;
