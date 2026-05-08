@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -35,44 +36,57 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|confirmed|min:8',
-            'phone' => 'nullable|string|max:20',
-            'class_id' => 'required|exists:classes,id',
-            'parent_name' => 'required|string|max:255',
-            'parent_phone' => 'required|string|max:20',
+            'name' => ['required', 'string', 'max:255'],
+            'email_username' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9._-]+$/', 'unique:users,email'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'class_id' => ['required', 'exists:classes,id'],
+            'parent_name' => ['required', 'string', 'max:255'],
+            'parent_phone' => ['required', 'string', 'max:20'],
+            'phone' => ['nullable', 'string', 'max:20'],
+        ], [
+            'email_username.regex' => 'The username may only contain letters, numbers, dashes, underscores and periods.',
+            'email_username.unique' => 'This username is already taken.',
         ]);
 
-        $class = AcademicClass::find($request->class_id);
-        $studentCount = Student::where('class_id', $request->class_id)->count() + 1;
-        $prefix = strtoupper(str_replace(['Class ', ' ', '-'], ['', '', ''], $class->name));
-        $rollNumber = $prefix . '-' . str_pad($studentCount, 3, '0', STR_PAD_LEFT);
+        $fullEmail = $request->email_username . '@optimal.com';
 
-        $user = null;
-        DB::transaction(function() use ($request, &$user, $rollNumber) {
+        // Additional uniqueness check for the constructed email, just in case
+        if (User::where('email', $fullEmail)->exists()) {
+            return back()->withErrors(['email_username' => 'This username is already taken.'])->withInput();
+        }
+
+        DB::beginTransaction();
+        try {
             $user = User::create([
                 'name' => $request->name,
-                'email' => $request->email,
+                'email' => $fullEmail,
                 'password' => Hash::make($request->password),
                 'role' => 'student',
+                'status' => 'pending',
                 'phone' => $request->phone,
             ]);
 
+            // Create Student record immediately with the registration data
             Student::create([
                 'user_id' => $user->id,
                 'class_id' => $request->class_id,
-                'roll_number' => $rollNumber,
+                'roll_number' => 'REG-' . strtoupper(Str::random(6)), // Unique temp roll number
                 'parent_name' => $request->parent_name,
                 'parent_phone' => $request->parent_phone,
                 'admission_date' => now(),
             ]);
-        });
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Registration failed. Please try again.')->withInput();
+        }
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Do NOT log the user in since they are pending approval
+        // Auth::login($user);
 
-        return redirect('/student/dashboard');
+        return redirect('/pending-approval');
     }
 }

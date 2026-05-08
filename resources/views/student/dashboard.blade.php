@@ -59,21 +59,36 @@
 
 <!-- Stats Row -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <!-- Total Present -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-green-500">
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Present</p>
-        <p class="text-3xl font-bold text-gray-800 mt-1">{{ $stats['present'] }}</p>
-    </div>
+    <!-- Time Table -->
+    <a href="{{ route('student.timetable') }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-[#2c3e80] hover:shadow-md transition group">
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide group-hover:text-[#2c3e80] transition">Time Table</p>
+        <div class="mt-1">
+            @if($stats['current_class'])
+                <p class="text-xl font-bold text-gray-800 leading-tight">{{ $stats['current_class']->subject }}</p>
+                <p class="text-xs text-gray-400 font-bold uppercase mt-1">{{ \Carbon\Carbon::parse($stats['current_class']->time_start)->format('h:i A') }} - {{ \Carbon\Carbon::parse($stats['current_class']->time_end)->format('h:i A') }}</p>
+            @elseif($stats['next_class'])
+                <p class="text-xl font-bold text-gray-800 leading-tight">{{ $stats['next_class']->subject }}</p>
+                <p class="text-xs text-gray-400 font-bold uppercase mt-1">{{ \Carbon\Carbon::parse($stats['next_class']->time_start)->format('h:i A') }}</p>
+            @else
+                <p class="text-xl font-bold text-gray-400 italic leading-tight">No more classes</p>
+                <p class="text-xs text-gray-300 font-bold uppercase mt-1">Today</p>
+            @endif
+        </div>
+    </a>
 
-    <!-- Total Absent -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-red-500">
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Absent</p>
-        <p class="text-3xl font-bold text-gray-800 mt-1">{{ $stats['absent'] }}</p>
-    </div>
+    <!-- Total Aggregate Marks -->
+    <a href="{{ route('student.marks') }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-purple-500 hover:shadow-md transition group">
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide group-hover:text-purple-600 transition">Total Score</p>
+        <div class="flex items-baseline gap-1 mt-1">
+            <p class="text-3xl font-bold text-gray-800">{{ $stats['total_obtained'] }}</p>
+            <p class="text-sm font-bold text-gray-400">/ {{ $stats['total_possible'] }}</p>
+        </div>
+        <p class="text-[10px] text-gray-400 font-bold uppercase mt-1">Cumulative Marks</p>
+    </a>
 
     <!-- Attendance % -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-blue-500">
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Attendance %</p>
+    <a href="{{ route('student.attendance') }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-blue-500 hover:shadow-md transition group">
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide group-hover:text-blue-600 transition">Attendance %</p>
         <div class="flex items-center justify-between mt-1 mb-2">
             <p class="text-3xl font-bold text-gray-800">{{ $stats['percentage'] }}%</p>
         </div>
@@ -81,13 +96,13 @@
         <div class="w-full bg-gray-100 rounded-full h-2">
             <div class="bg-[#2c3e80] h-2 rounded-full" style="width: {{ $stats['percentage'] }}%"></div>
         </div>
-    </div>
+    </a>
 
     <!-- Pending Assignments -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-yellow-500">
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Pending Tasks</p>
+    <a href="{{ route('student.assignments') }}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-yellow-500 hover:shadow-md transition group">
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide group-hover:text-yellow-600 transition">Pending Tasks</p>
         <p class="text-3xl font-bold text-gray-800 mt-1">{{ $stats['pending_assignments'] }}</p>
-    </div>
+    </a>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">

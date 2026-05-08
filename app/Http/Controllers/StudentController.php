@@ -20,10 +20,26 @@ class StudentController extends Controller
      */
     public function dashboard()
     {
-        $student = auth()->user()->student;
+        $user = auth()->user();
+        
+        // REPAIR: If user is a student but missing the Student profile
+        if (!$user->student && $user->role === 'student') {
+            \App\Models\Student::create([
+                'user_id' => $user->id,
+                'roll_number' => 'RECOVERED-' . $user->id,
+                'class_id' => \App\Models\AcademicClass::first()->id ?? null,
+            ]);
+            // Refresh user to load the new student relation
+            $user->load('student');
+        }
+
+        $student = $user->student;
         if (!$student) abort(403, 'No student profile found.');
         
         $student = Auth::user()->student()->with(['user', 'academicClass'])->first();
+
+        // Prune old remarks (older than 20 days)
+        Remark::where('created_at', '<', now()->subDays(20))->delete();
         
         $presentCount = Attendance::where('student_id', $student->id)->where('status', 'present')->count();
         $absentCount = Attendance::where('student_id', $student->id)->where('status', 'absent')->count();
@@ -37,12 +53,41 @@ class StudentController extends Controller
                 $q->where('student_id', $student->id);
             })->count();
 
+        // New Logic: Find Current or Next Class
+        $today = now()->format('l');
+        $now = now()->format('H:i:s');
+        
+        $currentClass = Timetable::where('class_id', $student->class_id)
+            ->where('day', $today)
+            ->where('time_start', '<=', $now)
+            ->where('time_end', '>=', $now)
+            ->with('teacher')
+            ->first();
+            
+        $nextClass = null;
+        if (!$currentClass) {
+            $nextClass = Timetable::where('class_id', $student->class_id)
+                ->where('day', $today)
+                ->where('time_start', '>', $now)
+                ->orderBy('time_start')
+                ->with('teacher')
+                ->first();
+        }
+
+        // New Logic: Aggregate Marks
+        $totalObtained = Mark::where('student_id', $student->id)->sum('marks_obtained');
+        $totalPossible = Mark::where('student_id', $student->id)->sum('total_marks');
+
         $stats = [
             'present' => $presentCount,
             'absent' => $absentCount,
             'late' => $lateCount,
             'percentage' => $attendancePercentage,
-            'pending_assignments' => $pendingAssignmentsCount
+            'pending_assignments' => $pendingAssignmentsCount,
+            'current_class' => $currentClass,
+            'next_class' => $nextClass,
+            'total_obtained' => $totalObtained,
+            'total_possible' => $totalPossible,
         ];
 
         $recentMarks = Mark::where('student_id', $student->id)

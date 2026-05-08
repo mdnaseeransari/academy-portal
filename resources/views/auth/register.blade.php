@@ -12,12 +12,17 @@
             @enderror
         </div>
 
-        <!-- Email Address -->
+        <!-- Username -->
         <div class="mb-4">
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-            <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="username"
-                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80] focus:border-transparent @error('email') border-red-500 @enderror">
-            @error('email')
+            <label for="email_username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <div class="flex rounded-lg shadow-sm">
+                <input id="email_username" type="text" name="email_username" value="{{ old('email_username') }}" required autocomplete="username" placeholder="john_doe"
+                    class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-l-lg text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#2c3e80] focus:border-transparent @error('email_username') border-red-500 @enderror">
+                <span class="inline-flex items-center px-3 rounded-r-lg border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm font-medium">
+                    @optimal.com
+                </span>
+            </div>
+            @error('email_username')
                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>

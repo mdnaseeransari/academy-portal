@@ -111,6 +111,23 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/timetable', [AdminController::class, 'timetable'])->name('timetable');
     Route::post('/timetable/add', [AdminController::class, 'addTimetable'])->name('timetable.add');
     Route::delete('/timetable/{id}', [AdminController::class, 'deleteTimetable'])->name('timetable.delete');
+
+    Route::get('/pending-users', [AdminController::class, 'pendingUsers'])->name('pending-users');
+    Route::post('/approve-user/{id}', [AdminController::class, 'approveUser'])->name('approve-user');
+    Route::post('/reject-user/{id}', [AdminController::class, 'rejectUser'])->name('reject-user');
+
+    Route::get('/classes', [AdminController::class, 'classes'])->name('classes');
+    Route::post('/classes/add', [AdminController::class, 'addClass'])->name('classes.add');
+    Route::put('/classes/{id}', [AdminController::class, 'editClass'])->name('classes.update');
+    Route::delete('/classes/{id}', [AdminController::class, 'deleteClass'])->name('classes.delete');
 });
+
+Route::get('/pending-approval', function () {
+    return view('auth.pending-approval');
+})->name('pending-approval');
+
+Route::get('/rejected', function () {
+    return view('auth.rejected');
+})->name('rejected');
 
 require __DIR__.'/auth.php';

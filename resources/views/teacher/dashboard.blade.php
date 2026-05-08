@@ -57,32 +57,9 @@
     </div>
 </div>
 
-<!-- Stats Row -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <!-- My Students -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-blue-500">
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">My Students</p>
-        <p class="text-3xl font-bold text-gray-800 mt-1">{{ $stats['total_students'] }}</p>
-    </div>
 
-    <!-- Present Today -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-green-500">
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Present Today</p>
-        <p class="text-3xl font-bold text-gray-800 mt-1">{{ $stats['present_today'] }}</p>
-    </div>
 
-    <!-- Absent Today -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-red-500">
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Absent Today</p>
-        <p class="text-3xl font-bold text-gray-800 mt-1">{{ $stats['absent_today'] }}</p>
-    </div>
 
-    <!-- Assignments Given -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-purple-500">
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Assignments Given</p>
-        <p class="text-3xl font-bold text-gray-800 mt-1">{{ $stats['assignments'] }}</p>
-    </div>
-</div>
 
 <!-- Quick Actions -->
 <div class="mb-8">

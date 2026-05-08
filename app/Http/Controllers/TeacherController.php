@@ -71,43 +71,69 @@ class TeacherController extends Controller
         };
     }
 
-    /**
-     * Show attendance marking page.
-     */
     public function showAttendance(Request $request)
     {
         $teacher = auth()->user()->teacher;
         if (!$teacher) abort(403, 'No teacher profile found.');
+        $class = AcademicClass::where('teacher_id', $teacher->user_id)->first();
+        
         $classes = AcademicClass::all();
+        $selected_class = $class ? $class->id : null;
+        $selected_date = Carbon::today()->toDateString();
         
-        // Default to teacher's class if none selected
-        $selected_class = $request->get('class_id');
-        if (!$selected_class) {
-            $class = AcademicClass::where('teacher_id', auth()->id())->first();
-            $selected_class = $class ? $class->id : null;
-        }
+        $today = Carbon::now()->format('l'); // e.g., "Monday"
+        $currentTime = Carbon::now();
         
-        $selected_date = $request->get('date', date('Y-m-d'));
-        
+        $activePeriod = null;
+        $periodSlot = null;
         $students = collect();
         $already_marked = false;
         $existing_attendance = collect();
         
-        if ($selected_class && $selected_date) {
-            $students = Student::where('class_id', $selected_class)->with('user')->get();
-            $already_marked = Attendance::where('class_id', $selected_class)
-                ->where('date', $selected_date)
-                ->exists();
+        if ($class) {
+            // Find active period for this teacher today
+            $timetable = Timetable::where('teacher_id', $teacher->user_id)
+                                  ->where('day', $today)
+                                  ->get();
+            
+            foreach($timetable as $period) {
+                // If time_start or time_end are null, skip
+                if (!$period->time_start || !$period->time_end) continue;
                 
-            if ($already_marked) {
-                $existing_attendance = Attendance::where('class_id', $selected_class)
-                    ->where('date', $selected_date)
-                    ->get()
-                    ->keyBy('student_id');
+                $start = Carbon::parse($period->time_start)->subMinutes(15);
+                $end = Carbon::parse($period->time_end)->addMinutes(5);
+                
+                if ($currentTime->between($start, $end)) {
+                    $activePeriod = $period;
+                    $periodSlot = Carbon::parse($period->time_start)->format('H:i') . '-' . Carbon::parse($period->time_end)->format('H:i');
+                    // Override selected_class to the class of this period, since a teacher can teach multiple classes
+                    $selected_class = $period->class_id;
+                    $class = AcademicClass::find($selected_class);
+                    break;
+                }
+            }
+            
+            if ($selected_class) {
+                $students = Student::where('class_id', $selected_class)->with('user')->get();
+                
+                if ($activePeriod) {
+                    $already_marked = Attendance::where('class_id', $selected_class)
+                        ->where('date', Carbon::today()->toDateString())
+                        ->where('period_slot', $periodSlot)
+                        ->exists();
+                        
+                    if ($already_marked) {
+                        $existing_attendance = Attendance::where('class_id', $selected_class)
+                            ->where('date', Carbon::today()->toDateString())
+                            ->where('period_slot', $periodSlot)
+                            ->get()
+                            ->keyBy('student_id');
+                    }
+                }
             }
         }
         
-        return view('teacher.attendance', compact('students', 'classes', 'selected_class', 'selected_date', 'already_marked', 'existing_attendance'));
+        return view('teacher.attendance', compact('students', 'classes', 'selected_class', 'selected_date', 'already_marked', 'existing_attendance', 'activePeriod', 'periodSlot', 'class'));
     }
 
     /**
@@ -117,24 +143,33 @@ class TeacherController extends Controller
     {
         $request->validate([
             'class_id' => 'required|exists:classes,id',
-            'date' => 'required|date',
+            'period_slot' => 'required|string',
             'attendance' => 'required|array',
         ]);
 
+        $already_marked = Attendance::where('class_id', $request->class_id)
+            ->where('date', Carbon::today()->toDateString())
+            ->where('period_slot', $request->period_slot)
+            ->exists();
+            
+        if ($already_marked) {
+            return redirect()->back()->with('error', 'Attendance already marked for this period!');
+        }
+
         DB::transaction(function () use ($request) {
             foreach ($request->attendance as $student_id => $data) {
-                Attendance::updateOrCreate(
-                    ['student_id' => $student_id, 'date' => $request->date],
-                    [
-                        'status' => $data['status'],
-                        'class_id' => $request->class_id,
-                        'marked_by' => auth()->id()
-                    ]
-                );
+                Attendance::create([
+                    'student_id' => $student_id,
+                    'class_id' => $request->class_id,
+                    'date' => Carbon::today()->toDateString(),
+                    'period_slot' => $request->period_slot,
+                    'status' => $data['status'],
+                    'marked_by' => auth()->id()
+                ]);
             }
         });
 
-        return redirect()->back()->with('success', 'Attendance recorded successfully!');
+        return redirect()->back()->with('success', 'Attendance locked for ' . $request->period_slot);
     }
 
     /**
@@ -194,21 +229,19 @@ class TeacherController extends Controller
 
         DB::transaction(function () use ($request, $db_exam_type) {
             foreach ($request->marks as $student_id => $data) {
+                // If absent is checked, marks is 0
                 $marksObtained = isset($data['absent']) ? 0 : ($data['marks_obtained'] ?? 0);
 
-                Mark::updateOrCreate(
-                    [
-                        'student_id' => $student_id,
-                        'exam_type' => $db_exam_type,
-                        'subject' => $request->subject,
-                    ],
-                    [
-                        'marks_obtained' => $marksObtained,
-                        'total_marks' => $request->total_marks,
-                        'teacher_id' => auth()->id(),
-                        'remarks' => $data['remarks'] ?? null,
-                    ]
-                );
+                // Add NEW mark entry instead of updating previous one
+                Mark::create([
+                    'student_id' => $student_id,
+                    'exam_type' => $db_exam_type,
+                    'subject' => $request->subject,
+                    'marks_obtained' => $marksObtained,
+                    'total_marks' => $request->total_marks,
+                    'teacher_id' => auth()->id(),
+                    'remarks' => $data['remarks'] ?? null,
+                ]);
             }
         });
 
@@ -330,11 +363,14 @@ class TeacherController extends Controller
     public function assignments()
     {
         $assignments = Assignment::where('teacher_id', auth()->id())
+            ->with(['submissions', 'academicClass'])
             ->withCount('submissions')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('teacher.assignments', compact('assignments'));
+        $classes = AcademicClass::orderBy('name')->get();
+
+        return view('teacher.assignments', compact('assignments', 'classes'));
     }
 
     /**
@@ -380,6 +416,7 @@ class TeacherController extends Controller
     public function createAssignment(Request $request)
     {
         $request->validate([
+            'class_id' => 'required|exists:classes,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'due_date' => 'required|date|after:today',
@@ -387,7 +424,6 @@ class TeacherController extends Controller
         ]);
 
         $teacher = auth()->user()->teacher;
-        $class = AcademicClass::where('teacher_id', $teacher->user_id)->first();
 
         $filePath = null;
         if ($request->hasFile('file')) {
@@ -395,7 +431,7 @@ class TeacherController extends Controller
         }
 
         Assignment::create([
-            'class_id' => $class->id,
+            'class_id' => $request->class_id,
             'teacher_id' => $teacher->user_id,
             'title' => $request->title,
             'description' => $request->description,

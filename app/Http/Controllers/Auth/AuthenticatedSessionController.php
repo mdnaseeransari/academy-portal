@@ -25,20 +25,35 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
+        
+        $user = auth()->user();
+        
+        // NEW: Check if user is pending approval
+        if ($user->status === 'pending') {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect('/pending-approval')->with('error', 'Your account is pending admin approval.');
+        }
+        
+        // NEW: Check if user is rejected
+        if ($user->status === 'rejected') {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect('/rejected')->with('error', 'Your registration has been rejected.');
+        }
+        
+        // Existing logic
         $request->session()->regenerate();
 
-        $user = Auth::user();
-
-        if ($user->role === 'admin') {
-            return redirect()->intended('/admin/dashboard');
-        } elseif ($user->role === 'teacher') {
-            return redirect()->intended('/teacher/dashboard');
-        } elseif ($user->role === 'student') {
-            return redirect()->intended('/student/dashboard');
+        $role = $user->role;
+        if ($role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($role === 'teacher') {
+            return redirect()->route('teacher.dashboard');
         }
-
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->route('student.dashboard');
     }
 
     /**

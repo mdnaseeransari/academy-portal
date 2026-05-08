@@ -16,6 +16,7 @@ class Student extends Model
         'class_id',
         'roll_number',
         'parent_name',
+        'parent_email',
         'parent_phone',
         'address',
         'admission_date',

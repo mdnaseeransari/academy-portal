@@ -34,8 +34,24 @@ class AdminController extends Controller
         // Top-level stats
         $totalStudents  = Student::count();
         $totalTeachers  = Teacher::count();
-        $totalClasses   = AcademicClass::count();
         $unreadContacts = Contact::where('status', 'unread')->count();
+
+        // REPAIR: Find "Ghost" students (Approved Users with role 'student' but no Student record)
+        // This can happen if a previous creation failed midway.
+        $ghostStudents = User::where('role', 'student')
+            ->where('status', 'approved')
+            ->whereDoesntHave('student')
+            ->get();
+
+        foreach ($ghostStudents as $ghost) {
+            // We don't know their class, so we'll put them in a placeholder or just wait for admin to edit
+            // For now, let's just create the record so they show up in the list and can login.
+            Student::create([
+                'user_id' => $ghost->id,
+                'roll_number' => 'RECOVERED-' . $ghost->id,
+                'class_id' => AcademicClass::first()->id ?? null, // Default to first class if available
+            ]);
+        }
 
         // Today's attendance overview per class
         $classes = AcademicClass::withCount('students')->get();
@@ -48,8 +64,6 @@ class AdminController extends Controller
                 ->where('date', $today)->where('status', 'present')->count();
             $absent  = Attendance::whereIn('student_id', $studentIds)
                 ->where('date', $today)->where('status', 'absent')->count();
-            $late    = Attendance::whereIn('student_id', $studentIds)
-                ->where('date', $today)->where('status', 'late')->count();
 
             $percentage = $total > 0 ? round(($present / $total) * 100, 1) : 0;
 
@@ -59,7 +73,6 @@ class AdminController extends Controller
                 'total'      => $total,
                 'present'    => $present,
                 'absent'     => $absent,
-                'late'       => $late,
                 'percentage' => $percentage,
             ];
         });
@@ -76,32 +89,28 @@ class AdminController extends Controller
             ->limit(5)
             ->get();
 
-        // Overall today's attendance % across all students
-        $allStudentIds    = Student::pluck('id');
-        $totalAllStudents = $allStudentIds->count();
-        $presentAllToday  = Attendance::whereIn('student_id', $allStudentIds)
-            ->where('date', $today)
-            ->where('status', 'present')
-            ->count();
-        $attendanceToday = $totalAllStudents > 0
-            ? round(($presentAllToday / $totalAllStudents) * 100, 1)
-            : 0;
+        // Pending user registrations (last 5)
+        $pending_registrations = User::where('role', 'student')
+            ->where('status', 'pending')
+            ->with('student.academicClass')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
 
         $stats = [
             'students'         => $totalStudents,
             'teachers'         => $totalTeachers,
-            'classes'          => $totalClasses,
             'unread'           => $unreadContacts,
             'unread_contacts'  => $unreadContacts,
-            'attendance_today' => $attendanceToday,
-            'assignments'      => Assignment::where('created_at', '>=', Carbon::now()->startOfWeek())->count(),
+            'pending_count'    => User::where('role', 'student')->where('status', 'pending')->count(),
         ];
 
         return view('admin.dashboard', compact(
             'stats',
             'attendance_overview',
             'recent_students',
-            'recent_contacts'
+            'recent_contacts',
+            'pending_registrations'
         ));
     }
 
@@ -142,38 +151,48 @@ class AdminController extends Controller
     public function addStudent(Request $request)
     {
         $request->validate([
-            'name'           => 'required|string|max:255',
-            'email'          => 'required|email|unique:users,email',
-            'password'       => 'required|string|min:8',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email_username' => 'required|string|max:255|unique:users,email',
+            'phone' => 'required|string|max:20',
+            'roll_number' => 'nullable|string|max:50',
             'academic_class_id' => 'required|exists:classes,id',
-            'roll_number'    => 'required|string|max:50|unique:students,roll_number',
-            'parent_name'    => 'nullable|string|max:255',
-            'parent_phone'   => 'nullable|string|max:20',
-            'address'        => 'nullable|string|max:500',
-            'admission_date' => 'nullable|date',
+            'parent_name' => 'required|string|max:255',
+            'parent_email' => 'nullable|email|max:255',
+            'parent_phone' => 'required|string|max:20',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
-        DB::transaction(function () use ($request) {
+        $fullEmail = $request->email_username . '@optimal.com';
+
+        // Check if full email already exists
+        if (User::where('email', $fullEmail)->exists()) {
+            return back()->withErrors(['email_username' => 'This username is already taken.'])->withInput();
+        }
+
+        return DB::transaction(function() use ($request, $fullEmail) {
+            // Create User
             $user = User::create([
-                'name'     => $request->name,
-                'email'    => $request->email,
-                'password' => Hash::make($request->password),
-                'role'     => 'student',
-                'is_active'=> true,
+                'name' => $request->first_name . ' ' . $request->last_name,
+                'email' => $fullEmail,
+                'password' => Hash::make($request->password), 
+                'role' => 'student',
+                'phone' => $request->phone,
+                'status' => 'approved', // Admin adds, so auto-approved
             ]);
 
+            // Create Student record
             Student::create([
-                'user_id'        => $user->id,
-                'class_id'       => $request->academic_class_id,
-                'roll_number'    => $request->roll_number,
-                'parent_name'    => $request->parent_name,
-                'parent_phone'   => $request->parent_phone,
-                'address'        => $request->address,
-                'admission_date' => $request->admission_date ?? now()->toDateString(),
+                'user_id' => $user->id,
+                'roll_number' => $request->roll_number ?: $this->generateRollNumber($request->academic_class_id),
+                'class_id' => $request->academic_class_id,
+                'parent_name' => $request->parent_name,
+                'parent_email' => $request->parent_email,
+                'parent_phone' => $request->parent_phone,
             ]);
-        });
 
-        return redirect()->route('admin.students')->with('success', 'Student added successfully.');
+            return redirect()->back()->with('success', 'Student added successfully!');
+        });
     }
 
     /**
@@ -265,39 +284,39 @@ class AdminController extends Controller
     public function addTeacher(Request $request)
     {
         $request->validate([
-            'name'          => 'required|string|max:255',
-            'email'         => 'required|email|unique:users,email',
-            'password'      => 'required|string|min:8',
-            'subject'       => 'required|string|max:255',
-            'phone'         => 'nullable|string|max:20',
-            'qualification' => 'nullable|string|max:255',
-            'academic_class_id' => 'nullable|exists:classes,id',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email_username' => 'required|string|max:255|unique:users,email',
+            'phone' => 'required|string|max:20',
+            'subject' => 'required|string|max:100',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
-        DB::transaction(function () use ($request) {
-            $user = User::create([
-                'name'     => $request->name,
-                'email'    => $request->email,
-                'password' => Hash::make($request->password),
-                'role'     => 'teacher',
-                'is_active'=> true,
-            ]);
+        $fullEmail = $request->email_username . '@optimal.com';
 
-            Teacher::create([
-                'user_id'       => $user->id,
-                'subject'       => $request->subject,
-                'phone'         => $request->phone,
-                'qualification' => $request->qualification,
-            ]);
+        // Check if full email already exists
+        if (User::where('email', $fullEmail)->exists()) {
+            return back()->withErrors(['email_username' => 'This username is already taken.'])->withInput();
+        }
 
-            // Assign teacher to a class if specified
-            if ($request->filled('academic_class_id')) {
-                AcademicClass::where('id', $request->academic_class_id)
-                    ->update(['teacher_id' => $user->id]);
-            }
-        });
+        // Create User
+        $user = User::create([
+            'name' => $request->first_name . ' ' . $request->last_name,
+            'email' => $fullEmail,
+            'password' => Hash::make($request->password),
+            'role' => 'teacher',
+            'phone' => $request->phone,
+            'status' => 'approved', // Admin adds, so auto-approved
+        ]);
 
-        return redirect()->route('admin.teachers')->with('success', 'Teacher added successfully.');
+        // Create Teacher record
+        Teacher::create([
+            'user_id' => $user->id,
+            'subject' => $request->subject,
+            'phone' => $request->phone,
+        ]);
+
+        return redirect()->back()->with('success', 'Teacher added successfully!');
     }
 
     /**
@@ -622,5 +641,158 @@ class AdminController extends Controller
         Timetable::findOrFail($id)->delete();
 
         return redirect()->route('admin.timetable')->with('success', 'Timetable slot deleted.');
+    }
+
+    // =========================================================================
+    // REGISTRATION APPROVALS
+    // =========================================================================
+
+    public function pendingUsers(Request $request)
+    {
+        $query = User::where('role', 'student')->where('status', 'pending');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $pendingUsers = $query->orderBy('created_at', 'desc')->get();
+        $search = $request->search;
+        
+        return view('admin.pending-users', compact('pendingUsers', 'search'));
+    }
+
+    public function approveUser($id)
+    {
+        return DB::transaction(function() use ($id) {
+            $user = User::findOrFail($id);
+            
+            if ($user->status !== 'pending') {
+                return redirect()->back()->with('error', 'User is not pending approval.');
+            }
+            
+            // Create Student record only if it doesn't exist
+            $student = Student::where('user_id', $user->id)->first();
+            
+            if (!$student) {
+                Student::create([
+                    'user_id' => $user->id,
+                    'roll_number' => 'TEMP-' . $user->id, 
+                    'class_id' => null,
+                ]);
+            } else {
+                // Update the temporary roll number to the professional format
+                if ($student->class_id) {
+                    $student->update([
+                        'roll_number' => $this->generateRollNumber($student->class_id)
+                    ]);
+                }
+            }
+            
+            // Approve user
+            $user->update(['status' => 'approved']);
+            
+            return redirect()->back()->with('success', 'Student approved successfully!');
+        });
+    }
+
+    public function rejectUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->update(['status' => 'rejected']);
+        
+        return redirect()->back()->with('success', 'Student rejected.');
+    }
+
+    // =========================================================================
+    // CLASS MANAGEMENT
+    // =========================================================================
+
+    public function classes(Request $request)
+    {
+        $query = AcademicClass::with('teacher', 'students');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        $classes = $query->get();
+        $search = $request->search;
+
+        return view('admin.classes', compact('classes', 'search'));
+    }
+
+    public function addClass(Request $request)
+    {
+        $request->validate([
+            'class_name' => 'required|string|max:100|unique:classes,name',
+            'teacher_id' => 'nullable|exists:users,id',
+        ]);
+
+        AcademicClass::create([
+            'name' => $request->class_name,
+            'teacher_id' => $request->teacher_id,
+        ]);
+
+        return redirect()->back()->with('success', 'Class added successfully!');
+    }
+
+    public function editClass(Request $request, $id)
+    {
+        $class = AcademicClass::findOrFail($id);
+        
+        $request->validate([
+            'class_name' => 'required|string|max:100|unique:classes,name,' . $id,
+            'teacher_id' => 'nullable|exists:users,id',
+        ]);
+
+        $class->update([
+            'name' => $request->class_name,
+            'teacher_id' => $request->teacher_id,
+        ]);
+
+        return redirect()->back()->with('success', 'Class updated successfully!');
+    }
+
+    public function deleteClass($id)
+    {
+        $class = AcademicClass::findOrFail($id);
+        
+        // Check if class has students
+        if ($class->students()->count() > 0) {
+            return redirect()->back()->with('error', 'Cannot delete class with students. Move students to another class first.');
+        }
+        
+        $class->delete();
+        
+        return redirect()->back()->with('success', 'Class deleted successfully!');
+    }
+
+    private function generateRollNumber($classId)
+    {
+        $class = AcademicClass::find($classId);
+        if (!$class) return 'UNK-000';
+
+        // Extract numbers and letters, stripping "Class" prefix
+        $prefix = preg_replace('/^Class\s+/i', '', $class->name);
+        $prefix = str_replace(' ', '', $prefix); // Remove spaces
+
+        // Get all roll numbers for this class to find the true maximum
+        $lastStudent = Student::where('class_id', $classId)
+            ->where('roll_number', 'like', $prefix . '-%')
+            ->get()
+            ->map(function($s) {
+                $parts = explode('-', $s->roll_number);
+                return (int) end($parts);
+            })
+            ->max();
+
+        $nextNum = ($lastStudent ?: 0) + 1;
+
+        return $prefix . '-' . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
     }
 }

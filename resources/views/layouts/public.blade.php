@@ -29,7 +29,16 @@
         <div class="flex items-center gap-4">
             @if (Route::has('login'))
                 @auth
-                    <a href="{{ url('/dashboard') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Dashboard</a>
+                    {{-- Only show Dashboard if user is fully approved --}}
+                    @if (auth()->user()->status === 'approved')
+                        <a href="{{ url('/dashboard') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Dashboard</a>
+                    @else
+                        {{-- If pending or rejected, show logout instead of dashboard --}}
+                        <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="text-gray-700 hover:text-[#2c3e80] text-sm font-medium">Logout</button>
+                        </form>
+                    @endif
                 @else
                     <a href="{{ route('login') }}" class="bg-[#2c3e80] text-white px-4 py-2 rounded-lg hover:bg-[#1e2d5e] transition font-medium text-sm">Login</a>
                     @if (Route::has('register'))
@@ -60,7 +69,16 @@
             <a href="{{ route('contact') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Contact</a>
             @if (Route::has('login'))
                 @auth
-                    <a href="{{ url('/dashboard') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Dashboard</a>
+                    {{-- Only show Dashboard if user is fully approved --}}
+                    @if (auth()->user()->status === 'approved')
+                        <a href="{{ url('/dashboard') }}" class="text-sm font-medium text-gray-700 hover:text-[#2c3e80] transition">Dashboard</a>
+                    @else
+                        {{-- If pending or rejected, show logout instead of dashboard --}}
+                        <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="text-gray-700 hover:text-[#2c3e80] text-sm font-medium">Logout</button>
+                        </form>
+                    @endif
                 @else
                     <a href="{{ route('login') }}" class="bg-[#2c3e80] text-white px-4 py-2 rounded-lg hover:bg-[#1e2d5e] transition font-medium text-sm text-center">Login</a>
                     @if (Route::has('register'))

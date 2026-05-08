@@ -55,7 +55,6 @@
     <div class="lg:col-span-2">
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-6">
             <h3 class="text-lg font-bold text-gray-800 mb-4">Create New Assignment</h3>
-            <p class="text-sm text-gray-500 mb-4">Assignments for: {{ $teacherClass->name ?? 'Your Class' }}</p>
 
             @if(session('success'))
                 <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-4 text-sm font-medium">
@@ -65,6 +64,21 @@
 
             <form action="{{ route('teacher.assignments.create') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
+                
+                <!-- Select Class -->
+                <div>
+                    <label for="class_id" class="block text-sm font-bold text-gray-700 mb-2">Select Class*</label>
+                    <select name="class_id" id="class_id" required 
+                        class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm @error('class_id') border-red-500 @enderror">
+                        <option value="">-- Choose Class --</option>
+                        @foreach($classes as $class)
+                            <option value="{{ $class->id }}" {{ old('class_id') == $class->id ? 'selected' : '' }}>{{ $class->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('class_id')
+                        <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
+                    @enderror
+                </div>
                 
                 <!-- Title -->
                 <div>
@@ -131,7 +145,10 @@
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex-1">
                             <h4 class="text-lg font-bold text-gray-800 leading-tight mb-1">{{ $assignment->title }}</h4>
-                            <div class="flex items-center gap-2">
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+                                <span class="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">
+                                    {{ $assignment->academicClass->name ?? 'N/A' }}
+                                </span>
                                 <span class="text-xs {{ $isOverdue ? 'text-red-600 font-bold' : 'text-gray-400 font-medium' }}">
                                     Due: {{ \Carbon\Carbon::parse($assignment->due_date)->format('d M, Y') }}
                                 </span>

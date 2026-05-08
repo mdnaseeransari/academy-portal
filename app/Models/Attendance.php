@@ -16,6 +16,7 @@ class Attendance extends Model
         'student_id',
         'class_id',
         'date',
+        'period_slot',
         'status',
         'marked_by',
     ];
