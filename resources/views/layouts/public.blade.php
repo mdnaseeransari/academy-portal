@@ -13,7 +13,9 @@
     <!-- Navbar -->
     <nav class="bg-white border-b border-gray-100 h-16 flex items-center justify-between px-6 sticky top-0 z-50 shadow-sm">
         <div class="flex items-center gap-2">
-            <img src="{{ asset('images/logo-optimal-classes.png') }}" alt="Optimal Classes" class="h-10">
+            <a href="{{ url('/') }}" class="inline-flex items-center">
+                <img src="{{ asset('images/logo-optimal-classes.png') }}" alt="Optimal Classes" class="h-10">
+            </a>
         </div>
 
         <!-- Desktop Navigation -->
@@ -126,9 +128,9 @@
             </div>
             <div class="text-right">
                 <div class="flex justify-end gap-4">
-                    <a href="#" class="text-sm hover:text-gray-300 transition">Facebook</a>
-                    <a href="#" class="text-sm hover:text-gray-300 transition">Instagram</a>
-                    <a href="#" class="text-sm hover:text-gray-300 transition">YouTube</a>
+                    <a href="https://www.facebook.com/people/Optimal-Classes/61551640119156/?mibextid=wwXIfr&rdid=xltLHPzFAMo6iKTS&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F19kS34o7fS%2F%3Fmibextid%3DwwXIfr" target="_blank" rel="noreferrer" class="text-sm hover:text-gray-300 transition">Facebook</a>
+                    <a href="https://www.instagram.com/optimal_classes?igsh=M3Iwc280YW1oaHVh&utm_source=qr" target="_blank" rel="noreferrer" class="text-sm hover:text-gray-300 transition">Instagram</a>
+                    <a href="https://www.youtube.com/@Optimal_Classes" target="_blank" rel="noreferrer" class="text-sm hover:text-gray-300 transition">YouTube</a>
                 </div>
             </div>
         </div>

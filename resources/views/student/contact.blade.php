@@ -128,7 +128,7 @@
                     </div>
                     <div>
                         <p class="text-sm font-bold text-gray-800">Address</p>
-                        <p class="text-sm text-gray-500 leading-relaxed">Optimal Classes, 123 Education Hub, New Delhi, India</p>
+                        <p class="text-sm text-gray-500 leading-relaxed">Optimal Classes, New Colony Kakarmatta Varanasi, Uttar Pradesh</p>
                     </div>
                 </div>
 
@@ -138,7 +138,7 @@
                     </div>
                     <div>
                         <p class="text-sm font-bold text-gray-800">Phone</p>
-                        <p class="text-sm text-gray-500">+91 98765 43210</p>
+                        <p class="text-sm text-gray-500">+91 9415228666 | +91 7380922230</p>
                     </div>
                 </div>
 

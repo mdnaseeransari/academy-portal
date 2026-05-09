@@ -15,46 +15,26 @@
 <div class="min-h-screen bg-white">
     <div class="container mx-auto px-6 py-24">
         
-        <!-- Gallery Filters -->
-        <div class="flex flex-wrap justify-center gap-4 mb-20">
-            @foreach(['All', 'Infrastructure', 'Classrooms', 'Events', 'Achievements'] as $cat)
-            <button class="px-8 py-3 rounded-2xl font-black transition-all duration-300 border-2 {{ $cat == 'All' ? 'bg-[#2c3e80] text-white border-[#2c3e80] shadow-lg' : 'bg-white text-[#2c3e80] border-gray-100 hover:border-[#2c3e80]' }}">
-                {{ $cat }}
-            </button>
-            @endforeach
-        </div>
 
         <!-- Gallery Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             @php
-                $gallery = [
-                    ['img' => 'bg-optimal-classes.jpg', 'title' => 'Main Campus Entrance', 'cat' => 'Infrastructure'],
-                    ['img' => 'download (1).jpg', 'title' => 'Digital Classroom Setup', 'cat' => 'Classrooms'],
-                    ['img' => 'download (2).jpg', 'title' => 'Annual Science Fair', 'cat' => 'Events'],
-                    ['img' => 'download.jpg', 'title' => 'Practical Labs', 'cat' => 'Infrastructure'],
-                    ['img' => 'photo.jpeg', 'title' => 'Student Seminar', 'cat' => 'Events'],
-                ];
+                $galleryFiles = glob(public_path('images/gallary/*.{jpg,jpeg,png,gif}'), GLOB_BRACE);
+                $gallery = array_map(function ($file) {
+                    $name = pathinfo($file, PATHINFO_FILENAME);
+                    return [
+                        'img' => basename($file),
+                        'title' => ucwords(str_replace(['-', '_'], ' ', $name)),
+                        'cat' => 'Gallery',
+                    ];
+                }, $galleryFiles);
             @endphp
 
             @foreach($gallery as $item)
             <div class="group relative bg-gray-100 rounded-[2rem] overflow-hidden aspect-square shadow-lg hover:shadow-2xl transition-all duration-500 animate-fade-in">
-                <img src="{{ asset('images/' . $item['img']) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="{{ $item['title'] }}">
-                <div class="absolute inset-0 bg-gradient-to-t from-[#2c3e80] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
-                    <span class="text-white/60 text-[10px] font-black uppercase tracking-widest mb-1">{{ $item['cat'] }}</span>
-                    <h4 class="text-white font-black text-xl leading-tight">{{ $item['title'] }}</h4>
-                </div>
+                <img src="{{ asset('images/gallary/' . $item['img']) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Gallery image">
             </div>
             @endforeach
-
-            @for ($i = 6; $i <= 12; $i++)
-            <div class="group relative bg-gray-50 rounded-[2rem] overflow-hidden aspect-square border-2 border-dashed border-gray-200 flex items-center justify-center animate-fade-in">
-                <div class="text-center group-hover:scale-110 transition-transform duration-300">
-                    <div class="text-4xl mb-2 grayscale opacity-30">📷</div>
-                    <p class="text-gray-400 font-black text-sm uppercase tracking-widest">Image {{ $i }}</p>
-                    <p class="text-gray-300 text-[10px] font-bold">COMING SOON</p>
-                </div>
-            </div>
-            @endfor
         </div>
     </div>
 </div>

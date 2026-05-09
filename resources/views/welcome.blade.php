@@ -71,33 +71,37 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
-                <div class="text-4xl mb-4"><svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1M17 10a4 4 0 100-8 4 4 0 000 8zM7 10a4 4 0 100-8 4 4 0 000 8z"/></svg></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="text-[#2c3e80] mb-4"><svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1M17 10a4 4 0 100-8 4 4 0 000 8zM7 10a4 4 0 100-8 4 4 0 000 8z"/></svg></div>
                 <h3 class="text-lg font-bold text-gray-800 mb-2">Experienced faculty members from top educational backgrounds</h3>
                 <p class="text-gray-600">Our teachers bring years of expertise and proven teaching methodologies.</p>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
-                <div class="text-4xl mb-4"><svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7V5a2 2 0 012-2h6a2 2 0 012 2v2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10M7 11h6M7 15h6M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="text-[#2c3e80] mb-4"><svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7V5a2 2 0 012-2h6a2 2 0 012 2v2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10M7 11h6M7 15h6M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
                 <h3 class="text-lg font-bold text-gray-800 mb-2">Regular tests and doubt-solving sessions</h3>
                 <p class="text-gray-600">Continuous assessment and personalized doubt clearing for better understanding.</p>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
-                <div class="text-4xl mb-4"><svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 18h8"/></svg></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="text-[#2c3e80] mb-4"><svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 18h8"/></svg></div>
                 <h3 class="text-lg font-bold text-gray-800 mb-2">Smart classrooms and interactive learning tools</h3>
                 <p class="text-gray-600">Modern technology integrated with traditional teaching methods.</p>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
-                <div class="text-4xl mb-4"><svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14a3 3 0 100-6H6"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17h10a2 2 0 100-4H7"/></svg></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="text-[#2c3e80] mb-4"><svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14a3 3 0 100-6H6"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17h10a2 2 0 100-4H7"/></svg></div>
                 <h3 class="text-lg font-bold text-gray-800 mb-2">Fully air-conditioned classrooms</h3>
                 <p class="text-gray-600">Comfortable learning environment for focused studies.</p>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
-                <div class="text-4xl mb-4"><svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="text-[#2c3e80] mb-4"><svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
                 <h3 class="text-lg font-bold text-gray-800 mb-2">Comprehensive study material for CBSE, ICSE, and State Board</h3>
                 <p class="text-gray-600">Complete coverage of all board syllabi with practice materials.</p>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
-                <div class="text-4xl mb-4">🎓</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="text-[#2c3e80] mb-4">
+                    <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                    </svg>
+                </div>
                 <h3 class="text-lg font-bold text-gray-800 mb-2">Strong focus on IIT JEE and NEET foundation building</h3>
                 <p class="text-gray-600">Early preparation and conceptual clarity for competitive exams.</p>
             </div>
@@ -135,14 +139,18 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div class="mb-4">
-                    <p class="text-gray-600 italic">"Best Faculty for its optimal price and the effort made by the teachers... regular evaluation of results, competitive environment, and obviously, the skills are outstanding... definitely way to go 👍"</p>
+                    <p class="text-gray-600 italic">"Best Faculty for its optimal price and the effort made by the teachers... regular evaluation of results, competitive environment, and obviously, the skills are outstanding... definitely way to go"</p>
                 </div>
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="font-bold text-gray-800">Anas Siddqui</p>
                         <p class="text-sm text-gray-500">Scored 96% marks in Boards</p>
                     </div>
-                    <div class="text-yellow-400">⭐⭐⭐⭐⭐</div>
+                    <div class="flex text-yellow-400">
+                        @for($i = 0; $i < 5; $i++)
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        @endfor
+                    </div>
                 </div>
             </div>
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -154,19 +162,27 @@
                         <p class="font-bold text-gray-800">Niyati V. Singh</p>
                         <p class="text-sm text-gray-500">Scored 93.5% marks in Boards</p>
                     </div>
-                    <div class="text-yellow-400">⭐⭐⭐⭐⭐</div>
+                    <div class="flex text-yellow-400">
+                        @for($i = 0; $i < 5; $i++)
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        @endfor
+                    </div>
                 </div>
             </div>
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div class="mb-4">
-                    <p class="text-gray-600 italic">"Really having a good service by the tutorial staff here. I am provided with excellent support great knowledge by Shobhit Sir. His teaching is simple yet incredibly powerful. Highly recommended. 👍"</p>
+                    <p class="text-gray-600 italic">"Really having a good service by the tutorial staff here. I am provided with excellent support great knowledge by Shobhit Sir. His teaching is simple yet incredibly powerful. Highly recommended."</p>
                 </div>
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="font-bold text-gray-800">Sakshi Srivastava</p>
                         <p class="text-sm text-gray-500">Scored 93% marks in Boards</p>
                     </div>
-                    <div class="text-yellow-400">⭐⭐⭐⭐⭐</div>
+                    <div class="flex text-yellow-400">
+                        @for($i = 0; $i < 5; $i++)
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        @endfor
+                    </div>
                 </div>
             </div>
         </div>
@@ -178,8 +194,14 @@
 <!-- Courses & Fee Section -->
 <section id="courses" class="py-20 bg-white">
     <div class="container mx-auto px-6">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Our Coaching Programs</h2>
+            <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Choose the right program for your child with focused coaching for boards, competitive exams, and early foundation.</p>
+        </div>
+
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center flex flex-col">
+    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 text-center flex flex-col hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 max-w-sm mx-auto">
         <div class="flex justify-center mb-4">
             <svg class="w-10 h-10 text-[#2c3e80]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -187,9 +209,9 @@
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-3">Class 6 to 10 — CBSE, ICSE and ISC Coaching</h3>
         <p class="text-gray-600 mb-6 flex-1">Comprehensive coaching focusing on concept clarity, NCERT coverage and exam-oriented preparation.</p>
-        <a href="mailto:optimalclassesvns@gmail.com" class="bg-[#2c3e80] text-white px-6 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold">Enquire Now</a>
+        <a href="{{ route('courses') }}" class="bg-[#2c3e80] text-white px-6 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold">Enquire Now</a>
     </div>
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center flex flex-col">
+    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 text-center flex flex-col hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 max-w-sm mx-auto">
         <div class="flex justify-center mb-4">
             <svg class="w-10 h-10 text-[#2c3e80]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
@@ -197,9 +219,9 @@
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-3">PCM & PCB Coaching</h3>
         <p class="text-gray-600 mb-6 flex-1">Expert guidance in Physics, Chemistry, Mathematics and Biology for Class 11 and 12.</p>
-        <a href="mailto:optimalclassesvns@gmail.com" class="bg-[#2c3e80] text-white px-6 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold">Enquire Now</a>
+        <a href="{{ route('courses') }}" class="bg-[#2c3e80] text-white px-6 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold">Enquire Now</a>
     </div>
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center flex flex-col">
+    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 text-center flex flex-col hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 max-w-sm mx-auto">
         <div class="flex justify-center mb-4">
             <svg class="w-10 h-10 text-[#2c3e80]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
@@ -207,9 +229,9 @@
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-3">IIT JEE Coaching in Varanasi</h3>
         <p class="text-gray-600 mb-6 flex-1">Structured preparation for JEE Main and Advanced with advanced problem-solving techniques and regular mock tests.</p>
-        <a href="mailto:optimalclassesvns@gmail.com" class="bg-[#2c3e80] text-white px-6 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold">Enquire Now</a>
+        <a href="{{ route('courses') }}" class="bg-[#2c3e80] text-white px-6 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold">Enquire Now</a>
     </div>
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center flex flex-col">
+    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 text-center flex flex-col hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 max-w-sm mx-auto">
         <div class="flex justify-center mb-4">
             <svg class="w-10 h-10 text-[#2c3e80]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.182l-7.682-7.682a4.5 4.5 0 010-6.364z"/>
@@ -217,9 +239,9 @@
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-3">NEET Coaching in Varanasi</h3>
         <p class="text-gray-600 mb-6 flex-1">Result-driven NEET coaching with experienced biology faculty and regular assessments.</p>
-        <a href="mailto:optimalclassesvns@gmail.com" class="bg-[#2c3e80] text-white px-6 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold">Enquire Now</a>
+        <a href="{{ route('courses') }}" class="bg-[#2c3e80] text-white px-6 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold">Enquire Now</a>
     </div>
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center flex flex-col">
+    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 text-center flex flex-col hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 max-w-sm mx-auto">
         <div class="flex justify-center mb-4">
             <svg class="w-10 h-10 text-[#2c3e80]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
@@ -227,9 +249,9 @@
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-3">ICSE / ISC Coaching</h3>
         <p class="text-gray-600 mb-6 flex-1">Strong academic foundation for ICSE and ISC science students with comprehensive study material.</p>
-        <a href="mailto:optimalclassesvns@gmail.com" class="bg-[#2c3e80] text-white px-6 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold">Enquire Now</a>
+        <a href="{{ route('courses') }}" class="bg-[#2c3e80] text-white px-6 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold">Enquire Now</a>
     </div>
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center flex flex-col">
+    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 text-center flex flex-col hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 max-w-sm mx-auto">
         <div class="flex justify-center mb-4">
             <svg class="w-10 h-10 text-[#2c3e80]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
@@ -237,9 +259,42 @@
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-3">Foundation & Pre-Foundation Classes</h3>
         <p class="text-gray-600 mb-6 flex-1">Help students build strong fundamentals from an early stage for future competitive exams.</p>
-        <a href="mailto:optimalclassesvns@gmail.com" class="bg-[#2c3e80] text-white px-6 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold">Enquire Now</a>
+        <a href="{{ route('courses') }}" class="bg-[#2c3e80] text-white px-6 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold">Enquire Now</a>
     </div>
 </div>
-    </div>
+
+        <div class="bg-[#f8fafc] rounded-3xl border border-gray-200 p-8 mb-16">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-gray-800">Areas We Serve Across Varanasi</h3>
+                    <p class="text-gray-600 mt-2">Our coaching centers and services are easily accessible from the following prime locations:</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm text-gray-700">
+                    <div class="space-y-2">
+                        <p>BLW</p>
+                        <p>Sunderpur</p>
+                        <p>Susuwahi</p>
+                        <p>Bajardhia</p>
+                        <p>Chitaipur</p>
+                    </div>
+                    <div class="space-y-2">
+                        <p>Manduwadih</p>
+                        <p>Lahartara</p>
+                        <p>Lanka</p>
+                        <p>Naria</p>
+                        <p>Bhelupur</p>
+                    </div>
+                    <div class="space-y-2">
+                        <p>Khojwan</p>
+                        <p>Durgakund</p>
+                        <p>Shivpur</p>
+                        <p>Kakarmatta</p>
+                        <p>Bhagwanpur</p>
+                        <p>Varanasi Cantonment</p>
+                    </div>
+                </div>
+                <p class="text-center text-sm text-gray-500 mt-8">If you&apos;re searching for "best coaching classes in Varanasi" or "coaching institute in Varanasi", you&apos;ll find Optimal Classes conveniently located and ready to help.</p>
+            </div>
+        </div>
 </section>
 @endsection
