@@ -154,13 +154,16 @@ class AdminController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email_username' => 'required|string|max:255|unique:users,email',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|string|regex:/^[0-9]{10}$/|numeric',
             'roll_number' => 'nullable|string|max:50',
             'academic_class_id' => 'required|exists:classes,id',
             'parent_name' => 'required|string|max:255',
             'parent_email' => 'nullable|email|max:255',
-            'parent_phone' => 'required|string|max:20',
+            'parent_phone' => 'required|string|regex:/^[0-9]{10}$/|numeric',
             'password' => 'required|string|min:6|confirmed',
+        ], [
+            'phone.regex' => 'Phone number must be exactly 10 digits.',
+            'parent_phone.regex' => 'Parent phone number must be exactly 10 digits.',
         ]);
 
         $fullEmail = $request->email_username . '@optimal.com';
@@ -208,9 +211,11 @@ class AdminController extends Controller
             'academic_class_id' => 'required|exists:classes,id',
             'roll_number'    => ['required', 'string', 'max:50', Rule::unique('students', 'roll_number')->ignore($student->id)],
             'parent_name'    => 'nullable|string|max:255',
-            'parent_phone'   => 'nullable|string|max:20',
+            'parent_phone'   => 'nullable|string|regex:/^[0-9]{10}$/|numeric',
             'address'        => 'nullable|string|max:500',
             'admission_date' => 'nullable|date',
+        ], [
+            'parent_phone.regex' => 'Parent phone number must be exactly 10 digits.',
         ]);
 
         DB::transaction(function () use ($request, $student) {
@@ -287,9 +292,11 @@ class AdminController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email_username' => 'required|string|max:255|unique:users,email',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|string|regex:/^[0-9]{10}$/|numeric',
             'subject' => 'required|string|max:100',
             'password' => 'required|string|min:6|confirmed',
+        ], [
+            'phone.regex' => 'Phone number must be exactly 10 digits.',
         ]);
 
         $fullEmail = $request->email_username . '@optimal.com';
@@ -330,9 +337,11 @@ class AdminController extends Controller
             'name'          => 'required|string|max:255',
             'email'         => ['required', 'email', Rule::unique('users', 'email')->ignore($teacher->user_id)],
             'subject'       => 'required|string|max:255',
-            'phone'         => 'nullable|string|max:20',
+            'phone'         => 'nullable|string|regex:/^[0-9]{10}$/|numeric',
             'qualification' => 'nullable|string|max:255',
             'academic_class_id' => 'nullable|exists:classes,id',
+        ], [
+            'phone.regex' => 'Phone number must be exactly 10 digits.',
         ]);
 
         DB::transaction(function () use ($request, $teacher) {

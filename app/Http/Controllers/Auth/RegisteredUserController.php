@@ -41,11 +41,13 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'class_id' => ['required', 'exists:classes,id'],
             'parent_name' => ['required', 'string', 'max:255'],
-            'parent_phone' => ['required', 'string', 'max:20'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'parent_phone' => ['required', 'string', 'regex:/^[0-9]{10}$/', 'numeric'],
+            'phone' => ['nullable', 'string', 'regex:/^[0-9]{10}$/', 'numeric'],
         ], [
             'email_username.regex' => 'The username may only contain letters, numbers, dashes, underscores and periods.',
             'email_username.unique' => 'This username is already taken.',
+            'parent_phone.regex' => 'Phone number must be exactly 10 digits.',
+            'phone.regex' => 'Phone number must be exactly 10 digits.',
         ]);
 
         $fullEmail = $request->email_username . '@optimal.com';

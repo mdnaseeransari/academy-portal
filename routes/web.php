@@ -42,11 +42,21 @@ Route::post('/contact', function (Illuminate\Http\Request $request) {
         'first_name' => 'required|string|max:255',
         'last_name' => 'required|string|max:255',
         'email' => 'required|email',
-        'phone' => 'required|string|max:20',
+        'phone' => 'required|regex:/^[0-9]{10}$/|numeric',
         'message' => 'required|string|min:20|max:2000',
+    ], [
+        'phone.regex' => 'Phone number must be exactly 10 digits.',
     ]);
 
-    return redirect()->back()->with('success', 'Thank you! Your message has been sent.');
+    \App\Models\Contact::create([
+        'name' => $request->first_name . ' ' . $request->last_name,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'message' => $request->message,
+        'status' => 'unread',
+    ]);
+
+    return redirect()->back()->with('success', 'Thank you! Your message has been sent to the admin.');
 })->name('contact.submit');
 
 // Fix: Add a generic dashboard route that redirects based on role

@@ -85,7 +85,8 @@
                     <!-- Phone -->
                     <div>
                         <label for="phone" class="block text-sm font-bold text-gray-700 mb-2">Phone Number (Optional)</label>
-                        <input type="text" id="phone" name="phone" value="{{ old('phone') }}" placeholder="Enter your phone"
+                        <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" placeholder="10 Digit Mobile Number"
+                               minlength="10" maxlength="10" pattern="[0-9]{10}"
                                class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] transition">
                         @error('phone') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>

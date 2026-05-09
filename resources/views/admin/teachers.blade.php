@@ -149,7 +149,7 @@
                         </div>
                         <div class="sm:col-span-1">
                             <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Phone Number*</label>
-                            <input type="text" name="phone" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition" placeholder="Phone">
+                            <input type="tel" name="phone" required minlength="10" maxlength="10" pattern="[0-9]{10}" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition" placeholder="Phone (10 digits)">
                         </div>
                         <div class="sm:col-span-1">
                             <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Password*</label>
@@ -207,7 +207,7 @@
                         </div>
                         <div class="sm:col-span-1">
                             <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Phone Number*</label>
-                            <input type="text" name="phone" id="edit_phone" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition">
+                            <input type="tel" name="phone" id="edit_phone" required minlength="10" maxlength="10" pattern="[0-9]{10}" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition">
                         </div>
                         <div class="sm:col-span-1">
                             <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Qualification</label>

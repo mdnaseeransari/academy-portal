@@ -47,7 +47,7 @@
         <!-- Phone -->
         <div class="mb-4">
             <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number (Optional)</label>
-            <input id="phone" type="text" name="phone" value="{{ old('phone') }}" autocomplete="tel"
+            <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" autocomplete="tel" minlength="10" maxlength="10" pattern="[0-9]{10}"
                 class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80] focus:border-transparent @error('phone') border-red-500 @enderror">
             @error('phone')
                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -82,7 +82,7 @@
         <!-- Parent Phone -->
         <div class="mb-6">
             <label for="parent_phone" class="block text-sm font-medium text-gray-700 mb-1">Parent's Phone</label>
-            <input id="parent_phone" type="text" name="parent_phone" value="{{ old('parent_phone') }}" required
+            <input id="parent_phone" type="tel" name="parent_phone" value="{{ old('parent_phone') }}" required minlength="10" maxlength="10" pattern="[0-9]{10}"
                 class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80] focus:border-transparent @error('parent_phone') border-red-500 @enderror">
             @error('parent_phone')
                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>

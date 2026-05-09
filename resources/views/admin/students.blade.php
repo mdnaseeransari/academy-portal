@@ -178,7 +178,7 @@
                         <!-- Phone -->
                         <div class="sm:col-span-1">
                             <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Phone Number*</label>
-                            <input type="text" name="phone" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition" placeholder="e.g. +91 9876543210">
+                            <input type="tel" name="phone" required minlength="10" maxlength="10" pattern="[0-9]{10}" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition" placeholder="e.g. 9876543210">
                             @error('phone') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
                         </div>
 
@@ -218,7 +218,7 @@
                         <!-- Parent Phone -->
                         <div class="sm:col-span-1">
                             <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Parent Phone*</label>
-                            <input type="text" name="parent_phone" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition" placeholder="e.g. +91 9876543211">
+                            <input type="tel" name="parent_phone" required minlength="10" maxlength="10" pattern="[0-9]{10}" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition" placeholder="e.g. 9876543211">
                             @error('parent_phone') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
                         </div>
 
@@ -308,7 +308,7 @@
                         <!-- Parent Phone -->
                         <div class="sm:col-span-1">
                             <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Parent Phone Number*</label>
-                            <input type="text" name="parent_phone" id="edit_phone" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition">
+                            <input type="tel" name="parent_phone" id="edit_phone" required minlength="10" maxlength="10" pattern="[0-9]{10}" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition">
                         </div>
 
                         <!-- Address -->
