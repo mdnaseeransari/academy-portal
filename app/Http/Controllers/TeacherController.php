@@ -452,11 +452,47 @@ class TeacherController extends Controller
      */
     public function deleteAssignment($id)
     {
-        $assignment = Assignment::where('teacher_id', auth()->user()->teacher->user_id)
+        $assignment = Assignment::with('submissions')->where('teacher_id', auth()->user()->teacher->user_id)
             ->findOrFail($id);
+
+        // Function to extract public ID and type from Cloudinary URL
+        $extractCloudinaryInfo = function($url) {
+            $pattern = '/res\.cloudinary\.com\/[^\/]+\/([^\/]+)\/upload\/(?:v\d+\/)?([^\.]+)/';
+            if (preg_match($pattern, $url, $matches)) {
+                return ['type' => $matches[1], 'public_id' => $matches[2]];
+            }
+            return null;
+        };
+
+        // 1. Delete Assignment File
+        if ($assignment->file_path) {
+            $info = $extractCloudinaryInfo($assignment->file_path);
+            if ($info) {
+                try {
+                    cloudinary()->uploadApi()->destroy($info['public_id'], ['resource_type' => $info['type']]);
+                } catch (\Exception $e) {
+                    // Log or ignore if file already deleted
+                }
+            }
+        }
+
+        // 2. Delete Submission Files
+        foreach ($assignment->submissions as $submission) {
+            if ($submission->file_path) {
+                $info = $extractCloudinaryInfo($submission->file_path);
+                if ($info) {
+                    try {
+                        cloudinary()->uploadApi()->destroy($info['public_id'], ['resource_type' => $info['type']]);
+                    } catch (\Exception $e) {
+                        // Ignore
+                    }
+                }
+            }
+        }
+
         $assignment->delete();
 
-        return redirect()->back()->with('success', 'Assignment deleted.');
+        return redirect()->route('teacher.assignments')->with('success', 'Assignment and associated files deleted.');
     }
 }
 
