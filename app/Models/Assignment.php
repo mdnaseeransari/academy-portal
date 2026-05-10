@@ -32,4 +32,13 @@ class Assignment extends Model
     {
         return $this->hasMany(AssignmentSubmission::class, 'assignment_id');
     }
+
+    public function getFileUrlAttribute()
+    {
+        if (!$this->file_path) return null;
+        if (filter_var($this->file_path, FILTER_VALIDATE_URL)) {
+            return $this->file_path;
+        }
+        return \Illuminate\Support\Facades\Storage::url($this->file_path);
+    }
 }

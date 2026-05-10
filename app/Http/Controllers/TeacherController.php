@@ -14,6 +14,7 @@ use App\Models\AssignmentSubmission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class TeacherController extends Controller
@@ -427,7 +428,11 @@ class TeacherController extends Controller
 
         $filePath = null;
         if ($request->hasFile('file')) {
-            $filePath = $request->file('file')->store('assignments', 'public');
+            $result = cloudinary()->uploadApi()->upload($request->file('file')->getRealPath(), [
+                'folder' => 'assignments',
+                'resource_type' => 'auto',
+            ]);
+            $filePath = $result['secure_url'];
         }
 
         Assignment::create([
@@ -439,7 +444,7 @@ class TeacherController extends Controller
             'due_date' => $request->due_date,
         ]);
 
-        return redirect()->back()->with('success', 'Assignment created successfully!');
+        return redirect()->route('teacher.assignments')->with('success', 'Assignment created successfully!');
     }
 
     /**

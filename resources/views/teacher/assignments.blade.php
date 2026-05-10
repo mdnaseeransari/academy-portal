@@ -173,7 +173,7 @@
                     <div class="flex items-center justify-between pt-4 border-t border-gray-50">
                         <div class="flex items-center gap-4">
                             @if($assignment->file_path)
-                                <a href="{{ Storage::url($assignment->file_path) }}" target="_blank" class="flex items-center gap-2 text-[#2c3e80] hover:text-[#1e2d5e] text-xs font-bold transition underline decoration-2 underline-offset-4">
+                                <a href="{{ $assignment->file_url }}" target="_blank" class="flex items-center gap-2 text-[#2c3e80] hover:text-[#1e2d5e] text-xs font-bold transition underline decoration-2 underline-offset-4">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                                     Download File
                                 </a>

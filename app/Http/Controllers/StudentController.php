@@ -12,6 +12,7 @@ use App\Models\Contact;
 use App\Models\Timetable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -211,19 +212,23 @@ class StudentController extends Controller
             return back()->withErrors(['file' => 'You have already submitted this assignment.']);
         }
 
-        $path = $request->file('file')->store('submissions', 'public');
+        $result = cloudinary()->uploadApi()->upload($request->file('file')->getRealPath(), [
+            'folder' => 'submissions',
+            'resource_type' => 'auto',
+        ]);
+        $fileUrl = $result['secure_url'];
         
         $status = (now() > $assignment->due_date) ? 'late' : 'submitted';
 
         AssignmentSubmission::create([
             'assignment_id' => $request->assignment_id,
             'student_id' => $student->id,
-            'file_path' => $path,
+            'file_path' => $fileUrl,
             'submitted_at' => now(),
             'status' => $status,
         ]);
 
-        return redirect()->back()->with('success', 'Assignment submitted successfully!');
+        return redirect()->route('student.assignments')->with('success', 'Assignment submitted successfully!');
     }
 
     /**
