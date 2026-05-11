@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
         User::create([
             'name' => 'Admin User',
             'email' => 'admin@optimal.com',
-            'password' => Hash::make('admin123'),
+            'password' => Hash::make('Optimal@666'),
             'role' => 'admin',
             'is_active' => true,
         ]);
