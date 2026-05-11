@@ -11,12 +11,15 @@ class AdminSeeder extends Seeder
     
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@optimal.com',
-            'password' => Hash::make('Optimal@666'),
-            'role' => 'admin',
-            'is_active' => true,
-        ]);
+       User::updateOrCreate(
+    ['email' => 'admin@optimal.com'],
+    [
+        'name' => 'Admin User',
+        'password' => Hash::make('Optimal@666'),
+        'role' => 'admin',
+        'is_active' => true,
+        'status' => 'approved',
+    ]
+);
     }
 }
