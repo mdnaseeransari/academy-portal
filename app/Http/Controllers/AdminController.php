@@ -581,9 +581,19 @@ class AdminController extends Controller
         $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
         $timetableQuery = Timetable::with('academicClass', 'teacher')
-            ->orderBy('class_id')
-            ->orderByRaw("FIELD(day, 'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday')")
-            ->orderBy('time_start');
+    ->orderBy('class_id')
+    ->orderByRaw("
+        CASE day
+            WHEN 'Sunday' THEN 1
+            WHEN 'Monday' THEN 2
+            WHEN 'Tuesday' THEN 3
+            WHEN 'Wednesday' THEN 4
+            WHEN 'Thursday' THEN 5
+            WHEN 'Friday' THEN 6
+            WHEN 'Saturday' THEN 7
+        END
+    ")
+    ->orderBy('time_start');
 
         $selected_class = $request->class_id;
         if (!$selected_class && $classes->isNotEmpty()) {
