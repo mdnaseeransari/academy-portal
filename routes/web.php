@@ -20,6 +20,9 @@ Route::middleware('auth')->group(function () {
 Route::get('/about', function () {
     return view('public.about');
 })->name('about');
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok']);
+})->name('health');
 
 Route::get('/courses', function () {
     return view('public.courses');
