@@ -124,7 +124,6 @@
             </div>
             <div class="text-center">
                 <p class="text-sm">Optimal Classes © 2026. All Rights Reserved.</p>
-                <p class="text-sm text-gray-400">Designed with ❤️ for students of Varanasi</p>
             </div>
             <div class="text-right">
                 <div class="flex justify-end gap-4">

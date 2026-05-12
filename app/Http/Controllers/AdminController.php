@@ -166,7 +166,7 @@ class AdminController extends Controller
             'parent_phone.regex' => 'Parent phone number must be exactly 10 digits.',
         ]);
 
-        $fullEmail = $request->email_username . '@optimal.com';
+        $fullEmail = $request->email_username . '@gmail.com';
 
         // Check if full email already exists
         if (User::where('email', $fullEmail)->exists()) {
@@ -299,7 +299,7 @@ class AdminController extends Controller
             'phone.regex' => 'Phone number must be exactly 10 digits.',
         ]);
 
-        $fullEmail = $request->email_username . '@optimal.com';
+        $fullEmail = $request->email_username . '@gmail.com';
 
         // Check if full email already exists
         if (User::where('email', $fullEmail)->exists()) {

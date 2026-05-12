@@ -18,19 +18,19 @@ class TeacherSeeder extends Seeder
         $teachers = [
             [
                 'name' => 'Rahul Sharma',
-                'email' => 'rahul@optimal.com',
+                'email' => 'rahul@gmail.com',
                 'subject' => 'Mathematics',
                 'class' => 'Class 9-A',
             ],
             [
                 'name' => 'Priya Singh',
-                'email' => 'priya@optimal.com',
+                'email' => 'priya@gmail.com',
                 'subject' => 'Science',
                 'class' => 'Class 9-B',
             ],
             [
                 'name' => 'Amit Kumar',
-                'email' => 'amit@optimal.com',
+                'email' => 'amit@gmail.com',
                 'subject' => 'English',
                 'class' => 'Class 10-A',
             ],

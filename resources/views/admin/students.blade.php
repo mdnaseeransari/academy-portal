@@ -169,7 +169,7 @@
                             <div class="flex rounded-lg shadow-sm">
                                 <input type="text" name="email_username" required class="flex-1 min-w-0 block w-full bg-gray-50 border border-gray-200 rounded-none rounded-l-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition" placeholder="e.g. jdoe">
                                 <span class="inline-flex items-center px-3 rounded-r-lg border border-l-0 border-gray-200 bg-gray-100 text-gray-500 text-xs font-bold">
-                                    @optimal.com
+                                    @gmail.com
                                 </span>
                             </div>
                             @error('email_username') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror

@@ -68,7 +68,7 @@
 
         <!-- Footer -->
         <footer class="bg-white border-t border-gray-100 py-6 text-center">
-            <p class="text-sm text-gray-500">Optimal Classes &copy; 2025. All rights reserved.</p>
+            <p class="text-sm text-gray-500">Optimal Classes &copy; 2026. All rights reserved.</p>
         </footer>
     </div>
 

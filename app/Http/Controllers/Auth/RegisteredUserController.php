@@ -50,7 +50,7 @@ class RegisteredUserController extends Controller
             'phone.regex' => 'Phone number must be exactly 10 digits.',
         ]);
 
-        $fullEmail = $request->email_username . '@optimal.com';
+        $fullEmail = $request->email_username . '@gmail.com';
 
         // Additional uniqueness check for the constructed email, just in case
         if (User::where('email', $fullEmail)->exists()) {
