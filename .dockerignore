@@ -2,3 +2,4 @@
 node_modules
 vendor
 d.env
+k6-tests
