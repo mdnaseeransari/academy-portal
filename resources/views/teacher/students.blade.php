@@ -47,7 +47,7 @@
 @section('content')
 <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div>
-        <h1 class="text-2xl font-bold text-gray-800">My Students — {{ $class->name }}</h1>
+        <h1 class="text-2xl font-bold text-gray-800">My Students — {{ $class->name ?? 'No Class Assigned' }}</h1>
         <p class="text-sm text-gray-500 font-medium">{{ $students->total() }} students enrolled</p>
     </div>
     <div class="flex items-center gap-3">

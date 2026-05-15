@@ -324,8 +324,8 @@ class TeacherController extends Controller
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->whereHas('user', function($u) use ($search) {
-                    $u->where('name', 'like', "%{$search}%");
-                })->orWhere('roll_number', 'like', "%{$search}%");
+                    $u->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
+                })->orWhereRaw('LOWER(roll_number) LIKE ?', ['%' . strtolower($search) . '%']);
             });
         }
         

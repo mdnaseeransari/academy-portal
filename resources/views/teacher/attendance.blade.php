@@ -68,13 +68,13 @@
             <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         </div>
         <h3 class="text-lg font-bold text-gray-800 mb-2">No Active Class Period</h3>
-        <p class="text-gray-400 font-medium italic">You can only mark attendance from 15 minutes before until 5 minutes after a scheduled period.</p>
+        <p class="text-gray-400 font-medium italic">You can only mark attendance after 5 minutes into a scheduled period.</p>
     </div>
 @else
     <div class="bg-[#2c3e80] rounded-xl shadow-sm border border-gray-100 p-6 mb-8 text-white">
         <div class="flex justify-between items-center">
             <div>
-                <h2 class="text-xl font-bold">Active Class: {{ $class->name }}</h2>
+                <h2 class="text-xl font-bold">Active Class: {{ $class->name ?? 'N/A' }}</h2>
                 <p class="text-blue-200">Period: {{ $periodSlot }}</p>
             </div>
             @if($already_marked)
