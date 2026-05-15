@@ -27,9 +27,10 @@ class AdminController extends Controller
     /**
      * Admin dashboard with stats and attendance overview.
      */
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $today = Carbon::today()->toDateString();
+        $selected_class_id = $request->get('class_id');
 
         // Top-level stats
         $totalStudents  = Student::count();
@@ -37,26 +38,23 @@ class AdminController extends Controller
         $unreadContacts = Contact::where('status', 'unread')->count();
 
         // REPAIR: Find "Ghost" students (Approved Users with role 'student' but no Student record)
-        // This can happen if a previous creation failed midway.
         $ghostStudents = User::where('role', 'student')
             ->where('status', 'approved')
             ->whereDoesntHave('student')
             ->get();
 
         foreach ($ghostStudents as $ghost) {
-            // We don't know their class, so we'll put them in a placeholder or just wait for admin to edit
-            // For now, let's just create the record so they show up in the list and can login.
             Student::create([
                 'user_id' => $ghost->id,
                 'roll_number' => 'RECOVERED-' . $ghost->id,
-                'class_id' => AcademicClass::first()->id ?? null, // Default to first class if available
+                'class_id' => AcademicClass::first()->id ?? null,
             ]);
         }
 
         // Today's attendance overview per class
-        $classes = AcademicClass::withCount('students')->get();
+        $all_classes = AcademicClass::withCount('students')->orderBy('name')->get();
 
-        $attendance_overview = $classes->map(function ($class) use ($today) {
+        $attendance_overview = $all_classes->map(function ($class) use ($today) {
             $studentIds = $class->students()->pluck('id');
             $total      = $studentIds->count();
 
@@ -77,9 +75,12 @@ class AdminController extends Controller
             ];
         });
 
-        // Recent students (last 5 admitted)
-        $recent_students = Student::with('user', 'academicClass')
-            ->orderBy('created_at', 'desc')
+        // Recent students (last 5 admitted) - Filtered by class if selected
+        $recent_query = Student::with('user', 'academicClass');
+        if ($selected_class_id) {
+            $recent_query->where('class_id', $selected_class_id);
+        }
+        $recent_students = $recent_query->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
 
@@ -89,11 +90,16 @@ class AdminController extends Controller
             ->limit(5)
             ->get();
 
-        // Pending user registrations (last 5)
-        $pending_registrations = User::where('role', 'student')
+        // Pending user registrations (last 5) - Filtered by class if selected
+        $pending_query = User::where('role', 'student')
             ->where('status', 'pending')
-            ->with('student.academicClass')
-            ->orderBy('created_at', 'desc')
+            ->with('student.academicClass');
+        if ($selected_class_id) {
+            $pending_query->whereHas('student', function($q) use ($selected_class_id) {
+                $q->where('class_id', $selected_class_id);
+            });
+        }
+        $pending_registrations = $pending_query->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
 
@@ -110,7 +116,9 @@ class AdminController extends Controller
             'attendance_overview',
             'recent_students',
             'recent_contacts',
-            'pending_registrations'
+            'pending_registrations',
+            'all_classes',
+            'selected_class_id'
         ));
     }
 
@@ -125,22 +133,22 @@ class AdminController extends Controller
     {
         $query = Student::with('user', 'academicClass');
 
-        if ($request->filled('class_id')) {
-            $query->where('class_id', $request->class_id);
+        if ($request->filled('class_filter')) {
+            $query->where('class_id', $request->class_filter);
         }
 
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('roll_number', 'like', "%{$search}%")
-                  ->orWhereHas('user', fn ($u) => $u->where('name', 'like', "%{$search}%"));
+                $q->whereRaw('LOWER(roll_number) LIKE ?', ['%' . strtolower($search) . '%'])
+                  ->orWhereHas('user', fn ($u) => $u->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']));
             });
         }
 
         $students = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
         $classes  = AcademicClass::orderBy('name')->get();
         $search   = $request->search;
-        $class_filter = $request->class_id;
+        $class_filter = $request->class_filter;
 
         return view('admin.students', compact('students', 'classes', 'search', 'class_filter'));
     }
@@ -273,7 +281,7 @@ class AdminController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->whereHas('user', fn ($u) => $u->where('name', 'like', "%{$search}%"));
+            $query->whereHas('user', fn ($u) => $u->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']));
         }
 
         $teachers = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
@@ -486,7 +494,7 @@ class AdminController extends Controller
             $selected_student = Student::with('user', 'academicClass', 'marks', 'remarks.teacher')
                 ->where('roll_number', $student_search)
                 ->orWhereHas('user', function ($q) use ($student_search) {
-                    $q->where('name', 'like', "%{$student_search}%");
+                    $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($student_search) . '%']);
                 })->first();
 
             if ($selected_student) {
@@ -529,9 +537,10 @@ class AdminController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('message', 'like', "%{$search}%");
+                $searchTerm = '%' . strtolower($search) . '%';
+                $q->whereRaw('LOWER(name) LIKE ?', [$searchTerm])
+                  ->orWhereRaw('LOWER(email) LIKE ?', [$searchTerm])
+                  ->orWhereRaw('LOWER(message) LIKE ?', [$searchTerm]);
             });
         }
 
@@ -673,8 +682,9 @@ class AdminController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                $searchTerm = '%' . strtolower($search) . '%';
+                $q->whereRaw('LOWER(name) LIKE ?', [$searchTerm])
+                  ->orWhereRaw('LOWER(email) LIKE ?', [$searchTerm]);
             });
         }
 
@@ -736,7 +746,7 @@ class AdminController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where('name', 'like', "%{$search}%");
+            $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
         }
 
         $classes = $query->get();

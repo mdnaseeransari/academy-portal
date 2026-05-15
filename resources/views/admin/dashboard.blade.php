@@ -5,9 +5,25 @@
 @endpush
 
 @section('content')
-<div class="mb-8">
-    <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
-    <p class="text-sm text-gray-500 font-medium">System overview and management console.</p>
+<div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+        <p class="text-sm text-gray-500 font-medium">System overview and management console.</p>
+    </div>
+    
+    <!-- Class Filter -->
+    <div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100 min-w-[200px]">
+        <form method="GET" action="{{ route('admin.dashboard') }}" class="flex items-center gap-2">
+            <select name="class_id" onchange="this.form.submit()" class="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-bold text-gray-700 focus:ring-0 cursor-pointer">
+                <option value="">All Classes (Filter)</option>
+                @foreach($all_classes as $class)
+                    <option value="{{ $class->id }}" {{ $selected_class_id == $class->id ? 'selected' : '' }}>
+                        {{ $class->name }}
+                    </option>
+                @endforeach
+            </select>
+        </form>
+    </div>
 </div>
 
 <!-- Stats Row -->
