@@ -40,6 +40,18 @@ Route::get('/contact', function () {
     return view('public.contact');
 })->name('contact');
 
+// 301 Redirects - Old URLs to New URLs
+Route::redirect('/our-director', '/about', 301);
+Route::redirect('/contact-us', '/contact', 301);
+Route::redirect('/result', '/results', 301);
+Route::redirect('/album', '/gallery', 301);
+Route::redirect('/class-6t10', '/courses', 301);
+Route::redirect('/why-oc', '/about', 301);
+Route::redirect('/student-journey', '/about', 301);
+
+// Also handle www vs non-www variations
+Route::redirect('/about-us', '/about', 301);
+
 Route::post('/contact', function (Illuminate\Http\Request $request) {
     $request->validate([
         'first_name' => 'required|string|max:255',
