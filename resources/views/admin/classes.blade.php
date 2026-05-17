@@ -113,7 +113,7 @@
     <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4">
         <div class="p-6 border-b border-gray-100 flex justify-between items-center">
             <h3 class="text-xl font-bold text-gray-800">Edit Class</h3>
-            <button onclick="document.getElementById('editClassModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
+            <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
@@ -135,7 +135,7 @@
                 </div>
             </div>
             <div class="mt-6 flex justify-end gap-3">
-                <button type="button" onclick="document.getElementById('editClassModal').classList.add('hidden')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancel</button>
+                <button type="button" onclick="closeEditModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancel</button>
                 <button type="submit" class="px-4 py-2 bg-[#2c3e80] text-white rounded-lg hover:bg-[#1e2d5e]">Update Class</button>
             </div>
         </form>
@@ -149,6 +149,11 @@ function openEditModal(id, name, teacherId) {
     document.getElementById('editClassForm').action = `/admin/classes/${id}`;
     document.getElementById('editClassModal').classList.remove('hidden');
     document.getElementById('editClassModal').style.display = 'flex';
+}
+
+function closeEditModal() {
+    document.getElementById('editClassModal').classList.add('hidden');
+    document.getElementById('editClassModal').style.display = '';
 }
 </script>
 @endsection
