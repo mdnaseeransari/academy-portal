@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('content')
-<div class="min-h-screen flex flex-col items-center justify-center text-center px-6" style="background-image: url('{{ asset('images/bg-optimal-classes.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+<div class="min-h-screen flex flex-col items-center justify-center text-center px-6" style="background-image: url('{{ asset('images/bg-optimal-classes.webp') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
     <h1 class="text-5xl font-bold text-white mb-4">Welcome to <span class="text-white">Optimal Classes</span></h1>
     <p class="text-lg text-white/90 mb-8 max-w-2xl">Empowering students and teachers with a modern, efficient, and professional class management experience.</p>
 

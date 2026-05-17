@@ -48,6 +48,11 @@ Route::redirect('/album', '/gallery', 301);
 Route::redirect('/class-6t10', '/courses', 301);
 Route::redirect('/why-oc', '/about', 301);
 Route::redirect('/student-journey', '/about', 301);
+Route::redirect('/mission-vision', '/about', 301);
+Route::redirect('/acedmic-team', '/about', 301);
+Route::redirect('/iit-jee-neet', '/results', 301);
+Route::redirect('/class-11t12', '/courses', 301);
+Route::redirect('/admin-panel', '/about', 301);
 
 // Also handle www vs non-www variations
 Route::redirect('/about-us', '/about', 301);

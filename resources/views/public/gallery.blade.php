@@ -19,7 +19,7 @@
         <!-- Gallery Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             @php
-                $galleryFiles = glob(public_path('images/gallary/*.{jpg,jpeg,png,gif}'), GLOB_BRACE);
+                $galleryFiles = glob(public_path('images/gallary/*.webp'), GLOB_BRACE);
                 $gallery = array_map(function ($file) {
                     $name = pathinfo($file, PATHINFO_FILENAME);
                     return [
@@ -32,7 +32,7 @@
 
             @foreach($gallery as $item)
             <div class="group relative bg-gray-100 rounded-[2rem] overflow-hidden aspect-square shadow-lg hover:shadow-2xl transition-all duration-500 animate-fade-in">
-                <img src="{{ asset('images/gallary/' . $item['img']) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Gallery image">
+                <img src="{{ asset('images/gallary/' . $item['img']) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Gallery image" loading="lazy">
             </div>
             @endforeach
         </div>

@@ -16,7 +16,7 @@
                 </div>
                 <div class="relative group">
                     <div class="absolute -inset-1 bg-gradient-to-r from-[#2c3e80] to-[#B8924A] rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                    <img src="{{ asset('images/Shobhit Srivastava.png') }}" class="relative rounded-2xl shadow-xl w-full h-[400px] object-contain bg-white" alt="Shobhit Kumar Srivastava">
+                    <img src="{{ asset('images/Shobhit Srivastava.webp') }}" class="relative rounded-2xl shadow-xl w-full h-[400px] object-contain bg-white" alt="Shobhit Kumar Srivastava" loading="lazy">
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                 <div class="text-center group">
                     <div class="w-32 h-32 mx-auto mb-4 relative">
-                        <img src="{{ asset('images/Shobhit Srivastava.png') }}" class="w-full h-full rounded-full object-cover shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 border-2 border-white" alt="Shobhit Srivastava">
+                        <img src="{{ asset('images/Shobhit Srivastava.webp') }}" class="w-full h-full rounded-full object-cover shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 border-2 border-white" alt="Shobhit Srivastava" loading="lazy">
                     </div>
                     <h4 class="font-bold text-gray-800 text-sm">Shobhit Srivastava</h4>
                     <span class="bg-[#2c3e80] text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">Maths</span>
@@ -47,7 +47,7 @@
                 </div>
                 <div class="text-center group">
                     <div class="w-32 h-32 mx-auto mb-4 relative">
-                        <img src="{{ asset('images/Rahul Pandey.jpg') }}" class="w-full h-full rounded-full object-cover shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 border-2 border-white" alt="Rahul Pandey">
+                        <img src="{{ asset('images/Rahul Pandey.webp') }}" class="w-full h-full rounded-full object-cover shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 border-2 border-white" alt="Rahul Pandey" loading="lazy">
                     </div>
                     <h4 class="font-bold text-gray-800 text-sm">Rahul Pandey</h4>
                     <span class="bg-[#2c3e80] text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">Physics</span>
@@ -55,7 +55,7 @@
                 </div>
                 <div class="text-center group">
                     <div class="w-32 h-32 mx-auto mb-4 relative">
-                        <img src="{{ asset('images/Vaibhav Singh.jpg') }}" class="w-full h-full rounded-full object-cover shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 border-2 border-white" alt="Vaibhav Singh">
+                        <img src="{{ asset('images/Vaibhav Singh.webp') }}" class="w-full h-full rounded-full object-cover shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 border-2 border-white" alt="Vaibhav Singh" loading="lazy">
                     </div>
                     <h4 class="font-bold text-gray-800 text-sm">Vaibhav Singh</h4>
                     <span class="bg-[#2c3e80] text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">Chemistry</span>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="text-center group">
                     <div class="w-32 h-32 mx-auto mb-4 relative">
-                        <img src="{{ asset('images/Ms.jpg') }}" class="w-full h-full rounded-full object-cover shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 border-2 border-white" alt="Ms. Shalini">
+                        <img src="{{ asset('images/Ms.webp') }}" class="w-full h-full rounded-full object-cover shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 border-2 border-white" alt="Ms. Shalini" loading="lazy">
                     </div>
                     <h4 class="font-bold text-gray-800 text-sm">Ms. Shalini</h4>
                     <span class="bg-[#2c3e80] text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">English</span>
@@ -71,7 +71,7 @@
                 </div>
                 <div class="text-center group">
                     <div class="w-32 h-32 mx-auto mb-4 relative">
-                        <img src="{{ asset('images/Sahil Ali.png') }}" class="w-full h-full rounded-full object-cover shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 border-2 border-white" alt="Sahil Ali">
+                        <img src="{{ asset('images/Sahil Ali.webp') }}" class="w-full h-full rounded-full object-cover shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 border-2 border-white" alt="Sahil Ali" loading="lazy">
                     </div>
                     <h4 class="font-bold text-gray-800 text-sm">Sahil Ali</h4>
                     <span class="bg-[#2c3e80] text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">Science</span>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="text-center group">
                     <div class="w-32 h-32 mx-auto mb-4 relative">
-                        <img src="{{ asset('images/Anuj Yadav.jpg') }}" class="w-full h-full rounded-full object-cover shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 border-2 border-white" alt="Anuj Yadav">
+                        <img src="{{ asset('images/Anuj Yadav.webp') }}" class="w-full h-full rounded-full object-cover shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 border-2 border-white" alt="Anuj Yadav" loading="lazy">
                     </div>
                     <h4 class="font-bold text-gray-800 text-sm">Anuj Yadav</h4>
                     <span class="bg-[#2c3e80] text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">Biology</span>
