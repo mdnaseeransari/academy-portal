@@ -1,0 +1,47 @@
+name: Monthly Database Backup
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install PostgreSQL client
+        run: sudo apt install postgresql-client -y
+
+      - name: Create backup
+        env:
+          PGPASSWORD: ${{ secrets.NEON_PASSWORD }}
+        run: |
+          pg_dump \
+            -h ${{ secrets.NEON_HOST }} \
+            -U ${{ secrets.NEON_USERNAME }} \
+            -d ${{ secrets.NEON_DATABASE }} \
+            --no-acl \
+            --no-owner \
+            -f backup_$(date +%Y_%m).sql
+
+      - name: Checkout backup repository
+        uses: actions/checkout@v3
+        with:
+          repository: your-github-username/optimalclasses-backup
+          token: ${{ secrets.BACKUP_REPO_TOKEN }}
+          path: backup-repo
+
+      - name: Move backup and keep last 12
+        run: |
+          cp backup_$(date +%Y_%m).sql backup-repo/
+          cd backup-repo
+          ls -t *.sql | tail -n +13 | xargs rm -f
+
+      - name: Commit and push
+        run: |
+          cd backup-repo
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Monthly backup $(date +%Y_%m)" || echo "No changes"
+          git push
