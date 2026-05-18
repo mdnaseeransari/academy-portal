@@ -25,7 +25,7 @@ jobs:
             -f backup_$(date +%Y_%m).sql
 
       - name: Checkout backup repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: mdnaseeransari/optimalclasses-backup
           token: ${{ secrets.BACKUP_REPO_TOKEN }}
