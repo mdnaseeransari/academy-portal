@@ -27,7 +27,7 @@ jobs:
       - name: Checkout backup repository
         uses: actions/checkout@v3
         with:
-          repository: your-github-username/optimalclasses-backup
+          repository: mdnaseeransari/optimalclasses-backup
           token: ${{ secrets.BACKUP_REPO_TOKEN }}
           path: backup-repo
 
