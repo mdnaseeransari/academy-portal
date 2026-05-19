@@ -17,7 +17,7 @@
         
 
         <!-- Gallery Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div class="gallery-masonry">
             @php
                 $galleryFiles = glob(public_path('images/gallary/*.webp'), GLOB_BRACE);
                 $gallery = array_map(function ($file) {
@@ -31,8 +31,8 @@
             @endphp
 
             @foreach($gallery as $item)
-            <div class="group relative bg-gray-100 rounded-[2rem] overflow-hidden aspect-square shadow-lg hover:shadow-2xl transition-all duration-500 animate-fade-in">
-                <img src="{{ asset('images/gallary/' . $item['img']) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Gallery image" loading="lazy">
+            <div class="gallery-item group relative bg-gray-100 shadow-lg hover:shadow-2xl transition-all duration-500 animate-fade-in">
+                <img src="{{ asset('images/gallary/' . $item['img']) }}" class="gallery-masonry-img group-hover:scale-110 transition-transform duration-700" alt="Gallery image" loading="lazy">
             </div>
             @endforeach
         </div>
@@ -40,6 +40,36 @@
 </div>
 
 <style>
+.gallery-masonry {
+    column-count: 4;
+    column-gap: 10px;
+}
+.gallery-item {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 10px;
+    break-inside: avoid;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.gallery-masonry-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Media Queries for responsive column count */
+@media (max-width: 992px) {
+    .gallery-masonry {
+        column-count: 3;
+    }
+}
+@media (max-width: 576px) {
+    .gallery-masonry {
+        column-count: 2;
+    }
+}
+
 @keyframes fade-in {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }

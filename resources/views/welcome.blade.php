@@ -1,7 +1,15 @@
 @extends('layouts.public')
 
 @section('content')
-<div class="min-h-screen flex flex-col items-center justify-center text-center px-6" style="background-image: url('{{ asset('images/bg-optimal-classes.webp') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+<div class="relative z-0 overflow-hidden min-h-screen flex flex-col items-center justify-center text-center px-6">
+    <!-- Automatic Background Slideshow -->
+    <div class="absolute inset-0 -z-10 pointer-events-none bg-black">
+        <div class="absolute inset-0 z-10 bg-black/40"></div>
+        <img id="hero-slide-1" src="{{ asset('images/bg-optimal-classes.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-100" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 1">
+        <img id="hero-slide-2" data-src="{{ asset('images/12.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-0" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 2">
+        <img id="hero-slide-3" data-src="{{ asset('images/14.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-0" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 3">
+    </div>
+
     <h1 class="text-5xl font-bold text-white mb-4">Welcome to <span class="text-white">Optimal Classes</span></h1>
     <p class="text-lg text-white/90 mb-8 max-w-2xl">Empowering students and teachers with a modern, efficient, and professional class management experience.</p>
 
@@ -17,6 +25,8 @@
             @endauth
         @endif
     </div>
+
+
 </div>
 
 <div class="bg-white py-20">
@@ -51,13 +61,14 @@
 <section id="home" class="bg-[#2c3e80] text-white py-20">
     <div class="container mx-auto px-6 text-center">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">Top Rated Coaching Institute in Varanasi, Uttar Pradesh</h1>
-        <p class="text-lg md:text-xl mb-8 max-w-4xl mx-auto">Optimal Classes is a top rated educational institute in Varanasi offering result-oriented coaching for CBSE, ICSE/ISC, IIT JEE and NEET preparation.</p>
+        <p class="text-lg md:text-xl mb-8 max-w-4xl mx-auto">Optimal Classes is a top rated educational institute in Varanasi offering result-oriented coaching for CBSE, ICSE/ISC, Olympiad, IIT JEE and NEET preparation.</p>
 
         <div class="flex flex-wrap justify-center gap-4 mb-8">
             <span class="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium"><svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg> Class 6-12</span>
+            <span class="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium"><svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8V5a3 3 0 013-3h4a3 3 0 013 3v3a4 4 0 01-4 4H11a4 4 0 01-4-4z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 21h6"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14v7"/></svg> Board Exams</span>
+            <span class="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium"><svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg> Olympiad</span>
             <span class="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium"><svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8a4 4 0 11-4 4 4 4 0 014-4zm0 0v-3m0 12v-3m9-6h-3M6 12H3m15.364-6.364l-2.121 2.121M8.757 15.243l-2.121 2.121m0-10.607l2.121 2.121M15.243 15.243l2.121 2.121"/></svg> IIT JEE</span>
             <span class="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium"><svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.182l-7.682-7.682a4.5 4.5 0 010-6.364z"/></svg> NEET</span>
-            <span class="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium"><svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8V5a3 3 0 013-3h4a3 3 0 013 3v3a4 4 0 01-4 4H11a4 4 0 01-4-4z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 21h6"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14v7"/></svg> Board Exams</span>
         </div>
     </div>
 </section>
@@ -108,21 +119,17 @@
         </div>
 
         <!-- Stats -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="grid grid-cols-3 gap-6 max-w-2xl mx-auto">
             <div class="text-center">
-                <div class="text-4xl font-bold text-[#2c3e80] mb-2">10+</div>
+                <div class="text-4xl font-bold text-[#2c3e80] mb-0.5">6</div>
                 <p class="text-gray-600 font-medium">Dedicated Teachers</p>
             </div>
             <div class="text-center">
-                <div class="text-4xl font-bold text-[#2c3e80] mb-2">500+</div>
-                <p class="text-gray-600 font-medium">Members</p>
-            </div>
-            <div class="text-center">
-                <div class="text-4xl font-bold text-[#2c3e80] mb-2">1000+</div>
+                <div class="text-4xl font-bold text-[#2c3e80] mb-0.5">1000+</div>
                 <p class="text-gray-600 font-medium">Students</p>
             </div>
             <div class="text-center">
-                <div class="text-4xl font-bold text-[#2c3e80] mb-2">100+</div>
+                <div class="text-4xl font-bold text-[#2c3e80] mb-0.5">100+</div>
                 <p class="text-gray-600 font-medium">Toppers</p>
             </div>
         </div>
@@ -297,4 +304,54 @@
             </div>
         </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const slides = [
+            document.getElementById('hero-slide-1'),
+            document.getElementById('hero-slide-2'),
+            document.getElementById('hero-slide-3')
+        ];
+        
+        let currentIndex = 0;
+        
+        // Lazy load images 2 and 3 after window load event
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                for (let i = 1; i < slides.length; i++) {
+                    if (slides[i] && slides[i].hasAttribute('data-src')) {
+                        slides[i].setAttribute('src', slides[i].getAttribute('data-src'));
+                        slides[i].removeAttribute('data-src');
+                    }
+                }
+            }, 1000); // 1 second delay to ensure other page content loads first
+        });
+
+        function showNextSlide() {
+            const nextIndex = (currentIndex + 1) % slides.length;
+            const currentSlide = slides[currentIndex];
+            const nextSlide = slides[nextIndex];
+            
+            if (!currentSlide || !nextSlide) return;
+
+            // Ensure the next image is loaded before transition
+            if (nextSlide.hasAttribute('data-src')) {
+                nextSlide.setAttribute('src', nextSlide.getAttribute('data-src'));
+                nextSlide.removeAttribute('data-src');
+            }
+
+            // Perform crossfade transition
+            currentSlide.classList.remove('opacity-100');
+            currentSlide.classList.add('opacity-0');
+            nextSlide.classList.remove('opacity-0');
+            nextSlide.classList.add('opacity-100');
+            
+            currentIndex = nextIndex;
+        }
+
+        // Run auto-advance every 5 seconds (5000ms)
+        setInterval(showNextSlide, 5000);
+    });
+</script>
+
 @endsection

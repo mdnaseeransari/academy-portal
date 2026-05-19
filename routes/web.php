@@ -1,13 +1,15 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $activeNotification = \App\Models\Notification::where('is_active', true)->first();
+    return view('welcome', compact('activeNotification'));
 });
 
 Route::middleware('auth')->group(function () {
@@ -171,6 +173,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Admin Assignment Submissions
     Route::get('/assignments/{id}/submissions', [AdminController::class, 'viewSubmissions'])->name('assignments.submissions');
     Route::patch('/submissions/{id}/marks', [AdminController::class, 'updateMarks'])->name('submissions.updateMarks');
+
+    // Admin Notification Bar management
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications', [NotificationController::class, 'store'])->name('notifications.store');
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 });
 
 Route::get('/pending-approval', function () {

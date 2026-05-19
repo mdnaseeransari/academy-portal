@@ -33,6 +33,10 @@ Artisan::command('app:convert-images-webp', function () {
 
             if (file_exists($webpPath)) {
                 $this->line("Skipping (already exists): $webpPath");
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                    $this->line("Deleted original: $filePath");
+                }
                 continue;
             }
 
@@ -64,6 +68,10 @@ Artisan::command('app:convert-images-webp', function () {
 
             if ($success) {
                 $this->info("Success: $webpPath");
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                    $this->line("Deleted original: $filePath");
+                }
             } else {
                 $this->error("Failed to convert: $filePath");
             }
