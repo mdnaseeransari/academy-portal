@@ -17,6 +17,13 @@ class AppServiceProvider extends ServiceProvider
         if (app()->environment('production')) {
             URL::forceScheme('https');
         }
-        \Illuminate\Support\Facades\View::share('activeNotification', \App\Models\Notification::where('is_active', true)->latest()->first());
+        try {
+            \Illuminate\Support\Facades\View::share(
+                'activeNotification',
+                \App\Models\Notification::where('is_active', true)->latest()->first()
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\View::share('activeNotification', null);
+        }
     }
 }
