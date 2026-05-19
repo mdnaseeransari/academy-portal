@@ -273,31 +273,121 @@
         <div class="bg-[#f8fafc] rounded-3xl border border-gray-200 p-8 mb-16">
             <div class="max-w-4xl mx-auto">
                 <div class="text-center mb-8">
-                    <h3 class="text-2xl font-bold text-gray-800">Areas We Serve Across Varanasi</h3>
-                    <p class="text-gray-600 mt-2">Our coaching centers and services are easily accessible from the following prime locations:</p>
+                    <h3 class="text-3xl font-bold text-gray-900 tracking-tight">Serving students across Varanasi</h3>
+                    <p class="text-gray-600 mt-3 text-base">Our coaching centers and services are easily accessible from the following prime locations.</p>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm text-gray-700">
-                    <div class="space-y-2">
-                        <p>BLW</p>
-                        <p>Sunderpur</p>
-                        <p>Susuwahi</p>
-                        <p>Bajardhia</p>
-                        <p>Chitaipur</p>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>BLW</span>
                     </div>
-                    <div class="space-y-2">
-                        <p>Manduwadih</p>
-                        <p>Lahartara</p>
-                        <p>Lanka</p>
-                        <p>Naria</p>
-                        <p>Bhelupur</p>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Sunderpur</span>
                     </div>
-                    <div class="space-y-2">
-                        <p>Khojwan</p>
-                        <p>Durgakund</p>
-                        <p>Shivpur</p>
-                        <p>Kakarmatta</p>
-                        <p>Bhagwanpur</p>
-                        <p>Varanasi Cantonment</p>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Susuwahi</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Bajardhia</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Chitaipur</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Manduwadih</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Lahartara</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Lanka</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Naria</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Bhelupur</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Khojwan</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Durgakund</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Shivpur</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Kakarmatta</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Bhagwanpur</span>
+                    </div>
+                    <div class="inline-flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm text-sm font-medium text-gray-800">
+                        <svg class="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Varanasi Cantonment</span>
                     </div>
                 </div>
                 <p class="text-center text-sm text-gray-500 mt-8">If you&apos;re searching for "best coaching classes in Varanasi" or "coaching institute in Varanasi", you&apos;ll find Optimal Classes conveniently located and ready to help.</p>
