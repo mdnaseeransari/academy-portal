@@ -17,7 +17,9 @@ return new class extends Migration
         });
 
         // Convert enum to varchar to safely allow new exam types without breaking existing ones
-        \Illuminate\Support\Facades\DB::statement("ALTER TABLE marks MODIFY COLUMN exam_type VARCHAR(255) NOT NULL");
+        Schema::table('marks', function (Blueprint $table) {
+            $table->string('exam_type')->change();
+        });
     }
 
     /**
@@ -29,6 +31,8 @@ return new class extends Migration
             $table->dropColumn(['date', 'topic']);
         });
 
-        \Illuminate\Support\Facades\DB::statement("ALTER TABLE marks MODIFY COLUMN exam_type ENUM('unit_test', 'half_yearly', 'final', 'other') NOT NULL");
+        Schema::table('marks', function (Blueprint $table) {
+            $table->enum('exam_type', ['unit_test', 'half_yearly', 'final', 'other'])->change();
+        });
     }
 };
