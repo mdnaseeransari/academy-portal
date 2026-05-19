@@ -47,30 +47,42 @@
 @section('content')
 <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div>
-        <h1 class="text-2xl font-bold text-gray-800">My Students — {{ $class->name ?? 'No Class Assigned' }}</h1>
+        <h1 class="text-2xl font-bold text-gray-800">My Students — {{ $class ? $class->name : 'All Assigned Classes' }}</h1>
         <p class="text-sm text-gray-500 font-medium">{{ $students->total() }} students enrolled</p>
-    </div>
-    <div class="flex items-center gap-3">
-        <button disabled class="bg-gray-100 text-gray-400 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 cursor-not-allowed">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            Download PDF
-        </button>
     </div>
 </div>
 
-<!-- Search Bar -->
+<!-- Search Bar & Filters -->
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-    <form action="{{ route('teacher.students') }}" method="GET" class="flex flex-wrap items-center gap-4">
-        <div class="flex-grow min-w-[300px]">
+    <form action="{{ route('teacher.students') }}" method="GET" class="flex flex-wrap items-end gap-4">
+        <!-- Search Input -->
+        <div class="flex-grow min-w-[250px]">
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Search Students</label>
             <input type="text" name="search" value="{{ $search }}" placeholder="Search by name or roll number"
-                class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm">
+                class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm px-3 py-2">
         </div>
-        <button type="submit" class="bg-[#2c3e80] text-white px-6 py-2 rounded-lg hover:bg-[#1e2d5e] transition font-bold text-sm h-[42px]">
-            Search
-        </button>
-        @if($search)
-            <a href="{{ route('teacher.students') }}" class="text-sm text-red-600 font-bold hover:underline">Clear Search</a>
-        @endif
+
+        <!-- Class Filter Dropdown -->
+        <div class="w-64">
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Filter by Class</label>
+            <select name="class_id" onchange="this.form.submit()" class="w-full border border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm px-3 py-2">
+                <option value="">All Assigned Classes</option>
+                @foreach($classes as $c)
+                    <option value="{{ $c->id }}" {{ $selected_class_id == $c->id ? 'selected' : '' }}>
+                        {{ $c->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button type="submit" class="bg-[#2c3e80] text-white px-6 py-2 rounded-lg hover:bg-[#1e2d5e] transition font-bold text-sm h-[42px]">
+                Search
+            </button>
+            @if($search || $selected_class_id)
+                <a href="{{ route('teacher.students') }}" class="text-sm text-red-600 font-bold hover:underline self-center whitespace-nowrap">Clear Filters</a>
+            @endif
+        </div>
     </form>
 </div>
 

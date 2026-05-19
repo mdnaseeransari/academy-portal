@@ -109,8 +109,11 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->name('teacher.')
     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
     Route::get('/attendance', [TeacherController::class, 'showAttendance'])->name('attendance');
     Route::post('/attendance/mark', [TeacherController::class, 'markAttendance'])->name('attendance.mark');
+    Route::delete('/attendance/delete', [TeacherController::class, 'deleteAttendance'])->name('attendance.delete');
     Route::get('/marks', [TeacherController::class, 'marks'])->name('marks');
     Route::post('/marks/save', [TeacherController::class, 'saveMarks'])->name('saveMarks');
+    Route::post('/exams/schedule', [TeacherController::class, 'scheduleExam'])->name('exams.schedule');
+    Route::delete('/exams/schedule/{id}', [TeacherController::class, 'deleteExamSchedule'])->name('exams.schedule.delete');
     Route::get('/assignments', [TeacherController::class, 'assignments'])->name('assignments');
     Route::post('/assignments/create', [TeacherController::class, 'createAssignment'])->name('assignments.create');
     Route::delete('/assignments/{id}', [TeacherController::class, 'deleteAssignment'])->name('assignments.delete');
@@ -150,6 +153,24 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/classes/add', [AdminController::class, 'addClass'])->name('classes.add');
     Route::put('/classes/{id}', [AdminController::class, 'editClass'])->name('classes.update');
     Route::delete('/classes/{id}', [AdminController::class, 'deleteClass'])->name('classes.delete');
+
+    // Admin management of Assignments, Attendance, and Marks
+    Route::get('/assignments', [AdminController::class, 'assignmentsPage'])->name('assignments');
+    Route::post('/assignments/create', [AdminController::class, 'createAssignment'])->name('assignments.create');
+    Route::delete('/assignments/{id}', [AdminController::class, 'deleteAssignment'])->name('assignments.delete');
+
+    Route::get('/attendance', [AdminController::class, 'attendancePage'])->name('attendance');
+    Route::post('/attendance/mark', [AdminController::class, 'markAttendance'])->name('attendance.mark');
+    Route::delete('/attendance/delete', [AdminController::class, 'deleteAttendance'])->name('attendance.delete');
+
+    Route::get('/marks', [AdminController::class, 'marksPage'])->name('marks');
+    Route::post('/marks/save', [AdminController::class, 'saveMarks'])->name('saveMarks');
+    Route::post('/exams/schedule', [AdminController::class, 'scheduleExam'])->name('exams.schedule');
+    Route::delete('/exams/schedule/{id}', [AdminController::class, 'deleteExamSchedule'])->name('exams.schedule.delete');
+
+    // Admin Assignment Submissions
+    Route::get('/assignments/{id}/submissions', [AdminController::class, 'viewSubmissions'])->name('assignments.submissions');
+    Route::patch('/submissions/{id}/marks', [AdminController::class, 'updateMarks'])->name('submissions.updateMarks');
 });
 
 Route::get('/pending-approval', function () {

@@ -86,30 +86,53 @@
     </div>
 </div>
 
-<!-- Filter Form -->
+<!-- Filter Tabs & Form -->
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+    <div class="flex border-b border-gray-200 mb-6">
+        <a href="{{ route('student.attendance', ['view_mode' => 'month']) }}" 
+           class="px-5 py-2.5 border-b-2 text-sm font-bold transition-all flex items-center gap-2 {{ ($view_mode ?? 'month') === 'month' ? 'border-[#2c3e80] text-[#2c3e80]' : 'border-transparent text-gray-400 hover:text-gray-600' }}">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002-2z"></path></svg>
+            Filter by Month
+        </a>
+        <a href="{{ route('student.attendance', ['view_mode' => 'date']) }}" 
+           class="px-5 py-2.5 border-b-2 text-sm font-bold transition-all flex items-center gap-2 {{ ($view_mode ?? 'month') === 'date' ? 'border-[#2c3e80] text-[#2c3e80]' : 'border-transparent text-gray-400 hover:text-gray-600' }}">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002-2z"></path></svg>
+            Filter by Date
+        </a>
+    </div>
+
     <form action="{{ route('student.attendance') }}" method="GET" class="flex flex-wrap items-end gap-4">
-        <div class="flex-grow min-w-[200px]">
-            <label for="month" class="block text-sm font-medium text-gray-700 mb-1">Select Month</label>
-            <select name="month" id="month" class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm">
-                @foreach(range(1, 12) as $m)
-                    <option value="{{ $m }}" {{ $selected_month == $m ? 'selected' : '' }}>
-                        {{ date('F', mktime(0, 0, 0, $m, 1)) }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        <input type="hidden" name="view_mode" value="{{ $view_mode ?? 'month' }}">
 
-        <div class="flex-grow min-w-[200px]">
-            <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Select Year</label>
-            <select name="year" id="year" class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm">
-                @foreach(range(date('Y') - 1, date('Y') + 1) as $y)
-                    <option value="{{ $y }}" {{ $selected_year == $y ? 'selected' : '' }}>{{ $y }}</option>
-                @endforeach
-            </select>
-        </div>
+        @if(($view_mode ?? 'month') === 'date')
+            <div class="flex-grow min-w-[200px]">
+                <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Select Date</label>
+                <input type="date" name="date" id="date" value="{{ $selected_date ?? date('Y-m-d') }}" 
+                       class="w-full border border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm py-2 px-3 shadow-sm bg-white text-gray-700 font-semibold transition">
+            </div>
+        @else
+            <div class="flex-grow min-w-[200px]">
+                <label for="month" class="block text-sm font-medium text-gray-700 mb-1">Select Month</label>
+                <select name="month" id="month" class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm">
+                    @foreach(range(1, 12) as $m)
+                        <option value="{{ $m }}" {{ $selected_month == $m ? 'selected' : '' }}>
+                            {{ date('F', mktime(0, 0, 0, $m, 1)) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-        <button type="submit" class="bg-[#2c3e80] text-white px-6 py-2 rounded-lg hover:bg-[#1e2d5e] transition font-bold text-sm h-[42px]">
+            <div class="flex-grow min-w-[200px]">
+                <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Select Year</label>
+                <select name="year" id="year" class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm">
+                    @foreach(range(date('Y') - 1, date('Y') + 1) as $y)
+                        <option value="{{ $y }}" {{ $selected_year == $y ? 'selected' : '' }}>{{ $y }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
+
+        <button type="submit" class="bg-[#2c3e80] text-white px-6 py-2 rounded-lg hover:bg-[#1e2d5e] transition font-bold text-sm h-[42px] shadow-sm">
             Filter Records
         </button>
     </form>
@@ -129,6 +152,7 @@
                     <tr>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Day of Week</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Subject / Slot</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Marked By</th>
                     </tr>
@@ -151,6 +175,9 @@
                             <span class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($record->date)->format('l') }}</span>
                         </td>
                         <td class="px-6 py-4">
+                            <span class="text-sm font-bold text-gray-700">{{ $record->period_slot ?? 'General Slot' }}</span>
+                        </td>
+                        <td class="px-6 py-4">
                             <span class="px-3 py-1 rounded-full text-xs font-bold uppercase {{ $statusBadge }}">
                                 {{ $record->status }}
                             </span>
@@ -165,7 +192,12 @@
         </div>
         <!-- Pagination -->
         <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
-            {{ $attendance->appends(['month' => $selected_month, 'year' => $selected_year])->links() }}
+            {{ $attendance->appends([
+                'view_mode' => $view_mode ?? 'month',
+                'month' => $selected_month,
+                'year' => $selected_year,
+                'date' => $selected_date
+            ])->links() }}
         </div>
     @endif
 </div>

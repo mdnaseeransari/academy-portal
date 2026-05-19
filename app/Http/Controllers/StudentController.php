@@ -9,6 +9,7 @@ use App\Models\AssignmentSubmission;
 use App\Models\Mark;
 use App\Models\Remark;
 use App\Models\Contact;
+use App\Models\ExamSchedule;
 use App\Models\Timetable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,9 +43,41 @@ class StudentController extends Controller
         // Prune old remarks (older than 20 days)
         Remark::where('created_at', '<', now()->subDays(20))->delete();
         
-        $presentCount = Attendance::where('student_id', $student->id)->where('status', 'present')->count();
-        $absentCount = Attendance::where('student_id', $student->id)->where('status', 'absent')->count();
-        $lateCount = Attendance::where('student_id', $student->id)->where('status', 'late')->count();
+        $rawAttendance = Attendance::where('student_id', $student->id)
+            ->orderBy('date', 'desc')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        $deduplicatedAttendance = collect();
+        $seenKeys = [];
+
+        foreach ($rawAttendance as $record) {
+            $normalizedSlot = $record->period_slot;
+            if ($record->period_slot) {
+                $period_slot = trim($record->period_slot);
+                if (preg_match('/^(.+?)\s+(\d{1,2}:\d{2})/i', $period_slot, $matches)) {
+                    $subject = strtolower(trim($matches[1]));
+                    $startTime = trim($matches[2]);
+                    if (strlen($startTime) === 4) {
+                        $startTime = '0' . $startTime;
+                    }
+                    $normalizedSlot = $subject . '_' . $startTime;
+                } else {
+                    $normalizedSlot = strtolower($period_slot);
+                }
+            }
+
+            $uniqueKey = $record->date . '_' . $normalizedSlot;
+
+            if (!isset($seenKeys[$uniqueKey])) {
+                $seenKeys[$uniqueKey] = true;
+                $deduplicatedAttendance->push($record);
+            }
+        }
+
+        $presentCount = $deduplicatedAttendance->where('status', 'present')->count();
+        $absentCount = $deduplicatedAttendance->where('status', 'absent')->count();
+        $lateCount = $deduplicatedAttendance->where('status', 'late')->count();
         
         $totalAttendance = $presentCount + $absentCount + $lateCount;
         $attendancePercentage = $totalAttendance > 0 ? round(($presentCount / $totalAttendance) * 100, 1) : 0;
@@ -102,7 +135,12 @@ class StudentController extends Controller
             ->limit(3)
             ->get();
 
-        return view('student.dashboard', compact('student', 'stats', 'recentMarks', 'recentRemarks'));
+        $upcoming_exams = ExamSchedule::where('class_id', $student->class_id)
+            ->where('scheduled_date', '>=', now()->toDateString())
+            ->orderBy('scheduled_date', 'asc')
+            ->get();
+
+        return view('student.dashboard', compact('student', 'stats', 'recentMarks', 'recentRemarks', 'upcoming_exams'));
     }
 
     /**
@@ -112,18 +150,58 @@ class StudentController extends Controller
     {
         $student = auth()->user()->student;
         if (!$student) abort(403, 'No student profile found.');
+
+        $view_mode = $request->get('view_mode', 'month');
         $selected_month = $request->get('month', date('m'));
         $selected_year = $request->get('year', date('Y'));
+        $selected_date = $request->get('date', date('Y-m-d'));
 
-        $query = Attendance::where('student_id', $student->id)
-            ->whereMonth('date', $selected_month)
-            ->whereYear('date', $selected_year)
-            ->with('markedBy');
+        $query = Attendance::where('student_id', $student->id);
 
-        $total = $query->count();
-        $present = (clone $query)->where('status', 'present')->count();
-        $absent = (clone $query)->where('status', 'absent')->count();
-        $late = (clone $query)->where('status', 'late')->count();
+        if ($view_mode === 'date') {
+            $query->where('date', $selected_date);
+        } else {
+            $query->whereMonth('date', $selected_month)
+                  ->whereYear('date', $selected_year);
+        }
+
+        // Fetch matching records ordered by date desc and updated_at desc (latest first)
+        $records = $query->with('markedBy')
+            ->orderBy('date', 'desc')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        $deduplicated = collect();
+        $seenKeys = [];
+
+        foreach ($records as $record) {
+            $normalizedSlot = $record->period_slot;
+            if ($record->period_slot) {
+                $period_slot = trim($record->period_slot);
+                if (preg_match('/^(.+?)\s+(\d{1,2}:\d{2})/i', $period_slot, $matches)) {
+                    $subject = strtolower(trim($matches[1]));
+                    $startTime = trim($matches[2]);
+                    if (strlen($startTime) === 4) {
+                        $startTime = '0' . $startTime;
+                    }
+                    $normalizedSlot = $subject . '_' . $startTime;
+                } else {
+                    $normalizedSlot = strtolower($period_slot);
+                }
+            }
+
+            $uniqueKey = $record->date . '_' . $normalizedSlot;
+
+            if (!isset($seenKeys[$uniqueKey])) {
+                $seenKeys[$uniqueKey] = true;
+                $deduplicated->push($record);
+            }
+        }
+
+        $total = $deduplicated->count();
+        $present = $deduplicated->where('status', 'present')->count();
+        $absent = $deduplicated->where('status', 'absent')->count();
+        $late = $deduplicated->where('status', 'late')->count();
         $percentage = $total > 0 ? round(($present / $total) * 100, 1) : 0;
 
         $summary = [
@@ -134,9 +212,27 @@ class StudentController extends Controller
             'percentage' => $percentage
         ];
 
-        $attendance = $query->paginate(15);
+        // Paginate the deduplicated Collection manually in memory
+        $currentPage = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage();
+        $perPage = 15;
+        $currentItems = $deduplicated->slice(($currentPage - 1) * $perPage, $perPage)->values();
 
-        return view('student.attendance', compact('attendance', 'summary', 'selected_month', 'selected_year'));
+        $attendance = new \Illuminate\Pagination\LengthAwarePaginator(
+            $currentItems,
+            $deduplicated->count(),
+            $perPage,
+            $currentPage,
+            ['path' => \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPath()]
+        );
+
+        return view('student.attendance', compact(
+            'attendance', 
+            'summary', 
+            'selected_month', 
+            'selected_year', 
+            'selected_date',
+            'view_mode'
+        ));
     }
 
     /**
@@ -151,7 +247,12 @@ class StudentController extends Controller
         $query = Mark::where('student_id', $student->id);
 
         if ($exam_type) {
-            $query->where('exam_type', $exam_type);
+            $mappedTypes = match($exam_type) {
+                'weekly_assessment' => ['weekly_assessment', 'Weekly Assessment'],
+                'mock_test' => ['mock_test', 'Mock Test'],
+                default => [$exam_type, str_replace('_', ' ', $exam_type), ucwords(str_replace('_', ' ', $exam_type))]
+            };
+            $query->whereIn('exam_type', $mappedTypes);
         }
 
         $marks = $query->orderBy('created_at', 'desc')->get();

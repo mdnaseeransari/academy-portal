@@ -55,10 +55,8 @@
     @php
         $tabs = [
             '' => 'All',
-            'unit_test' => 'Unit Test',
-            'half_yearly' => 'Half Yearly',
-            'final' => 'Final',
-            'other' => 'Other'
+            'weekly_assessment' => 'Weekly Assessment',
+            'mock_test' => 'Mock Test'
         ];
     @endphp
 
@@ -83,6 +81,7 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Subject</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Topic</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Exam Type</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Marks</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Percentage</th>
@@ -117,6 +116,9 @@
                                 <span class="text-sm font-bold text-gray-800">{{ $mark->subject }}</span>
                             </td>
                             <td class="px-6 py-4">
+                                <span class="text-sm font-bold text-gray-600">{{ $mark->topic }}</span>
+                            </td>
+                            <td class="px-6 py-4">
                                 <span class="text-sm text-gray-500 capitalize">{{ str_replace('_', ' ', $mark->exam_type) }}</span>
                             </td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-700">
@@ -131,7 +133,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">
-                                {{ $mark->created_at->format('M d, Y') }}
+                                {{ \Carbon\Carbon::parse($mark->date)->format('M d, Y') }}
                             </td>
                         </tr>
                     @endforeach

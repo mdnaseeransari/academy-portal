@@ -24,6 +24,10 @@
        class="px-6 py-2.5 rounded-lg text-sm font-bold transition {{ $tab == 'student' ? 'bg-[#2c3e80] text-white shadow-md' : 'bg-white text-gray-600 border border-gray-100 hover:bg-gray-50' }}">
         Student Profile Report
     </a>
+    <a href="{{ route('admin.reports', ['tab' => 'overview']) }}" 
+       class="px-6 py-2.5 rounded-lg text-sm font-bold transition {{ $tab == 'overview' ? 'bg-[#2c3e80] text-white shadow-md' : 'bg-white text-gray-600 border border-gray-100 hover:bg-gray-50' }}">
+        Student Overview
+    </a>
 </div>
 
 <!-- Tab Content -->
@@ -130,10 +134,8 @@
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Exam Type</label>
                 <select name="exam_type" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition">
                     <option value="">All Exams</option>
-                    <option value="unit_test" {{ request('exam_type') == 'unit_test' ? 'selected' : '' }}>Unit Test</option>
-                    <option value="half_yearly" {{ request('exam_type') == 'half_yearly' ? 'selected' : '' }}>Half Yearly</option>
-                    <option value="final" {{ request('exam_type') == 'final' ? 'selected' : '' }}>Final</option>
-                    <option value="other" {{ request('exam_type') == 'other' ? 'selected' : '' }}>Other</option>
+                    <option value="weekly_assessment" {{ request('exam_type') == 'weekly_assessment' ? 'selected' : '' }}>Weekly Assessment</option>
+                    <option value="mock_test" {{ request('exam_type') == 'mock_test' ? 'selected' : '' }}>Mock Test</option>
                 </select>
             </div>
             <div class="flex items-end">
@@ -152,10 +154,13 @@
                     <tr>
                         <th class="px-6 py-4">Roll No</th>
                         <th class="px-6 py-4">Student Name</th>
+                        <th class="px-6 py-4">Subject</th>
+                        <th class="px-6 py-4">Exam Type</th>
+                        <th class="px-6 py-4">Topic</th>
+                        <th class="px-6 py-4">Date</th>
                         <th class="px-6 py-4">Marks Obtained</th>
                         <th class="px-6 py-4">Total Marks</th>
                         <th class="px-6 py-4 text-center">Percentage</th>
-                        <th class="px-6 py-4 text-right">Grade</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -163,34 +168,24 @@
                     @foreach($marks_report as $data)
                     @php
                         $sum_perc += $data['percentage'];
-                        $grade = $data['grade'];
-                        $gradeColor = match($grade) {
-                            'A+' => 'bg-green-700 text-white',
-                            'A' => 'bg-green-500 text-white',
-                            'B' => 'bg-blue-500 text-white',
-                            'C' => 'bg-yellow-500 text-white',
-                            default => 'bg-red-500 text-white'
-                        };
                     @endphp
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4 text-sm font-bold text-[#2c3e80]">{{ $data['roll_no'] }}</td>
                         <td class="px-6 py-4 text-sm font-bold text-gray-800">{{ $data['name'] }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700 font-medium">{{ $data['subject'] }}</td>
+                        <td class="px-6 py-4 text-xs font-bold text-blue-800 uppercase bg-blue-50 px-2 py-1 rounded inline-block mt-3">{{ str_replace('_', ' ', $data['exam_type']) }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">{{ $data['topic'] }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-500">{{ \Carbon\Carbon::parse($data['date'])->format('d M Y') }}</td>
                         <td class="px-6 py-4 text-sm font-bold text-gray-700">{{ $data['marks'] }}</td>
                         <td class="px-6 py-4 text-sm text-gray-400">{{ $data['total'] }}</td>
-                        <td class="px-6 py-4 text-center text-sm font-bold">{{ $data['percentage'] }}%</td>
-                        <td class="px-6 py-4 text-right">
-                            <span class="px-3 py-1 rounded-md text-[10px] font-bold {{ $gradeColor }}">
-                                {{ $grade }}
-                            </span>
-                        </td>
+                        <td class="px-6 py-4 text-center text-sm font-bold text-emerald-600">{{ $data['percentage'] }}%</td>
                     </tr>
                     @endforeach
                 </tbody>
                 <tfoot class="bg-[#f8fafc]">
                     <tr class="font-bold">
-                        <td colspan="4" class="px-6 py-4 text-sm text-gray-500 uppercase tracking-widest">Class Average</td>
+                        <td colspan="8" class="px-6 py-4 text-sm text-gray-500 uppercase tracking-widest text-right pr-12">Class Average</td>
                         <td class="px-6 py-4 text-center text-lg text-[#2c3e80]">{{ number_format($sum_perc / count($marks_report), 1) }}%</td>
-                        <td></td>
                     </tr>
                 </tfoot>
             </table>
@@ -246,6 +241,10 @@
                     <div>
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Class</p>
                         <p class="text-lg font-bold text-gray-800">{{ $selected_student->academicClass->name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Class Rank</p>
+                        <p class="text-lg font-bold text-green-600">#{{ $selected_student->class_rank ?? 'N/A' }} <span class="text-xs text-gray-400 font-normal">/ {{ $selected_student->total_class_students ?? '-' }}</span></p>
                     </div>
                     <div>
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Admission Date</p>
@@ -323,6 +322,49 @@
     <div class="bg-white py-20 rounded-xl border border-dashed border-gray-300 flex flex-col items-center justify-center text-center">
         <p class="text-gray-400 italic">Search for a student by name or roll number to view profile report.</p>
     </div>
+    @endif
+
+@elseif($tab == 'overview')
+    <!-- Academic Overview Section -->
+    @if(empty($classPerformance))
+        <div class="bg-white py-20 rounded-xl border border-dashed border-gray-300 flex flex-col items-center justify-center text-center">
+            <p class="text-gray-400 italic">No marks data available to generate overview.</p>
+        </div>
+    @else
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @foreach($classPerformance as $performance)
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition">
+                    <div class="bg-[#2c3e80] p-4 border-b border-gray-100 flex justify-between items-center text-white">
+                        <h3 class="text-lg font-bold">{{ $performance->class->name }}</h3>
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col gap-6">
+                        
+                        <!-- Top Student -->
+                        @if($performance->top_student)
+                        <div class="bg-green-50 border border-green-100 rounded-lg p-4 relative transition hover:-translate-y-1">
+
+                            <h4 class="text-xs font-bold text-green-700 uppercase tracking-widest mb-1">Top Performer</h4>
+                            <p class="text-sm font-bold text-gray-800">{{ $performance->top_student->user->name ?? 'Unknown' }}</p>
+                            <p class="text-xs text-gray-500 mt-1">Roll No: {{ $performance->top_student->roll_number }}</p>
+                            <p class="text-2xl font-bold text-green-600 mt-2">{{ number_format($performance->top_avg, 1) }}%</p>
+                        </div>
+                        @endif
+
+                        <!-- Weakest Student -->
+                        @if($performance->weakest_student)
+                        <div class="bg-red-50 border border-red-100 rounded-lg p-4 relative transition hover:-translate-y-1">
+
+                            <h4 class="text-xs font-bold text-red-700 uppercase tracking-widest mb-1">Needs Attention</h4>
+                            <p class="text-sm font-bold text-gray-800">{{ $performance->weakest_student->user->name ?? 'Unknown' }}</p>
+                            <p class="text-xs text-gray-500 mt-1">Roll No: {{ $performance->weakest_student->roll_number }}</p>
+                            <p class="text-2xl font-bold text-red-600 mt-2">{{ number_format($performance->weakest_avg, 1) }}%</p>
+                        </div>
+                        @endif
+
+                    </div>
+                </div>
+            @endforeach
+        </div>
     @endif
 
 @endif

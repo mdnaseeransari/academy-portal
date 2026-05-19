@@ -18,6 +18,11 @@ class AcademicClass extends Model
         return $this->belongsTo(User::class, 'teacher_id');
     }
 
+    public function teachers()
+    {
+        return $this->belongsToMany(User::class, 'class_teacher', 'class_id', 'user_id');
+    }
+
     public function students()
     {
         return $this->hasMany(Student::class, 'class_id');

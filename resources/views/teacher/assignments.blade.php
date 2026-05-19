@@ -152,6 +152,10 @@
                                 <span class="text-xs {{ $isOverdue ? 'text-red-600 font-bold' : 'text-gray-400 font-medium' }}">
                                     Due: {{ \Carbon\Carbon::parse($assignment->due_date)->format('d M, Y') }}
                                 </span>
+                                <span class="text-xs text-gray-300">|</span>
+                                <span class="text-xs text-gray-500">
+                                    Assigned by: <span class="font-bold text-[#2c3e80]">{{ $assignment->creator->name ?? 'Admin' }}</span>
+                                </span>
                                 @if($isOverdue)
                                     <span class="bg-red-100 text-red-700 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Overdue</span>
                                 @endif

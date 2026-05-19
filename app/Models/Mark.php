@@ -17,6 +17,8 @@ class Mark extends Model
         'total_marks',
         'teacher_id',
         'remarks',
+        'date',
+        'topic',
     ];
 
     public function student()

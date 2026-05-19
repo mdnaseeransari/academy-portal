@@ -45,6 +45,51 @@
 @endpush
 
 @section('content')
+
+<!-- Exam Notification Bars (Dynamic) -->
+@if(isset($upcoming_exams) && $upcoming_exams->isNotEmpty())
+    <div id="dynamicExamNotifications">
+        @foreach($upcoming_exams as $exam)
+            <div id="exam-notification-{{ $exam->id }}" class="hidden mb-4 bg-indigo-50 border-l-4 border-[#2c3e80] p-4 rounded-r-lg shadow-sm flex items-start justify-between transition-all duration-300">
+                <div class="flex gap-3">
+                    <svg class="w-6 h-6 text-[#2c3e80] mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div>
+                        <h3 class="text-sm font-bold text-indigo-900">Upcoming {{ $exam->exam_type }}: {{ $exam->subject }}</h3>
+                        <p class="text-sm text-indigo-800 mt-1">
+                            Topic: <span class="font-semibold">{{ $exam->topic }}</span> | 
+                            Date: <span class="font-semibold">{{ $exam->scheduled_date->format('M d, Y') }}</span>
+                        </p>
+                    </div>
+                </div>
+                <button onclick="dismissExamNotification({{ $exam->id }})" class="text-indigo-400 hover:text-indigo-600 transition focus:outline-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+        @endforeach
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @foreach($upcoming_exams as $exam)
+                if (!localStorage.getItem('examNotificationDismissed_{{ $exam->id }}')) {
+                    const el = document.getElementById('exam-notification-{{ $exam->id }}');
+                    if (el) el.classList.remove('hidden');
+                }
+            @endforeach
+        });
+
+        function dismissExamNotification(id) {
+            const el = document.getElementById('exam-notification-' + id);
+            if (el) {
+                el.classList.add('hidden');
+                localStorage.setItem('examNotificationDismissed_' + id, 'true');
+            }
+        }
+    </script>
+@endif
+
 <!-- Welcome Banner -->
 <div class="mb-8 bg-white p-8 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div>

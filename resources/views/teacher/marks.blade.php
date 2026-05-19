@@ -50,12 +50,134 @@
     <p class="text-sm text-gray-500">Select class and exam type to enter student results.</p>
 </div>
 
+<!-- Schedule a Test Section -->
+<div class="bg-indigo-50 rounded-xl shadow-sm border border-[#2c3e80] p-6 mb-8 relative overflow-hidden">
+    <!-- Decorative background element -->
+    <div class="absolute -right-10 -top-10 text-indigo-100 opacity-50">
+        <svg class="w-40 h-40" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 002 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7v-5z"/></svg>
+    </div>
+    
+    <div class="relative z-10">
+        <div class="mb-4">
+            <h3 class="text-xl font-bold text-[#2c3e80] flex items-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                Schedule an Upcoming Exam
+            </h3>
+            <p class="text-sm text-indigo-800">Fill this out to immediately notify students on their dashboard about an upcoming test.</p>
+        </div>
+
+        <form action="{{ route('teacher.exams.schedule') }}" method="POST" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
+            @csrf
+            
+            <div class="lg:col-span-1">
+                <label class="block text-sm font-bold text-[#2c3e80] mb-2">Class</label>
+                <select name="class_id" required class="w-full border-indigo-200 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm bg-white shadow-sm">
+                    <option value="">-- Choose Class --</option>
+                    @foreach($classes as $class)
+                        <option value="{{ $class->id }}" {{ $selected_class == $class->id ? 'selected' : '' }}>{{ $class->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="lg:col-span-1">
+                <label class="block text-sm font-bold text-[#2c3e80] mb-2">Exam Type</label>
+                <select name="exam_type" class="w-full border-indigo-200 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm bg-white shadow-sm">
+                    <option value="Weekly Assessment">Weekly Assessment</option>
+                    <option value="Mock Test">Mock Test</option>
+                </select>
+            </div>
+
+            <div class="lg:col-span-1">
+                <label class="block text-sm font-bold text-[#2c3e80] mb-2">Subject</label>
+                <input type="text" name="subject" value="{{ $selected_subject }}" required placeholder="Enter Subject Name" class="w-full border border-indigo-200 rounded-lg px-3 py-2 text-sm focus:ring-[#2c3e80] focus:border-[#2c3e80] bg-white shadow-sm">
+            </div>
+            
+            <div class="lg:col-span-1">
+                <label class="block text-sm font-bold text-[#2c3e80] mb-2">Topic</label>
+                <input type="text" name="topic" required placeholder="Exam Topic" class="w-full border border-indigo-200 rounded-lg px-3 py-2 text-sm focus:ring-[#2c3e80] focus:border-[#2c3e80] bg-white shadow-sm">
+            </div>
+            
+            <div class="lg:col-span-1">
+                <label class="block text-sm font-bold text-[#2c3e80] mb-2">Date</label>
+                <input type="date" name="scheduled_date" required min="{{ \Carbon\Carbon::today()->format('Y-m-d') }}" class="w-full border border-indigo-200 rounded-lg px-3 py-2 text-sm focus:ring-[#2c3e80] focus:border-[#2c3e80] bg-white shadow-sm">
+            </div>
+
+            <div class="lg:col-span-1">
+                <label class="block text-sm font-bold text-[#2c3e80] mb-2">Total Marks</label>
+                <input type="number" name="total_marks" min="1" value="100" required class="w-full border border-indigo-200 rounded-lg px-3 py-2 text-sm focus:ring-[#2c3e80] focus:border-[#2c3e80] bg-white shadow-sm">
+            </div>
+
+            <div class="lg:col-span-6 mt-2">
+                <button type="submit" class="bg-[#2c3e80] text-white px-6 py-2.5 rounded-lg hover:bg-[#1e2d5e] transition font-bold text-sm shadow-sm flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Schedule & Notify Students
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if(isset($scheduled_exams) && $scheduled_exams->isNotEmpty())
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        Scheduled Upcoming Tests
+    </h3>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left">
+            <thead class="bg-gray-50 border-b border-gray-100">
+                <tr>
+                    <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Class</th>
+                    <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Subject & Topic</th>
+                    <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Exam Type</th>
+                    <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Date</th>
+                    <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Total Marks</th>
+                    <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                @foreach($scheduled_exams as $exam)
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-4 py-3">
+                        <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-bold">{{ $exam->academicClass->name ?? 'N/A' }}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="font-bold text-gray-800">{{ $exam->subject }}</div>
+                        <div class="text-xs text-gray-500">{{ $exam->topic }}</div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="bg-indigo-100 text-[#2c3e80] px-2 py-1 rounded text-xs font-bold uppercase">{{ $exam->exam_type }}</span>
+                    </td>
+                    <td class="px-4 py-3 font-medium text-gray-800 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002-2z"></path></svg>
+                        {{ $exam->scheduled_date->format('M d, Y') }}
+                    </td>
+                    <td class="px-4 py-3 font-medium text-gray-800">{{ $exam->total_marks }}</td>
+                    <td class="px-4 py-3 text-right">
+                        <form action="{{ route('teacher.exams.schedule.delete', $exam->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Delete this scheduled exam? This will remove the notification for students.');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+@endif
+
 <!-- Filter Section -->
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-    <form action="{{ route('teacher.marks') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-end">
+    <h3 class="text-lg font-bold text-gray-800 mb-4">Enter Marks for an Exam</h3>
+    <form action="{{ route('teacher.marks') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
         <div>
             <label class="block text-sm font-bold text-gray-700 mb-2">Select Class</label>
-            <select name="class_id" class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm">
+            <select name="class_id" onchange="window.location.href = '{{ route('teacher.marks') }}?class_id=' + this.value" class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm">
                 <option value="">-- Choose Class --</option>
                 @foreach($classes as $class)
                     <option value="{{ $class->id }}" {{ $selected_class == $class->id ? 'selected' : '' }}>{{ $class->name }}</option>
@@ -66,16 +188,24 @@
         <div>
             <label class="block text-sm font-bold text-gray-700 mb-2">Exam Type</label>
             <select name="exam_type" class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm">
-                <option value="Unit Test" {{ $exam_type == 'Unit Test' ? 'selected' : '' }}>Unit Test</option>
-                <option value="Half Yearly" {{ $exam_type == 'Half Yearly' ? 'selected' : '' }}>Half Yearly</option>
-                <option value="Final" {{ $exam_type == 'Final' ? 'selected' : '' }}>Final</option>
-                <option value="Other" {{ $exam_type == 'Other' ? 'selected' : '' }}>Other</option>
+                <option value="Weekly Assessment" {{ $exam_type == 'Weekly Assessment' || $exam_type == 'WEEKLY_ASSESSMENT' ? 'selected' : '' }}>Weekly Assessment</option>
+                <option value="Mock Test" {{ $exam_type == 'Mock Test' || $exam_type == 'MOCK_TEST' ? 'selected' : '' }}>Mock Test</option>
             </select>
         </div>
 
         <div>
             <label class="block text-sm font-bold text-gray-700 mb-2">Subject</label>
-            <input type="text" value="{{ $teacher->subject }}" readonly class="w-full bg-gray-50 border-gray-300 rounded-lg text-gray-500 cursor-not-allowed text-sm">
+            <input type="text" name="subject" value="{{ $selected_subject }}" readonly class="w-full bg-gray-50 border-gray-300 rounded-lg text-gray-500 cursor-not-allowed text-sm">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Topic</label>
+            <input type="text" name="topic" value="{{ $topic }}" required placeholder="Exam Topic" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-[#2c3e80] focus:border-[#2c3e80]">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Date</label>
+            <input type="date" name="date" value="{{ $exam_date }}" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-[#2c3e80] focus:border-[#2c3e80]">
         </div>
 
         <div>
@@ -83,9 +213,11 @@
             <input type="number" name="total_marks" value="{{ $total_marks ?? 100 }}" class="w-full border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-sm">
         </div>
 
-        <button type="submit" class="bg-[#2c3e80] text-white px-6 py-2.5 rounded-lg hover:bg-[#1e2d5e] transition font-bold text-sm">
-            Load Students
-        </button>
+        <div class="sm:col-span-2 lg:col-span-2">
+            <button type="submit" class="bg-[#2c3e80] text-white px-6 py-2.5 rounded-lg hover:bg-[#1e2d5e] transition font-bold text-sm w-full h-[42px]">
+                Load Students
+            </button>
+        </div>
     </form>
 </div>
 
@@ -94,7 +226,12 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
         <div class="p-6 border-b border-gray-100">
             <h3 class="text-lg font-bold text-gray-800">Student List</h3>
-            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Entering marks for {{ count($students) }} students</p>
+            <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">
+                Entering marks for {{ count($students) }} students | 
+                Subject: <span class="font-bold text-[#2c3e80]">{{ $selected_subject }}</span> | 
+                Topic: <span class="font-bold text-[#2c3e80]">{{ $topic }}</span> | 
+                Date: <span class="font-bold text-[#2c3e80]">{{ \Carbon\Carbon::parse($exam_date)->format('M d, Y') }}</span>
+            </p>
         </div>
 
         @if(session('success'))
@@ -108,9 +245,10 @@
             @csrf
             <input type="hidden" name="class_id" value="{{ $selected_class }}">
             <input type="hidden" name="exam_type" value="{{ $exam_type }}">
-            <input type="hidden" name="subject" value="{{ $teacher->subject }}">
+            <input type="hidden" name="subject" value="{{ $selected_subject }}">
+            <input type="hidden" name="topic" value="{{ $topic }}">
+            <input type="hidden" name="date" value="{{ $exam_date }}">
             <input type="hidden" name="total_marks" value="{{ $total_marks }}">
-
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
@@ -181,83 +319,52 @@
     </div>
 @endif
 
-<!-- Previously Uploaded Marks Section -->
-<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="p-6 border-b border-gray-100">
-        <h3 class="text-lg font-bold text-gray-800">Previously Uploaded Marks</h3>
-        <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider">History for {{ $teacher->subject }}</p>
-    </div>
 
-    @if($previous_marks->isEmpty())
-        <div class="p-12 text-center">
-            <p class="text-gray-400 font-medium italic">No marks uploaded yet for this selection.</p>
+<!-- Uploaded Exams History -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mt-8 mb-8">
+    <div class="p-6 border-b border-gray-100 bg-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h3 class="text-lg font-bold text-gray-800">Uploaded Exams History</h3>
+        <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">Filter History by Class:</span>
+            <select onchange="window.location.href = '{{ route('teacher.marks') }}?class_id=' + this.value" class="border border-gray-300 rounded-lg focus:ring-[#2c3e80] focus:border-[#2c3e80] text-xs font-bold text-gray-700 bg-white py-1 pr-8 pl-3 shadow-sm cursor-pointer">
+                <option value="">-- All Classes --</option>
+                @foreach($classes as $class)
+                    <option value="{{ $class->id }}" {{ $selected_class == $class->id ? 'selected' : '' }}>
+                        {{ $class->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    
+    @if(isset($uploaded_exams) && $uploaded_exams->isNotEmpty())
+        <div class="divide-y divide-gray-100">
+            @foreach($uploaded_exams as $exam)
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 hover:bg-gray-50 transition gap-4">
+                    <div>
+                        <p class="text-sm font-bold text-gray-800">{{ $exam->subject }} - {{ $exam->topic }}</p>
+                        <div class="flex items-center flex-wrap gap-3 mt-1">
+                            @if(isset($exam->class_name))
+                                <span class="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-md uppercase tracking-wider">Class: {{ $exam->class_name }}</span>
+                            @endif
+                            <span class="text-[10px] font-bold text-[#2c3e80] bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-md uppercase tracking-wider">{{ $exam->exam_type }}</span>
+                            <span class="text-xs text-gray-500 flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002-2z"></path></svg>
+                                {{ \Carbon\Carbon::parse($exam->date)->format('M d, Y') }}
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider border-l border-gray-200 pl-3">Total Marks: {{ $exam->total_marks }}</span>
+                        </div>
+                    </div>
+                    <a href="{{ route('teacher.marks', ['class_id' => $exam->class_id, 'exam_type' => $exam->exam_type, 'subject' => $exam->subject, 'topic' => $exam->topic, 'date' => $exam->date, 'total_marks' => $exam->total_marks]) }}" 
+                       class="px-5 py-2 bg-white border border-gray-300 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 hover:text-[#2c3e80] hover:border-[#2c3e80] transition shadow-sm whitespace-nowrap text-center">
+                        View / Edit
+                    </a>
+                </div>
+            @endforeach
         </div>
     @else
-        <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Student</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Marks</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Total</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Percentage</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Remarks</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                    @foreach($previous_marks as $mark)
-                    @php
-                        $percentage = $mark->total_marks > 0 ? ($mark->marks_obtained / $mark->total_marks) * 100 : 0;
-                        $badgeColor = match(true) {
-                            $percentage >= 75 => 'bg-green-100 text-green-700',
-                            $percentage >= 50 => 'bg-yellow-100 text-yellow-700',
-                            default => 'bg-red-100 text-red-700'
-                        };
-                    @endphp
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-6 py-4">
-                            <span class="text-sm font-medium text-gray-800">{{ $mark->student->user->name }}</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <form action="{{ route('teacher.saveMarks') }}" method="POST" class="flex items-center gap-2">
-                                @csrf
-                                <input type="hidden" name="class_id" value="{{ $selected_class }}">
-                                <input type="hidden" name="exam_type" value="{{ $exam_type }}">
-                                <input type="hidden" name="subject" value="{{ $teacher->subject }}">
-                                <input type="hidden" name="total_marks" value="{{ $mark->total_marks }}">
-                                <input type="hidden" name="marks[{{ $mark->student_id }}][remarks]" value="{{ $mark->remarks }}">
-                                <input type="number"
-                                       name="marks[{{ $mark->student_id }}][marks_obtained]"
-                                       value="{{ $mark->marks_obtained }}"
-                                       min="0" max="{{ $mark->total_marks }}"
-                                       class="w-20 border border-gray-300 rounded-lg px-2 py-1 text-sm focus:ring-2 focus:ring-[#2c3e80] focus:border-[#2c3e80]">
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="text-sm text-gray-500">{{ $mark->total_marks }}</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase {{ $badgeColor }}">
-                                {{ number_format($percentage, 1) }}%
-                            </span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <input type="text"
-                                   name="marks[{{ $mark->student_id }}][remarks]"
-                                   value="{{ $mark->remarks }}"
-                                   placeholder="Feedback..."
-                                   class="w-full border border-gray-300 rounded-lg px-2 py-1 text-sm focus:ring-2 focus:ring-[#2c3e80] focus:border-[#2c3e80]">
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                                <button type="submit" class="bg-[#2c3e80] hover:bg-[#1e2d5e] text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">
-                                    Update
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div class="p-12 text-center bg-white">
+            <p class="text-gray-400 font-medium italic">No exams recorded yet.</p>
         </div>
     @endif
 </div>

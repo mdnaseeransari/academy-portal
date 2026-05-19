@@ -6,6 +6,7 @@ use App\Models\AcademicClass;
 use App\Models\Assignment;
 use App\Models\Attendance;
 use App\Models\Contact;
+use App\Models\ExamSchedule;
 use App\Models\Mark;
 use App\Models\Student;
 use App\Models\Teacher;
@@ -29,7 +30,7 @@ class AdminController extends Controller
      */
     public function dashboard(Request $request)
     {
-        $today = Carbon::today()->toDateString();
+        $selected_date = $request->get('date', Carbon::today()->toDateString());
         $selected_class_id = $request->get('class_id');
 
         // Top-level stats
@@ -54,16 +55,33 @@ class AdminController extends Controller
         // Today's attendance overview per class
         $all_classes = AcademicClass::withCount('students')->orderBy('name')->get();
 
-        $attendance_overview = $all_classes->map(function ($class) use ($today) {
+        $attendance_overview = $all_classes->map(function ($class) use ($selected_date) {
             $studentIds = $class->students()->pluck('id');
             $total      = $studentIds->count();
 
-            $present = Attendance::whereIn('student_id', $studentIds)
-                ->where('date', $today)->where('status', 'present')->count();
-            $absent  = Attendance::whereIn('student_id', $studentIds)
-                ->where('date', $today)->where('status', 'absent')->count();
+            // Unique student-period combinations to prevent slot duplicates inflating overview percentages
+            $total_records = Attendance::whereIn('student_id', $studentIds)
+                ->where('date', $selected_date)
+                ->count();
 
-            $percentage = $total > 0 ? round(($present / $total) * 100, 1) : 0;
+            if ($total_records > 0) {
+                $present_records = Attendance::whereIn('student_id', $studentIds)
+                    ->where('date', $selected_date)
+                    ->where('status', 'present')
+                    ->count();
+                $absent_records = Attendance::whereIn('student_id', $studentIds)
+                    ->where('date', $selected_date)
+                    ->where('status', 'absent')
+                    ->count();
+
+                $present = round(($present_records / $total_records) * $total);
+                $absent  = round(($absent_records / $total_records) * $total);
+                $percentage = round(($present_records / $total_records) * 100, 1);
+            } else {
+                $present = 0;
+                $absent  = 0;
+                $percentage = 0;
+            }
 
             return [
                 'class_name' => $class->name,
@@ -118,7 +136,8 @@ class AdminController extends Controller
             'recent_contacts',
             'pending_registrations',
             'all_classes',
-            'selected_class_id'
+            'selected_class_id',
+            'selected_date'
         ));
     }
 
@@ -347,7 +366,8 @@ class AdminController extends Controller
             'subject'       => 'required|string|max:255',
             'phone'         => 'nullable|string|regex:/^[0-9]{10}$/|numeric',
             'qualification' => 'nullable|string|max:255',
-            'academic_class_id' => 'nullable|exists:classes,id',
+            'academic_class_ids' => 'nullable|array',
+            'academic_class_ids.*' => 'exists:classes,id',
         ], [
             'phone.regex' => 'Phone number must be exactly 10 digits.',
         ]);
@@ -369,13 +389,11 @@ class AdminController extends Controller
                 'qualification' => $request->qualification,
             ]);
 
-            // Remove teacher from any class that currently has them, then reassign
-            AcademicClass::where('teacher_id', $teacher->user_id)
-                ->update(['teacher_id' => null]);
-
-            if ($request->filled('academic_class_id')) {
-                AcademicClass::where('id', $request->academic_class_id)
-                    ->update(['teacher_id' => $teacher->user_id]);
+            // Sync many-to-many class assignments in the pivot table
+            if ($request->has('academic_class_ids')) {
+                $teacher->classes()->sync($request->academic_class_ids ?? []);
+            } else {
+                $teacher->classes()->sync([]);
             }
         });
 
@@ -390,9 +408,8 @@ class AdminController extends Controller
         $teacher = Teacher::with('user')->findOrFail($id);
 
         DB::transaction(function () use ($teacher) {
-            // Nullify class assignment
-            AcademicClass::where('teacher_id', $teacher->user_id)
-                ->update(['teacher_id' => null]);
+            // Detach classes assigned to the teacher
+            $teacher->classes()->detach();
 
             $user = $teacher->user;
             $teacher->delete();
@@ -469,20 +486,16 @@ class AdminController extends Controller
 
         $marks_report = $marksQuery->orderBy('subject')->get()->map(function ($mark) {
             $perc = $mark->total_marks > 0 ? round(($mark->marks_obtained / $mark->total_marks) * 100, 1) : 0;
-            $grade = match(true) {
-                $perc >= 90 => 'A+',
-                $perc >= 80 => 'A',
-                $perc >= 70 => 'B',
-                $perc >= 60 => 'C',
-                default => 'D'
-            };
             return [
                 'roll_no' => $mark->student->roll_number,
                 'name'    => $mark->student->user->name,
+                'subject' => $mark->subject,
+                'exam_type' => $mark->exam_type,
+                'topic'   => $mark->topic,
+                'date'    => $mark->date,
                 'marks'   => $mark->marks_obtained,
                 'total'   => $mark->total_marks,
                 'percentage' => $perc,
-                'grade'   => $grade
             ];
         });
 
@@ -501,16 +514,84 @@ class AdminController extends Controller
                 $totalAtt = Attendance::where('student_id', $selected_student->id)->count();
                 $presentAtt = Attendance::where('student_id', $selected_student->id)->where('status', 'present')->count();
                 $selected_student->attendance_percentage = $totalAtt > 0 ? round(($presentAtt / $totalAtt) * 100, 1) : 0;
+                
+                // Calculate Class Rank
+                $class_students = Student::where('class_id', $selected_student->class_id)->with('marks')->get();
+                $student_averages = [];
+                foreach ($class_students as $cs) {
+                    $c_marks = $cs->marks;
+                    if ($c_marks->isEmpty()) {
+                        $student_averages[$cs->id] = 0;
+                        continue;
+                    }
+                    $c_totalObtained = $c_marks->sum('marks_obtained');
+                    $c_totalMax = $c_marks->sum('total_marks');
+                    $c_avg = $c_totalMax > 0 ? ($c_totalObtained / $c_totalMax) * 100 : 0;
+                    $student_averages[$cs->id] = $c_avg;
+                }
+                arsort($student_averages); // Sort highest to lowest
+                
+                $rank = 1;
+                foreach ($student_averages as $cs_id => $avg) {
+                    if ($cs_id == $selected_student->id) {
+                        $selected_student->class_rank = $rank;
+                        break;
+                    }
+                    $rank++;
+                }
+                $selected_student->total_class_students = count($student_averages);
             }
         }
 
+        // ── Academic Overview ──────────────────────────────────────────────
+        $classPerformance = [];
         $tab = $request->get('tab', 'attendance');
+        
+        if ($tab === 'overview') {
+            $classesWithMarks = AcademicClass::with(['students.user', 'students.marks'])->orderBy('name')->get();
+            foreach ($classesWithMarks as $class) {
+                $students = $class->students;
+                $topStudent = null;
+                $weakestStudent = null;
+                $maxAvg = -1;
+                $minAvg = 101;
+
+                foreach ($students as $student) {
+                    $marks = $student->marks;
+                    if ($marks->isEmpty()) continue;
+                    
+                    $totalObtained = $marks->sum('marks_obtained');
+                    $totalMax = $marks->sum('total_marks');
+                    $avg = $totalMax > 0 ? ($totalObtained / $totalMax) * 100 : 0;
+                    
+                    if ($avg > $maxAvg) {
+                        $maxAvg = $avg;
+                        $topStudent = $student;
+                    }
+                    if ($avg < $minAvg) {
+                        $minAvg = $avg;
+                        $weakestStudent = $student;
+                    }
+                }
+                
+                if ($topStudent || $weakestStudent) {
+                    $classPerformance[] = (object) [
+                        'class' => $class,
+                        'top_student' => $topStudent,
+                        'top_avg' => $maxAvg,
+                        'weakest_student' => $weakestStudent,
+                        'weakest_avg' => $minAvg
+                    ];
+                }
+            }
+        }
 
         return view('admin.reports', compact(
             'classes',
             'attendance_report',
             'marks_report',
             'selected_student',
+            'classPerformance',
             'tab'
         ));
     }
@@ -762,10 +843,14 @@ class AdminController extends Controller
             'teacher_id' => 'nullable|exists:users,id',
         ]);
 
-        AcademicClass::create([
+        $class = AcademicClass::create([
             'name' => $request->class_name,
             'teacher_id' => $request->teacher_id,
         ]);
+
+        if ($request->filled('teacher_id')) {
+            $class->teachers()->syncWithoutDetaching([$request->teacher_id]);
+        }
 
         return redirect()->back()->with('success', 'Class added successfully!');
     }
@@ -783,6 +868,10 @@ class AdminController extends Controller
             'name' => $request->class_name,
             'teacher_id' => $request->teacher_id,
         ]);
+
+        if ($request->filled('teacher_id')) {
+            $class->teachers()->syncWithoutDetaching([$request->teacher_id]);
+        }
 
         return redirect()->back()->with('success', 'Class updated successfully!');
     }
@@ -823,5 +912,512 @@ class AdminController extends Controller
         $nextNum = ($lastStudent ?: 0) + 1;
 
         return $prefix . '-' . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
+    }
+
+    // =========================================================================
+    // FEATURE 1: ADMIN ASSIGNMENTS, ATTENDANCE, AND MARKS
+    // =========================================================================
+
+    private function mapExamType($type)
+    {
+        return match($type) {
+            'Weekly Assessment' => 'weekly_assessment',
+            'Mock Test' => 'mock_test',
+            'Unit Test' => 'unit_test',
+            'Half Yearly' => 'half_yearly',
+            'Final' => 'final',
+            'Other' => 'other',
+            default => $type,
+        };
+    }
+
+    private function getSelectedClassId(Request $request)
+    {
+        if ($request->has('class_id')) {
+            $classId = $request->get('class_id');
+            session(['admin_selected_class_id' => $classId]);
+            return $classId;
+        }
+
+        $classId = session('admin_selected_class_id');
+        if ($classId && AcademicClass::where('id', $classId)->exists()) {
+            return $classId;
+        }
+
+        $firstClass = AcademicClass::orderBy('name')->first();
+        if ($firstClass) {
+            session(['admin_selected_class_id' => $firstClass->id]);
+            return $firstClass->id;
+        }
+
+        return null;
+    }
+
+    public function assignmentsPage(Request $request)
+    {
+        $classes = AcademicClass::orderBy('name')->get();
+        $selected_class_id = $this->getSelectedClassId($request);
+
+        $assignments = collect();
+        if ($selected_class_id) {
+            $assignments = Assignment::where('class_id', $selected_class_id)
+                ->with(['submissions', 'academicClass', 'creator'])
+                ->withCount('submissions')
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
+        return view('admin.assignments', compact('assignments', 'classes', 'selected_class_id'));
+    }
+
+    public function createAssignment(Request $request)
+    {
+        $request->validate([
+            'class_id' => 'required|exists:classes,id',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'due_date' => 'required|date|after:today',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
+        ]);
+
+        $filePath = null;
+        if ($request->hasFile('file')) {
+            $result = cloudinary()->uploadApi()->upload($request->file('file')->getRealPath(), [
+                'folder' => 'assignments',
+                'resource_type' => 'auto',
+            ]);
+            $filePath = $result['secure_url'];
+        }
+
+        Assignment::create([
+            'class_id' => $request->class_id,
+            'teacher_id' => auth()->id(), // Admin user ID
+            'created_by' => auth()->id(),
+            'title' => $request->title,
+            'description' => $request->description,
+            'file_path' => $filePath,
+            'due_date' => $request->due_date,
+        ]);
+
+        return redirect()->back()->with('success', 'Assignment created successfully!');
+    }
+
+    public function deleteAssignment($id)
+    {
+        $assignment = Assignment::with('submissions')->findOrFail($id);
+
+        $extractCloudinaryInfo = function($url) {
+            $pattern = '/res\.cloudinary\.com\/[^\/]+\/([^\/]+)\/upload\/(?:v\d+\/)?([^\.]+)/';
+            if (preg_match($pattern, $url, $matches)) {
+                return ['type' => $matches[1], 'public_id' => $matches[2]];
+            }
+            return null;
+        };
+
+        if ($assignment->file_path) {
+            $info = $extractCloudinaryInfo($assignment->file_path);
+            if ($info) {
+                try {
+                    cloudinary()->uploadApi()->destroy($info['public_id'], ['resource_type' => $info['type']]);
+                } catch (\Exception $e) {
+                    // Ignore
+                }
+            }
+        }
+
+        foreach ($assignment->submissions as $submission) {
+            if ($submission->file_path) {
+                $info = $extractCloudinaryInfo($submission->file_path);
+                if ($info) {
+                    try {
+                        cloudinary()->uploadApi()->destroy($info['public_id'], ['resource_type' => $info['type']]);
+                    } catch (\Exception $e) {
+                        // Ignore
+                    }
+                }
+            }
+        }
+
+        $assignment->delete();
+
+        return redirect()->route('admin.assignments', ['class_id' => $assignment->class_id])->with('success', 'Assignment and associated files deleted.');
+    }
+
+    public function attendancePage(Request $request)
+    {
+        $classes = AcademicClass::orderBy('name')->get();
+        $selected_class_id = $this->getSelectedClassId($request);
+
+        $selected_date = $request->get('date', Carbon::today()->toDateString());
+        $period_slot = $request->get('period_slot') ? trim($request->get('period_slot')) : null;
+
+        $students = collect();
+        $existing_attendance = collect();
+        $already_marked = false;
+        $available_slots = collect();
+
+        if ($selected_class_id && $selected_date) {
+            // Get available slots for this day
+            $available_slots = Attendance::where('class_id', $selected_class_id)
+                ->where('date', $selected_date)
+                ->select('period_slot')
+                ->selectRaw('MAX(created_at) as created_at')
+                ->selectRaw('MAX(marked_by) as marked_by')
+                ->groupBy('period_slot')
+                ->with('markedBy')
+                ->orderBy('created_at', 'asc')
+                ->get();
+                
+            $dayOfWeek = Carbon::parse($selected_date)->format('l');
+            $scheduled_slots = Timetable::where('class_id', $selected_class_id)
+                ->where('day', $dayOfWeek)
+                ->orderBy('time_start')
+                ->get();
+        } else {
+            $scheduled_slots = collect();
+        }
+
+        if ($selected_class_id && $period_slot) {
+            $students = Student::where('class_id', $selected_class_id)->with('user')->get();
+            $existing_attendance = Attendance::where('class_id', $selected_class_id)
+                ->where('date', $selected_date)
+                ->where('period_slot', $period_slot)
+                ->get()
+                ->keyBy('student_id');
+
+            if ($existing_attendance->isNotEmpty()) {
+                $already_marked = true;
+            }
+        }
+
+        return view('admin.attendance', compact(
+            'students',
+            'classes',
+            'selected_class_id',
+            'selected_date',
+            'period_slot',
+            'already_marked',
+            'existing_attendance',
+            'available_slots',
+            'scheduled_slots'
+        ));
+    }
+
+    public function markAttendance(Request $request)
+    {
+        $request->validate([
+            'class_id' => 'required|exists:classes,id',
+            'date' => 'required|date',
+            'period_slot' => 'required|string|max:100',
+            'attendance' => 'required|array',
+        ]);
+
+        $period_slot = trim($request->period_slot);
+        $date = $request->date;
+
+        // Normalize target slot for matching
+        $targetSubject = null;
+        $targetStartTime = null;
+
+        if (preg_match('/^(.+?)\s+(\d{1,2}:\d{2})/i', $period_slot, $matches)) {
+            $targetSubject = strtolower(trim($matches[1]));
+            $targetStartTime = trim($matches[2]);
+            if (strlen($targetStartTime) === 4) {
+                $targetStartTime = '0' . $targetStartTime;
+            }
+        }
+
+        DB::transaction(function () use ($request, $date, $period_slot, $targetSubject, $targetStartTime) {
+            foreach ($request->attendance as $student_id => $data) {
+                $existing = Attendance::where('student_id', $student_id)
+                    ->where('date', $date)
+                    ->get();
+
+                $matchedRecord = null;
+                if ($targetSubject && $targetStartTime) {
+                    foreach ($existing as $record) {
+                        if ($record->period_slot) {
+                            $rec_slot = trim($record->period_slot);
+                            if (preg_match('/^(.+?)\s+(\d{1,2}:\d{2})/i', $rec_slot, $m)) {
+                                $recSubject = strtolower(trim($m[1]));
+                                $recStartTime = trim($m[2]);
+                                if (strlen($recStartTime) === 4) {
+                                    $recStartTime = '0' . $recStartTime;
+                                }
+                                if ($recSubject === $targetSubject && $recStartTime === $targetStartTime) {
+                                    $matchedRecord = $record;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if ($matchedRecord) {
+                    $matchedRecord->update([
+                        'class_id' => $request->class_id,
+                        'period_slot' => $period_slot, // Overwrite slot text to latest format
+                        'status' => $data['status'],
+                        'marked_by' => auth()->id()
+                    ]);
+                } else {
+                    Attendance::create([
+                        'student_id' => $student_id,
+                        'class_id' => $request->class_id,
+                        'date' => $date,
+                        'period_slot' => $period_slot,
+                        'status' => $data['status'],
+                        'marked_by' => auth()->id()
+                    ]);
+                }
+            }
+        });
+
+        return redirect()->back()->with('success', 'Attendance records updated successfully for ' . Carbon::parse($request->date)->format('M d, Y') . ' (' . $period_slot . ')');
+    }
+
+    /**
+     * Delete student attendance records for a given slot.
+     */
+    public function deleteAttendance(Request $request)
+    {
+        $request->validate([
+            'class_id' => 'required|exists:classes,id',
+            'date' => 'required|date',
+            'period_slot' => 'required|string',
+        ]);
+
+        $period_slot = trim($request->period_slot);
+        $date = $request->date;
+
+        // Normalize target slot for matching
+        $targetSubject = null;
+        $targetStartTime = null;
+
+        if (preg_match('/^(.+?)\s+(\d{1,2}:\d{2})/i', $period_slot, $matches)) {
+            $targetSubject = strtolower(trim($matches[1]));
+            $targetStartTime = trim($matches[2]);
+            if (strlen($targetStartTime) === 4) {
+                $targetStartTime = '0' . $targetStartTime;
+            }
+        }
+
+        // Fetch all attendance for this class and date
+        $records = Attendance::where('class_id', $request->class_id)
+            ->where('date', $date)
+            ->get();
+
+        $deletedCount = 0;
+        foreach ($records as $record) {
+            $normalizedSlot = $record->period_slot;
+            if ($record->period_slot) {
+                $rec_slot = trim($record->period_slot);
+                if (preg_match('/^(.+?)\s+(\d{1,2}:\d{2})/i', $rec_slot, $m)) {
+                    $recSubject = strtolower(trim($m[1]));
+                    $recStartTime = trim($m[2]);
+                    if (strlen($recStartTime) === 4) {
+                        $recStartTime = '0' . $recStartTime;
+                    }
+                    if ($targetSubject && $targetStartTime && $recSubject === $targetSubject && $recStartTime === $targetStartTime) {
+                        $record->delete();
+                        $deletedCount++;
+                        continue;
+                    }
+                }
+            }
+            
+            // Fallback exact string match
+            if (trim($record->period_slot) === $period_slot) {
+                $record->delete();
+                $deletedCount++;
+            }
+        }
+
+        return redirect()->route('admin.attendance', [
+            'class_id' => $request->class_id,
+            'date' => $date
+        ])->with('success', 'Successfully deleted ' . $deletedCount . ' attendance records for slot: ' . $period_slot);
+    }
+
+    public function marksPage(Request $request)
+    {
+        $classes = AcademicClass::orderBy('name')->get();
+        $selected_class_id = $this->getSelectedClassId($request);
+
+        $exam_type = $request->get('exam_type', 'Weekly Assessment');
+        $db_exam_type = $this->mapExamType($exam_type);
+
+        $subject = $request->get('subject');
+        $topic = $request->get('topic');
+        $exam_date = $request->get('date', Carbon::today()->toDateString());
+        $total_marks = $request->get('total_marks', 100);
+
+        $students = collect();
+        $previous_marks = collect();
+
+        $uploaded_exams = collect();
+
+        // Get list of unique subjects recorded in timetable or marks to pre-populate dropdown
+        $existing_subjects = Timetable::pluck('subject')
+            ->concat(Mark::pluck('subject'))
+            ->unique()
+            ->filter()
+            ->values();
+
+        // Fetch uploaded exams history
+        $uploaded_exams_query = Mark::join('students', 'marks.student_id', '=', 'students.id')
+            ->join('classes', 'students.class_id', '=', 'classes.id')
+            ->select('marks.exam_type', 'marks.subject', 'marks.topic', 'marks.date', 'marks.total_marks', 'classes.name as class_name', 'classes.id as class_id')
+            ->distinct();
+
+        if ($selected_class_id) {
+            $uploaded_exams_query->where('classes.id', $selected_class_id);
+        }
+
+        $uploaded_exams = $uploaded_exams_query
+            ->orderBy('marks.date', 'desc')
+            ->get();
+
+        // Fetch all scheduled (upcoming) exams across all classes
+        $scheduled_exams_query = ExamSchedule::with(['academicClass', 'creator'])
+            ->where('scheduled_date', '>=', Carbon::today());
+
+        $scheduled_exams = $scheduled_exams_query->orderBy('scheduled_date', 'asc')->get();
+
+        if ($selected_class_id) {
+            $students = Student::where('class_id', $selected_class_id)->with('user')->get();
+            $studentIds = $students->pluck('id');
+
+            if ($subject && $topic && $exam_date) {
+                $previous_marks = Mark::whereIn('student_id', $studentIds)
+                    ->where('exam_type', $db_exam_type)
+                    ->where('subject', $subject)
+                    ->where('topic', $topic)
+                    ->where('date', $exam_date)
+                    ->with('student.user')
+                    ->get()
+                    ->keyBy('student_id');
+            }
+        }
+
+        return view('admin.marks', compact(
+            'students',
+            'classes',
+            'selected_class_id',
+            'exam_type',
+            'subject',
+            'topic',
+            'exam_date',
+            'total_marks',
+            'previous_marks',
+            'existing_subjects',
+            'uploaded_exams',
+            'scheduled_exams'
+        ));
+    }
+
+    public function saveMarks(Request $request)
+    {
+        $request->validate([
+            'class_id' => 'required|exists:classes,id',
+            'exam_type' => 'required|string',
+            'subject' => 'required|string|max:255',
+            'topic' => 'required|string|max:255',
+            'date' => 'required|date',
+            'total_marks' => 'required|numeric|min:1|max:1000',
+            'marks' => 'required|array',
+        ]);
+
+        $db_exam_type = $this->mapExamType($request->exam_type);
+
+        DB::transaction(function () use ($request, $db_exam_type) {
+            foreach ($request->marks as $student_id => $data) {
+                $marksObtained = isset($data['absent']) ? 0 : ($data['marks_obtained'] ?? 0);
+
+                Mark::updateOrCreate(
+                    [
+                        'student_id' => $student_id,
+                        'subject' => $request->subject,
+                        'exam_type' => $db_exam_type,
+                        'topic' => $request->topic,
+                        'date' => $request->date,
+                    ],
+                    [
+                        'marks_obtained' => $marksObtained,
+                        'total_marks' => $request->total_marks,
+                        'teacher_id' => auth()->id(), // Marked by admin
+                        'remarks' => $data['remarks'] ?? null,
+                    ]
+                );
+            }
+        });
+
+        return redirect()->back()->with('success', 'Marks saved successfully for ' . $request->subject . ' (' . $request->exam_type . ')');
+    }
+
+    /**
+     * View submissions for a specific assignment.
+     */
+    public function viewSubmissions($assignmentId)
+    {
+        $assignment = Assignment::with(['submissions.student.user'])
+            ->findOrFail($assignmentId);
+
+        return view('admin.submissions', compact('assignment'));
+    }
+
+    /**
+     * Update marks/grade for a submission.
+     */
+    public function updateMarks(Request $request, $submissionId)
+    {
+        $submission = \App\Models\AssignmentSubmission::with('assignment')->findOrFail($submissionId);
+        
+        $request->validate([
+            'grade' => 'nullable|string|max:10',
+        ]);
+
+        $submission->grade = $request->grade;
+        $submission->save();
+
+        return back()->with('success', 'Grade updated successfully!');
+    }
+
+    /**
+     * Schedule an upcoming exam / test to notify students.
+     */
+    public function scheduleExam(Request $request)
+    {
+        $request->validate([
+            'class_id'       => 'required|exists:classes,id',
+            'subject'        => 'required|string|max:255',
+            'topic'          => 'required|string|max:255',
+            'exam_type'      => 'required|string|max:100',
+            'scheduled_date' => 'required|date|after_or_equal:today',
+            'total_marks'    => 'required|numeric|min:1|max:1000',
+        ]);
+
+        ExamSchedule::create([
+            'class_id'       => $request->class_id,
+            'created_by'     => auth()->id(),
+            'subject'        => $request->subject,
+            'topic'          => $request->topic,
+            'exam_type'      => $request->exam_type,
+            'scheduled_date' => $request->scheduled_date,
+            'total_marks'    => $request->total_marks,
+        ]);
+
+        return redirect()->back()->with('success', 'Exam scheduled successfully! Students will see this notification on their dashboard.');
+    }
+
+    /**
+     * Delete a scheduled exam.
+     */
+    public function deleteExamSchedule($id)
+    {
+        $schedule = ExamSchedule::findOrFail($id);
+        $schedule->delete();
+
+        return redirect()->back()->with('success', 'Exam schedule removed.');
     }
 }

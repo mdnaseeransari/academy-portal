@@ -69,7 +69,7 @@
                     data-subject="{{ $teacher->subject }}"
                     data-phone="{{ $teacher->phone }}"
                     data-qualification="{{ $teacher->qualification }}"
-                    data-class="{{ $teacher->classes->first()->id ?? '' }}">
+                    data-classes="{{ $teacher->classes->pluck('id')->implode(',') }}">
                     <td class="px-6 py-4 text-sm font-bold text-gray-400">{{ $teachers->firstItem() + $index }}</td>
                     <td class="px-6 py-4">
                         <div class="text-sm font-bold text-gray-800">{{ $teacher->user->name }}</div>
@@ -78,7 +78,9 @@
                     <td class="px-6 py-4 text-sm font-bold text-[#2c3e80]">{{ $teacher->subject }}</td>
                     <td class="px-6 py-4 text-sm font-medium text-gray-600">{{ $teacher->phone }}</td>
                     <td class="px-6 py-4 text-sm font-medium text-gray-600">{{ $teacher->qualification ?? 'N/A' }}</td>
-                    <td class="px-6 py-4 text-sm font-bold text-gray-600">{{ $teacher->classes->first()->name ?? 'None' }}</td>
+                    <td class="px-6 py-4 text-sm font-bold text-gray-600">
+                        {{ $teacher->classes->isNotEmpty() ? $teacher->classes->pluck('name')->implode(', ') : 'None' }}
+                    </td>
                     <td class="px-6 py-4 text-center">
                         @if($teacher->user->is_active)
                             <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-green-100 text-green-700">Active</span>
@@ -213,14 +215,16 @@
                             <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Qualification</label>
                             <input type="text" name="qualification" id="edit_qualification" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition">
                         </div>
-                        <div class="sm:col-span-1">
-                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Assign Class</label>
-                            <select name="academic_class_id" id="edit_class" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2c3e80]/20 focus:border-[#2c3e80] transition">
-                                <option value="">None</option>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Assign Classes</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 @foreach($classes as $class)
-                                    <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                <label class="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 hover:border-[#2c3e80] cursor-pointer transition">
+                                    <input type="checkbox" name="academic_class_ids[]" value="{{ $class->id }}" class="edit_classes_checkbox w-4 h-4 rounded border-gray-300 text-[#2c3e80] focus:ring-[#2c3e80]">
+                                    <span class="text-sm font-bold text-gray-700">{{ $class->name }}</span>
+                                </label>
                                 @endforeach
-                            </select>
+                            </div>
                         </div>
                     </div>
                     <div class="mt-8">
@@ -266,7 +270,7 @@
                             <p id="view_phone" class="text-sm font-bold text-gray-800"></p>
                         </div>
                         <div>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Assigned Class</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Assigned Classes</p>
                             <p id="view_class" class="text-sm font-bold text-gray-800"></p>
                         </div>
                     </div>
@@ -299,7 +303,11 @@ function openEditModal(row) {
     document.getElementById('edit_subject').value = row.dataset.subject;
     document.getElementById('edit_phone').value = row.dataset.phone;
     document.getElementById('edit_qualification').value = row.dataset.qualification;
-    document.getElementById('edit_class').value = row.dataset.class;
+    
+    const classIds = row.dataset.classes ? row.dataset.classes.split(',') : [];
+    document.querySelectorAll('.edit_classes_checkbox').forEach(cb => {
+        cb.checked = classIds.includes(cb.value);
+    });
     
     form.action = '/admin/teachers/' + row.dataset.id;
     modal.classList.remove('hidden');

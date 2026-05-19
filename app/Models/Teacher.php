@@ -23,7 +23,7 @@ class Teacher extends Model
 
     public function classes()
     {
-        return $this->hasMany(AcademicClass::class, 'teacher_id', 'user_id');
+        return $this->belongsToMany(AcademicClass::class, 'class_teacher', 'user_id', 'class_id', 'user_id');
     }
 
     public function assignments()
