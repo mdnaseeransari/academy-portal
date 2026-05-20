@@ -1,4 +1,7 @@
 @extends('layouts.public')
+@section('title', 'Best Coaching Institute near Kakarmatta & DLW Varanasi | Optimal Classes')
+@section('meta_description', 'Optimal Classes — Top rated coaching near Kakarmatta and DLW Colony, Varanasi. Class 6-12, IIT-JEE and NEET coaching at New Colony Kakarmatta. Call +91 9415228666.')
+@section('meta_keywords', 'coaching near kakarmatta, coaching near DLW varanasi, best coaching institute varanasi, IIT JEE NEET coaching varanasi, optimal classes varanasi')
 
 @section('content')
 <div class="relative z-0 overflow-hidden min-h-screen flex flex-col items-center justify-center text-center px-6">

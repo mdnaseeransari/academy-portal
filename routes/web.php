@@ -55,6 +55,7 @@ Route::redirect('/acedmic-team', '/about', 301);
 Route::redirect('/iit-jee-neet', '/results', 301);
 Route::redirect('/class-11t12', '/courses', 301);
 Route::redirect('/admin-panel', '/about', 301);
+Route::redirect('/class-7t10', '/courses', 301);
 
 // Also handle www vs non-www variations
 Route::redirect('/about-us', '/about', 301);
@@ -187,5 +188,44 @@ Route::get('/pending-approval', function () {
 Route::get('/rejected', function () {
     return view('auth.rejected');
 })->name('rejected');
+
+Route::get('/sitemap.xml', function () {
+    $content = '<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://www.optimalclasses.in/</loc>
+        <priority>1.0</priority>
+        <changefreq>weekly</changefreq>
+    </url>
+    <url>
+        <loc>https://www.optimalclasses.in/about</loc>
+        <priority>0.9</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+    <url>
+        <loc>https://www.optimalclasses.in/courses</loc>
+        <priority>0.9</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+    <url>
+        <loc>https://www.optimalclasses.in/results</loc>
+        <priority>0.8</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+    <url>
+        <loc>https://www.optimalclasses.in/gallery</loc>
+        <priority>0.7</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+    <url>
+        <loc>https://www.optimalclasses.in/contact</loc>
+        <priority>0.8</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+</urlset>';
+    return response($content, 200)->header('Content-Type', 'application/xml');
+});
+
+Route::redirect('/home', '/', 301);
 
 require __DIR__.'/auth.php';

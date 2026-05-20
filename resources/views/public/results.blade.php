@@ -1,4 +1,7 @@
 @extends('layouts.public')
+@section('title', 'Student Results & Toppers | Board, IIT JEE, NEET | Optimal Classes Varanasi')
+@section('meta_description', 'Optimal Classes students consistently score 90%+ in Board exams. 100+ toppers from Kakarmatta, DLW, Varanasi in Class 10, Class 12, IIT JEE and NEET.')
+@section('meta_keywords', 'optimal classes results varanasi, board exam toppers kakarmatta, IIT JEE NEET results varanasi coaching')
 
 @section('content')
 <!-- Results Header Section -->

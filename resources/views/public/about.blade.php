@@ -1,4 +1,7 @@
 @extends('layouts.public')
+@section('title', 'About Optimal Classes | Director, Vision & Academic Team | Varanasi')
+@section('meta_description', 'Meet Shobhit Kumar Srivastava, B.Tech HBTI Kanpur, Director of Optimal Classes Varanasi. Expert faculty for Class 6-12, IIT-JEE and NEET coaching near Kakarmatta.')
+@section('meta_keywords', 'optimal classes director varanasi, shobhit srivastava coaching varanasi, about optimal classes kakarmatta')
 
 @section('content')
 <!-- About Us Page Content -->

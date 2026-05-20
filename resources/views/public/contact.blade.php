@@ -1,4 +1,7 @@
 @extends('layouts.public')
+@section('title', 'Contact Optimal Classes | Coaching near Kakarmatta & DLW Varanasi')
+@section('meta_description', 'Contact Optimal Classes at New Colony Kakarmatta, Varanasi. Call +91 9415228666. Best coaching near DLW Colony for Class 6-12, IIT-JEE and NEET.')
+@section('meta_keywords', 'contact optimal classes varanasi, coaching near kakarmatta contact, DLW varanasi coaching enquiry')
 
 @section('content')
 <div class="min-h-screen bg-white">

@@ -1,4 +1,7 @@
 @extends('layouts.public')
+@section('title', 'Gallery | Classrooms & Campus Life | Optimal Classes Varanasi')
+@section('meta_description', 'Photos of Optimal Classes Varanasi — smart digital classrooms, student life and campus facilities near Kakarmatta and DLW Colony.')
+@section('meta_keywords', 'optimal classes gallery varanasi, coaching classrooms kakarmatta, optimal classes campus photos')
 
 @section('content')
 <!-- Gallery Header Section -->

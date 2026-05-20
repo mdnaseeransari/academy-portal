@@ -1,4 +1,7 @@
 @extends('layouts.public')
+@section('title', 'Courses & Fee 2026-27 | Class 6-12, IIT JEE, NEET | Optimal Classes Varanasi')
+@section('meta_description', 'Coaching fee for Class 6-12, IIT JEE and NEET at Optimal Classes Kakarmatta Varanasi. Session 2026-27 starts at ₹22,200 with easy installments available.')
+@section('meta_keywords', 'coaching fee varanasi, IIT JEE coaching fee varanasi, NEET coaching fee kakarmatta, class 6 to 12 fee varanasi')
 
 @section('content')
 <div class="min-h-screen bg-white">

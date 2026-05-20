@@ -1,10 +1,72 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Optimal Classes</title>
+
+    {{-- Page Title --}}
+    <title>@yield('title', 'Best Coaching Institute near Kakarmatta & DLW Varanasi | Optimal Classes')</title>
+
+    {{-- Meta Description --}}
+    <meta name="description" content="@yield('meta_description', 'Optimal Classes — Top coaching institute near Kakarmatta and DLW Colony, Varanasi. Expert coaching for Class 6-12, IIT-JEE and NEET. New Colony Kakarmatta, Varanasi. Call +91 9415228666')">
+
+    {{-- Meta Keywords --}}
+    <meta name="keywords" content="@yield('meta_keywords', 'coaching near kakarmatta, coaching near DLW varanasi, best coaching institute varanasi, IIT JEE coaching varanasi, NEET coaching varanasi, optimal classes varanasi, class 6 to 12 coaching varanasi')">
+
+    {{-- Canonical URL --}}
+    <link rel="canonical" href="@yield('canonical', url()->current())">
+
+    {{-- Robots --}}
+    <meta name="robots" content="index, follow">
+
+    {{-- Open Graph (WhatsApp / Facebook preview) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Optimal Classes">
+    <meta property="og:title" content="@yield('title', 'Best Coaching near Kakarmatta & DLW Varanasi | Optimal Classes')">
+    <meta property="og:description" content="@yield('meta_description', 'Top coaching institute near Kakarmatta and DLW Colony Varanasi. Class 6-12, IIT-JEE and NEET coaching.')">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('images/logo-optimal-classes.webp') }}">
+
+    {{-- Schema Markup --}}
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "EducationalOrganization",
+        "name": "Optimal Classes",
+        "description": "Top coaching institute near Kakarmatta and DLW Colony Varanasi. Class 6-12, IIT-JEE and NEET coaching.",
+        "url": "https://www.optimalclasses.in",
+        "logo": "https://www.optimalclasses.in/images/logo-optimal-classes.webp",
+        "telephone": ["+919415228666", "+917380922230"],
+        "email": "optimalclassesvns@gmail.com",
+        "address": {
+            "@@type": "PostalAddress",
+            "streetAddress": "New Colony, Kakarmatta",
+            "addressLocality": "Varanasi",
+            "addressRegion": "Uttar Pradesh",
+            "addressCountry": "IN"
+        },
+        "areaServed": [
+            "Kakarmatta", "DLW Colony", "BLW", "Sunderpur",
+            "Susuwahi", "Lahartara", "Lanka", "Bhelupur",
+            "Durgakund", "Shivpur", "Varanasi"
+        ],
+        "founder": {
+            "@@type": "Person",
+            "name": "Shobhit Kumar Srivastava",
+            "jobTitle": "Director"
+        },
+        "sameAs": [
+            "https://www.facebook.com/people/Optimal-Classes/61551640119156",
+            "https://www.instagram.com/optimal_classes",
+            "https://www.youtube.com/@Optimal_Classes"
+        ]
+    }
+    </script>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+   
     <style>
         html { scroll-behavior: smooth; }
 
