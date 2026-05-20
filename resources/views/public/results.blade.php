@@ -409,4 +409,27 @@ function showYear(year) {
     background-size: 30px 30px;
 }
 </style>
+
+<div class="container mx-auto px-6 py-12">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">
+        Why Our Results Speak for Themselves
+    </h2>
+    <p class="text-gray-600 mb-4">
+        At Optimal Classes, Kakarmatta Varanasi, our students 
+        consistently outperform the Varanasi average in CBSE and 
+        ICSE board examinations. In Session 2025-26 alone, we 
+        produced 2 Merit students scoring above 95% in Class 10 
+        and 1 Distinction student in Class 12.
+    </p>
+    <p class="text-gray-600 mb-4">
+        Our structured approach to IIT JEE and NEET preparation, 
+        combined with weekly Sunday tests and dedicated doubt 
+        sessions, ensures every student reaches their full potential.
+    </p>
+    <p class="text-gray-600">
+        Join the growing list of toppers from Kakarmatta, DLW, 
+        BLW, Sunderpur and across Varanasi who have achieved 
+        their dreams with Optimal Classes.
+    </p>
+</div>
 @endsection

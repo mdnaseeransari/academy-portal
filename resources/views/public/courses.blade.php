@@ -129,4 +129,21 @@
         </div>
     </div>
 </div>
+
+<div class="container mx-auto px-6 py-12 bg-gray-50">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">
+        Best Coaching for Class 6-12 near Kakarmatta, Varanasi
+    </h2>
+    <p class="text-gray-600 mb-4">
+        Whether your child is in Class 6 building their foundation 
+        or in Class 12 preparing for IIT JEE and NEET, Optimal 
+        Classes near DLW Colony Varanasi has the right program 
+        with experienced faculty and proven results.
+    </p>
+    <p class="text-gray-600">
+        Our fee structure is designed to be affordable with easy 
+        installments, making quality education accessible to all 
+        students in Kakarmatta, BLW, Sunderpur and surrounding areas.
+    </p>
+</div>
 @endsection

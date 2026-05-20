@@ -398,6 +398,21 @@
         </div>
 </section>
 
+<section class="py-12 bg-gray-50">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">
+            Conveniently Located near Kakarmatta & DLW, Varanasi
+        </h2>
+        <p class="text-gray-600 max-w-3xl mx-auto text-lg">
+            Optimal Classes is situated at New Colony, Kakarmatta, 
+            just minutes away from DLW Colony, BLW, and Sunderpur. 
+            Students from across Varanasi travel to us for expert 
+            coaching in Class 6-12, IIT JEE and NEET preparation. 
+            Visit us today or call +91 9415228666 for admissions.
+        </p>
+    </div>
+</section>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const slides = [

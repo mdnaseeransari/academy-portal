@@ -98,6 +98,22 @@
                     </summary>
                     <p class="text-gray-600 mt-4">Our unique combination of experienced teachers, personalized attention, quality study materials, and consistent results makes us the best coaching institute in Varanasi.</p>
                 </details>
+
+                <details class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 cursor-pointer group">
+                    <summary class="flex items-center justify-between font-bold text-gray-800 text-lg">
+                        Q6. Where exactly is Optimal Classes located?
+                        <span class="transition group-open:rotate-180">▼</span>
+                    </summary>
+                    <p class="text-gray-600 mt-4">Near Indrani Gas Agency, New Colony Kakarmatta, Varanasi — just 5 minutes from DLW gate and 10 minutes from BLW Colony.</p>
+                </details>
+
+                <details class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 cursor-pointer group">
+                    <summary class="flex items-center justify-between font-bold text-gray-800 text-lg">
+                        Q7. How do I get admission at Optimal Classes?
+                        <span class="transition group-open:rotate-180">▼</span>
+                    </summary>
+                    <p class="text-gray-600 mt-4">Simply call +91 9415228666 or fill the enquiry form above. Walk-in visits are welcome at our Kakarmatta centre during working hours (9 AM to 8 PM).</p>
+                </details>
             </div>
         </div>
     </div>
