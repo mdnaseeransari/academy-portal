@@ -8,9 +8,10 @@
     <!-- Automatic Background Slideshow -->
     <div class="absolute inset-0 -z-10 pointer-events-none bg-black">
         <div class="absolute inset-0 z-10 bg-black/40"></div>
-        <img id="hero-slide-1" src="{{ asset('images/bg-optimal-classes.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-100" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 1">
-        <img id="hero-slide-2" data-src="{{ asset('images/12.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-0" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 2">
-        <img id="hero-slide-3" data-src="{{ asset('images/14.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-0" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 3">
+        <img id="hero-slide-1" src="{{ asset('images/bg-optimal-classes.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-100" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 1" loading="eager" fetchpriority="high">
+        <img id="hero-slide-2" data-src="{{ asset('images/12.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-0" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 2" loading="lazy">
+        <img id="hero-slide-3" data-src="{{ asset('images/14.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-0" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 3" loading="lazy">
+        <img id="hero-slide-4" data-src="{{ asset('images/back.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-0" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 4" loading="lazy">
     </div>
 
     <h1 class="text-5xl font-bold text-white mb-4">Welcome to <span class="text-white">Optimal Classes</span></h1>
@@ -418,12 +419,13 @@
         const slides = [
             document.getElementById('hero-slide-1'),
             document.getElementById('hero-slide-2'),
-            document.getElementById('hero-slide-3')
+            document.getElementById('hero-slide-3'),
+            document.getElementById('hero-slide-4')
         ];
         
         let currentIndex = 0;
         
-        // Lazy load images 2 and 3 after window load event
+        // Lazy load images 2, 3 and 4 after window load event
         window.addEventListener('load', function() {
             setTimeout(function() {
                 for (let i = 1; i < slides.length; i++) {
@@ -457,8 +459,8 @@
             currentIndex = nextIndex;
         }
 
-        // Run auto-advance every 5 seconds (5000ms)
-        setInterval(showNextSlide, 5000);
+        // Run auto-advance every 3.5 seconds (3500ms)
+        setInterval(showNextSlide, 3500);
     });
 </script>
 

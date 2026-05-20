@@ -64,6 +64,10 @@
     }
     </script>
 
+    {{-- Preload critical images --}}
+    <link rel="preload" href="{{ asset('images/logo-optimal-classes.webp') }}" as="image">
+    <link rel="preload" href="{{ asset('images/bg-optimal-classes.webp') }}" as="image">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
    
@@ -145,7 +149,7 @@
     <nav class="bg-white border-b border-gray-100 h-16 flex items-center justify-between px-6 sticky top-0 z-50 shadow-sm">
         <div class="flex items-center gap-2">
             <a href="{{ url('/') }}" class="inline-flex items-center">
-                <img src="{{ asset('images/logo-optimal-classes.webp') }}" alt="Optimal Classes" class="h-10" loading="lazy">
+                <img src="{{ asset('images/logo-optimal-classes.webp') }}" alt="Optimal Classes" class="h-10" loading="eager" fetchpriority="high">
             </a>
         </div>
 
