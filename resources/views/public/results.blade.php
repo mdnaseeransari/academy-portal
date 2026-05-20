@@ -416,19 +416,25 @@ function showYear(year) {
     </h2>
     <p class="text-gray-600 mb-4">
         At Optimal Classes, Kakarmatta Varanasi, our students 
-        consistently outperform the Varanasi average in CBSE and 
-        ICSE board examinations. In Session 2025-26 alone, we 
-        produced 2 Merit students scoring above 95% in Class 10 
-        and 1 Distinction student in Class 12.
+        consistently achieve outstanding results in CBSE and ICSE 
+        board examinations. From Anas Siddiqui scoring 96% to 
+        Khushi Yadav, Anant Srivastava and Khushi Raj all scoring 
+        96.2% — our toppers speak for themselves.
     </p>
     <p class="text-gray-600 mb-4">
-        Our structured approach to IIT JEE and NEET preparation, 
-        combined with weekly Sunday tests and dedicated doubt 
-        sessions, ensures every student reaches their full potential.
+        In Session 2025-26, Kartikey Tripathi scored 94.6% in 
+        Class XII PCM, Harshit Tiwari scored 92% in Class X, 
+        Arohi Rai scored 91.6% and multiple students crossed 
+        90% in both Class 10 and Class 12 boards.
+    </p>
+    <p class="text-gray-600 mb-4">
+        Our structured approach combining weekly Sunday tests, 
+        dedicated doubt sessions and customized study material 
+        ensures every student from Kakarmatta, DLW, BLW, 
+        Sunderpur and across Varanasi reaches their full potential.
     </p>
     <p class="text-gray-600">
-        Join the growing list of toppers from Kakarmatta, DLW, 
-        BLW, Sunderpur and across Varanasi who have achieved 
+        Join the growing list of 100+ toppers who have achieved 
         their dreams with Optimal Classes.
     </p>
 </div>
