@@ -45,6 +45,46 @@
 @endpush
 
 @section('content')
+<style>
+@media (max-width: 768px) {
+    /* Filter form — stack and full-width button */
+    .student-attendance-filter {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+    .student-attendance-filter button[type="submit"] {
+        width: 100% !important;
+    }
+    .student-attendance-filter .flex-grow {
+        min-width: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Table cells — tighter padding on mobile */
+    .student-attendance-table th,
+    .student-attendance-table td {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        font-size: 12px !important;
+    }
+
+    /* Summary cards — min padding */
+    .summary-card {
+        padding: 12px !important;
+    }
+    .summary-card .text-3xl {
+        font-size: 1.5rem !important;
+    }
+
+    /* Filter tabs — smaller text on mobile */
+    .filter-tabs a {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        font-size: 12px !important;
+    }
+}
+</style>
 <div class="mb-8">
     <h1 class="text-2xl font-bold text-gray-800">My Attendance</h1>
     <p class="text-sm text-gray-500">View and filter your attendance history.</p>
@@ -53,25 +93,25 @@
 <!-- Summary Cards Row -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <!-- Total Days -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-purple-500">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-purple-500 summary-card">
         <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Days</p>
         <p class="text-3xl font-bold text-gray-800 mt-1">{{ $summary['total'] }}</p>
     </div>
 
     <!-- Present -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-green-500">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-green-500 summary-card">
         <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Present</p>
         <p class="text-3xl font-bold text-gray-800 mt-1">{{ $summary['present'] }}</p>
     </div>
 
     <!-- Absent -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-red-500">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-red-500 summary-card">
         <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Absent</p>
         <p class="text-3xl font-bold text-gray-800 mt-1">{{ $summary['absent'] }}</p>
     </div>
 
     <!-- Attendance % -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-blue-500">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-blue-500 summary-card">
         <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Attendance %</p>
         <p class="text-3xl font-bold text-gray-800 mt-1">{{ $summary['percentage'] }}%</p>
         
@@ -88,7 +128,7 @@
 
 <!-- Filter Tabs & Form -->
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-    <div class="flex border-b border-gray-200 mb-6">
+    <div class="flex border-b border-gray-200 mb-6 filter-tabs">
         <a href="{{ route('student.attendance', ['view_mode' => 'month']) }}" 
            class="px-5 py-2.5 border-b-2 text-sm font-bold transition-all flex items-center gap-2 {{ ($view_mode ?? 'month') === 'month' ? 'border-[#2c3e80] text-[#2c3e80]' : 'border-transparent text-gray-400 hover:text-gray-600' }}">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002-2z"></path></svg>
@@ -101,7 +141,7 @@
         </a>
     </div>
 
-    <form action="{{ route('student.attendance') }}" method="GET" class="flex flex-wrap items-end gap-4">
+    <form action="{{ route('student.attendance') }}" method="GET" class="flex flex-wrap items-end gap-4 student-attendance-filter">
         <input type="hidden" name="view_mode" value="{{ $view_mode ?? 'month' }}">
 
         @if(($view_mode ?? 'month') === 'date')
@@ -147,7 +187,7 @@
         </div>
     @else
         <div class="overflow-x-auto">
-            <table class="w-full text-left">
+            <table class="w-full text-left student-attendance-table">
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
