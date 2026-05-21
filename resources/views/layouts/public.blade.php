@@ -66,7 +66,8 @@
 
     {{-- Preload critical images --}}
     <link rel="preload" href="{{ asset('images/logo-optimal-classes.webp') }}" as="image">
-    <link rel="preload" href="{{ asset('images/bg-optimal-classes.webp') }}" as="image">
+
+    @yield('head')
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 

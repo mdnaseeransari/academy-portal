@@ -3,32 +3,23 @@
 @section('meta_description', 'Optimal Classes — Top rated coaching near Kakarmatta and DLW Colony, Varanasi. Class 6-12, IIT-JEE and NEET coaching at New Colony Kakarmatta. Call +91 9415228666.')
 @section('meta_keywords', 'coaching near kakarmatta, coaching near DLW varanasi, best coaching institute varanasi, IIT JEE NEET coaching varanasi, optimal classes varanasi')
 
+@section('head')
+    <link rel="preload" as="image" href="{{ asset('images/back.webp') }}" fetchpriority="high">
+@endsection
+
 @section('content')
 <div class="relative z-0 overflow-hidden min-h-screen flex flex-col items-center justify-center text-center px-6">
-    <!-- Automatic Background Slideshow -->
+    <!-- Static Hero Background -->
     <div class="absolute inset-0 -z-10 pointer-events-none bg-black">
-        <div class="absolute inset-0 z-10 bg-black/40"></div>
-        <img id="hero-slide-1" src="{{ asset('images/bg-optimal-classes.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-100" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 1" loading="eager" fetchpriority="high">
-        <img id="hero-slide-2" data-src="{{ asset('images/12.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-0" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 2" loading="lazy">
-        <img id="hero-slide-3" data-src="{{ asset('images/14.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-0" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 3" loading="lazy">
-        <img id="hero-slide-4" data-src="{{ asset('images/back.webp') }}" class="absolute inset-0 w-full h-full object-cover opacity-0" style="transition: opacity 2500ms ease-in-out;" alt="Optimal Classes Slideshow 4" loading="lazy">
+        <div class="absolute inset-0 z-10 bg-black/20"></div>
+        <img src="{{ asset('images/back.webp') }}" class="absolute inset-0 w-full h-full object-cover" alt="Optimal Classes Hero" loading="eager" fetchpriority="high" decoding="async" width="1920" height="1080">
     </div>
 
-    <h1 class="text-5xl font-bold text-white mb-4">Welcome to <span class="text-white">Optimal Classes</span></h1>
-    <p class="text-lg text-white/90 mb-8 max-w-2xl">Empowering students and teachers with a modern, efficient, and professional class management experience.</p>
-
-    <div class="flex flex-wrap justify-center gap-4">
-        @if (Route::has('login'))
-            @auth
-                <a href="{{ url('/dashboard') }}" class="bg-[#2c3e80] text-white px-8 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold text-lg">Go to Dashboard</a>
-            @else
-                <a href="{{ route('login') }}" class="bg-[#2c3e80] text-white px-8 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold text-lg">Login to Academy</a>
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="bg-white text-gray-700 border border-gray-300 px-8 py-3 rounded-lg hover:bg-gray-50 text-lg transition font-bold">Register Now</a>
-                @endif
-            @endauth
-        @endif
-    </div>
+    @auth
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="{{ url('/dashboard') }}" class="bg-[#2c3e80] text-white px-8 py-3 rounded-lg hover:bg-[#1e2d5e] transition font-bold text-lg">Go to Dashboard</a>
+        </div>
+    @endauth
 
 
 </div>
@@ -414,54 +405,5 @@
     </div>
 </section>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const slides = [
-            document.getElementById('hero-slide-1'),
-            document.getElementById('hero-slide-2'),
-            document.getElementById('hero-slide-3'),
-            document.getElementById('hero-slide-4')
-        ];
-        
-        let currentIndex = 0;
-        
-        // Lazy load images 2, 3 and 4 after window load event
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                for (let i = 1; i < slides.length; i++) {
-                    if (slides[i] && slides[i].hasAttribute('data-src')) {
-                        slides[i].setAttribute('src', slides[i].getAttribute('data-src'));
-                        slides[i].removeAttribute('data-src');
-                    }
-                }
-            }, 1000); // 1 second delay to ensure other page content loads first
-        });
-
-        function showNextSlide() {
-            const nextIndex = (currentIndex + 1) % slides.length;
-            const currentSlide = slides[currentIndex];
-            const nextSlide = slides[nextIndex];
-            
-            if (!currentSlide || !nextSlide) return;
-
-            // Ensure the next image is loaded before transition
-            if (nextSlide.hasAttribute('data-src')) {
-                nextSlide.setAttribute('src', nextSlide.getAttribute('data-src'));
-                nextSlide.removeAttribute('data-src');
-            }
-
-            // Perform crossfade transition
-            currentSlide.classList.remove('opacity-100');
-            currentSlide.classList.add('opacity-0');
-            nextSlide.classList.remove('opacity-0');
-            nextSlide.classList.add('opacity-100');
-            
-            currentIndex = nextIndex;
-        }
-
-        // Run auto-advance every 3.5 seconds (3500ms)
-        setInterval(showNextSlide, 3500);
-    });
-</script>
 
 @endsection

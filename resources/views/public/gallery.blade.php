@@ -22,20 +22,20 @@
         <!-- Gallery Grid -->
         <div class="gallery-masonry">
             @php
-                $galleryFiles = glob(public_path('images/gallary/*.webp'), GLOB_BRACE);
-                $gallery = array_map(function ($file) {
-                    $name = pathinfo($file, PATHINFO_FILENAME);
+                $newImages = ['1.webp', '2.webp', '4.webp', '5.webp', '6.webp', '7.webp', '8.webp', '9.webp', '10.webp', '11.webp', '12.webp', '13.webp', '14.webp'];
+                $gallery = array_map(function ($img) {
+                    $name = pathinfo($img, PATHINFO_FILENAME);
                     return [
-                        'img' => basename($file),
+                        'img' => $img,
                         'title' => ucwords(str_replace(['-', '_'], ' ', $name)),
                         'cat' => 'Gallery',
                     ];
-                }, $galleryFiles);
+                }, $newImages);
             @endphp
 
             @foreach($gallery as $item)
             <div class="gallery-item group relative bg-gray-100 shadow-lg hover:shadow-2xl transition-all duration-500 animate-fade-in">
-                <img src="{{ asset('images/gallary/' . $item['img']) }}" class="gallery-masonry-img group-hover:scale-110 transition-transform duration-700" alt="Gallery image" loading="lazy">
+                <img src="{{ asset('images/gallary/' . $item['img']) }}" class="gallery-masonry-img group-hover:scale-110 transition-transform duration-700" alt="Gallery image" loading="lazy" decoding="async">
             </div>
             @endforeach
         </div>
