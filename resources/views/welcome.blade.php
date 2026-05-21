@@ -8,10 +8,35 @@
 @endsection
 
 @section('content')
-<div class="relative z-0 overflow-hidden min-h-screen flex flex-col items-center justify-center text-center px-6">
+<style>
+    @media (max-width: 768px) {
+        #hero-section {
+            min-height: auto;
+            height: auto;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        #hero-bg-wrapper {
+            position: relative;
+            inset: auto;
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+        #hero-bg-wrapper img {
+            position: relative;
+            inset: auto;
+            width: 100%;
+            height: auto;
+            max-height: 50vh;
+            object-fit: contain;
+            display: block;
+        }
+    }
+</style>
+<div id="hero-section" class="relative z-0 overflow-hidden min-h-screen flex flex-col items-center justify-center text-center px-6">
     <!-- Static Hero Background -->
-    <div class="absolute inset-0 -z-10 pointer-events-none bg-black">
-        <div class="absolute inset-0 z-10 bg-black/20"></div>
+    <div id="hero-bg-wrapper" class="absolute inset-0 -z-10 pointer-events-none">
         <img src="{{ asset('images/back.webp') }}" class="absolute inset-0 w-full h-full object-cover" alt="Optimal Classes Hero" loading="eager" fetchpriority="high" decoding="async" width="1920" height="1080">
     </div>
 
