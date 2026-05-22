@@ -27,6 +27,11 @@ class User extends Authenticatable
         'profile_photo',
         'phone',
         'is_active',
+        // Pending registration fields — populated at registration, cleared after approval
+        'pending_class_id',
+        'pending_parent_name',
+        'pending_parent_email',
+        'pending_parent_phone',
     ];
 
     /**
@@ -78,5 +83,13 @@ class User extends Authenticatable
     public function teacher()
     {
         return $this->hasOne(Teacher::class);
+    }
+
+    /**
+     * Get the pending academic class (used during registration before approval)
+     */
+    public function pendingAcademicClass()
+    {
+        return $this->belongsTo(AcademicClass::class, 'pending_class_id', 'id');
     }
 }

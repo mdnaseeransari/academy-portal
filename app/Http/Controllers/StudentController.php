@@ -23,17 +23,6 @@ class StudentController extends Controller
     public function dashboard()
     {
         $user = auth()->user();
-        
-        // REPAIR: If user is a student but missing the Student profile
-        if (!$user->student && $user->role === 'student') {
-            \App\Models\Student::create([
-                'user_id' => $user->id,
-                'roll_number' => 'RECOVERED-' . $user->id,
-                'class_id' => \App\Models\AcademicClass::first()->id ?? null,
-            ]);
-            // Refresh user to load the new student relation
-            $user->load('student');
-        }
 
         $student = $user->student;
         if (!$student) abort(403, 'No student profile found.');

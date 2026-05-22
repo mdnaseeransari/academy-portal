@@ -38,20 +38,6 @@ class AdminController extends Controller
         $totalTeachers  = Teacher::count();
         $unreadContacts = Contact::where('status', 'unread')->count();
 
-        // REPAIR: Find "Ghost" students (Approved Users with role 'student' but no Student record)
-        $ghostStudents = User::where('role', 'student')
-            ->where('status', 'approved')
-            ->whereDoesntHave('student')
-            ->get();
-
-        foreach ($ghostStudents as $ghost) {
-            Student::create([
-                'user_id' => $ghost->id,
-                'roll_number' => 'RECOVERED-' . $ghost->id,
-                'class_id' => AcademicClass::first()->id ?? null,
-            ]);
-        }
-
         // Today's attendance overview per class
         $all_classes = AcademicClass::withCount('students')->orderBy('name')->get();
 
@@ -111,11 +97,9 @@ class AdminController extends Controller
         // Pending user registrations (last 5) - Filtered by class if selected
         $pending_query = User::where('role', 'student')
             ->where('status', 'pending')
-            ->with('student.academicClass');
+            ->with('pendingAcademicClass');
         if ($selected_class_id) {
-            $pending_query->whereHas('student', function($q) use ($selected_class_id) {
-                $q->where('class_id', $selected_class_id);
-            });
+            $pending_query->where('pending_class_id', $selected_class_id);
         }
         $pending_registrations = $pending_query->orderBy('created_at', 'desc')
             ->limit(5)
@@ -779,32 +763,37 @@ class AdminController extends Controller
     {
         return DB::transaction(function() use ($id) {
             $user = User::findOrFail($id);
-            
+
             if ($user->status !== 'pending') {
                 return redirect()->back()->with('error', 'User is not pending approval.');
             }
-            
-            // Create Student record only if it doesn't exist
-            $student = Student::where('user_id', $user->id)->first();
-            
-            if (!$student) {
-                Student::create([
-                    'user_id' => $user->id,
-                    'roll_number' => 'TEMP-' . $user->id, 
-                    'class_id' => null,
-                ]);
-            } else {
-                // Update the temporary roll number to the professional format
-                if ($student->class_id) {
-                    $student->update([
-                        'roll_number' => $this->generateRollNumber($student->class_id)
-                    ]);
-                }
-            }
-            
-            // Approve user
-            $user->update(['status' => 'approved']);
-            
+
+            // At approval time, create the official Student record using the
+            // pending registration data stored on the User row.
+            $classId    = $user->pending_class_id;
+            $rollNumber = $classId
+                ? $this->generateRollNumber($classId)
+                : 'REG-' . strtoupper(\Illuminate\Support\Str::random(6));
+
+            Student::create([
+                'user_id'      => $user->id,
+                'class_id'     => $classId,
+                'roll_number'  => $rollNumber,
+                'parent_name'  => $user->pending_parent_name,
+                'parent_email' => $user->pending_parent_email,
+                'parent_phone' => $user->pending_parent_phone,
+                'admission_date' => now()->toDateString(),
+            ]);
+
+            // Approve user and clear the pending registration staging fields
+            $user->update([
+                'status'               => 'approved',
+                'pending_class_id'     => null,
+                'pending_parent_name'  => null,
+                'pending_parent_email' => null,
+                'pending_parent_phone' => null,
+            ]);
+
             return redirect()->back()->with('success', 'Student approved successfully!');
         });
     }

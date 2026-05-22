@@ -4,15 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Student;
 use App\Models\AcademicClass;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -59,23 +56,20 @@ class RegisteredUserController extends Controller
 
         DB::beginTransaction();
         try {
+            // Create the User record with status=pending.
+            // Class and parent details are stored as pending_* fields so they are
+            // available when the admin approves. NO Student record is created here —
+            // that only happens after admin approval via approveUser().
             $user = User::create([
-                'name' => $request->name,
-                'email' => $fullEmail,
-                'password' => Hash::make($request->password),
-                'role' => 'student',
-                'status' => 'pending',
-                'phone' => $request->phone,
-            ]);
-
-            // Create Student record immediately with the registration data
-            Student::create([
-                'user_id' => $user->id,
-                'class_id' => $request->class_id,
-                'roll_number' => 'REG-' . strtoupper(Str::random(6)), // Unique temp roll number
-                'parent_name' => $request->parent_name,
-                'parent_phone' => $request->parent_phone,
-                'admission_date' => now(),
+                'name'                 => $request->name,
+                'email'                => $fullEmail,
+                'password'             => Hash::make($request->password),
+                'role'                 => 'student',
+                'status'               => 'pending',
+                'phone'                => $request->phone,
+                'pending_class_id'     => $request->class_id,
+                'pending_parent_name'  => $request->parent_name,
+                'pending_parent_phone' => $request->parent_phone,
             ]);
 
             DB::commit();
