@@ -141,12 +141,12 @@
         <!-- Stats -->
         <div class="grid grid-cols-3 gap-6 max-w-2xl mx-auto">
             <div class="text-center">
-                <div class="text-4xl font-bold text-[#2c3e80] mb-0.5">6</div>
+                <div class="text-4xl font-bold text-[#2c3e80] mb-0.5">10+</div>
                 <p class="text-gray-600 font-medium">Dedicated Teachers</p>
             </div>
             <div class="text-center">
                 <div class="text-4xl font-bold text-[#2c3e80] mb-0.5">1000+</div>
-                <p class="text-gray-600 font-medium">Students</p>
+                <p class="text-gray-600 font-medium">Students since 2022</p>
             </div>
             <div class="text-center">
                 <div class="text-4xl font-bold text-[#2c3e80] mb-0.5">100+</div>
