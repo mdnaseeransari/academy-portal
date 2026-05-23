@@ -442,6 +442,11 @@ class AdminController extends Controller
                 $late    = $records->where('status', 'late')->count();
                 $student = $records->first()->student;
 
+                // Skip orphaned records where student or user no longer exists
+                if (!$student || !$student->user) {
+                    return null;
+                }
+
                 return [
                     'name'       => $student->user->name,
                     'roll_no'    => $student->roll_number,
@@ -451,7 +456,7 @@ class AdminController extends Controller
                     'late'       => $late,
                     'percentage' => $total > 0 ? round(($present / $total) * 100, 1) : 0,
                 ];
-            })->values();
+            })->filter()->values();
 
         // ── Marks Report ───────────────────────────────────────────────────
         $marksClassId = $request->get('class_id');
@@ -469,6 +474,11 @@ class AdminController extends Controller
         }
 
         $marks_report = $marksQuery->orderBy('subject')->get()->map(function ($mark) {
+            // Skip orphaned records where student or user no longer exists
+            if (!$mark->student || !$mark->student->user) {
+                return null;
+            }
+
             $perc = $mark->total_marks > 0 ? round(($mark->marks_obtained / $mark->total_marks) * 100, 1) : 0;
             return [
                 'roll_no' => $mark->student->roll_number,
@@ -481,7 +491,7 @@ class AdminController extends Controller
                 'total'   => $mark->total_marks,
                 'percentage' => $perc,
             ];
-        });
+        })->filter()->values();
 
         // ── Student Report ─────────────────────────────────────────────────
         $student_search = $request->get('student_search');
