@@ -2,6 +2,22 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    <!-- Error Alert -->
+    @if ($errors->any() || session('error') || request()->get('expired'))
+        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            @if (session('error'))
+                <p class="text-red-700 text-sm font-medium">{{ session('error') }}</p>
+            @elseif (request()->get('expired'))
+                <p class="text-red-700 text-sm font-medium">⚠️ Your session expired. Please login again.</p>
+            @endif
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    <p class="text-red-700 text-sm">{{ $error }}</p>
+                @endforeach
+            @endif
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
 

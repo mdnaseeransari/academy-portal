@@ -13,6 +13,20 @@
                 <span class="text-2xl font-bold text-[#2c3e80]">Optimal Classes</span>
             </div>
 
+            <!-- Error Alert -->
+            @if ($errors->any() || session('error'))
+                <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    @if (session('error'))
+                        <p class="text-red-700 text-sm font-medium">{{ session('error') }}</p>
+                    @endif
+                    @if ($errors->any())
+                        @foreach ($errors->all() as $error)
+                            <p class="text-red-700 text-sm">{{ $error }}</p>
+                        @endforeach
+                    @endif
+                </div>
+            @endif
+
             {{ $slot }}
         </div>
     </div>

@@ -60,6 +60,27 @@
 
         <!-- Page Content -->
         <main class="p-6 flex-grow">
+            <!-- Error Alert -->
+            @if ($errors->any() || session('error'))
+                <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    @if (session('error'))
+                        <p class="text-red-700 text-sm font-medium">{{ session('error') }}</p>
+                    @endif
+                    @if ($errors->any())
+                        @foreach ($errors->all() as $error)
+                            <p class="text-red-700 text-sm">{{ $error }}</p>
+                        @endforeach
+                    @endif
+                </div>
+            @endif
+
+            <!-- Success Alert -->
+            @if (session('success'))
+                <div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <p class="text-green-700 text-sm font-medium">{{ session('success') }}</p>
+                </div>
+            @endif
+
             @yield('content')
         </main>
 
