@@ -144,7 +144,7 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition hover:shadow-md">
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex-1">
-                            <h4 class="text-lg font-bold text-gray-800 leading-tight mb-1">{{ $assignment->title }}</h4>
+                            <h4 class="text-lg font-bold text-gray-800 leading-tight mb-1 break-words overflow-hidden">{{ $assignment->title }}</h4>
                             <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
                                 <span class="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">
                                     {{ $assignment->academicClass->name ?? 'N/A' }}
@@ -174,15 +174,15 @@
                         </p>
                     </div>
 
-                    <div class="flex items-center justify-between pt-4 border-t border-gray-50">
-                        <div class="flex items-center gap-4">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-4 border-t border-gray-50">
+                        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
                             @if($assignment->file_path)
-                                <a href="{{ $assignment->file_url }}" target="_blank" class="flex items-center gap-2 text-[#2c3e80] hover:text-[#1e2d5e] text-xs font-bold transition underline decoration-2 underline-offset-4">
+                                <a href="{{ $assignment->file_url }}" target="_blank" class="flex items-center justify-center gap-2 text-[#2c3e80] hover:text-[#1e2d5e] text-xs font-bold transition underline decoration-2 underline-offset-4 px-4 py-2 bg-blue-50 rounded-lg hover:bg-blue-100 w-full sm:w-auto">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                                     Download File
                                 </a>
                             @endif
-                            <a href="{{ route('teacher.submissions', $assignment->id) }}" class="flex items-center gap-2 bg-[#2c3e80] text-white px-4 py-2 rounded-lg hover:bg-[#1e2d5e] text-xs font-bold transition shadow-sm">
+                            <a href="{{ route('teacher.submissions', $assignment->id) }}" class="flex items-center justify-center gap-2 bg-[#2c3e80] text-white px-4 py-2 rounded-lg hover:bg-[#1e2d5e] text-xs font-bold transition shadow-sm w-full sm:w-auto">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                 View Submissions
                             </a>
@@ -190,11 +190,12 @@
                         
                         <form method="POST"
                               action="{{ route('teacher.assignments.delete', $assignment->id) }}"
-                              onsubmit="return confirm('Delete this assignment?')">
+                              onsubmit="return confirm('Delete this assignment?')"
+                              class="w-full sm:w-auto">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
-                                    class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-xs font-bold transition shadow-sm">
+                                    class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-xs font-bold transition shadow-sm w-full">
                                 Delete
                             </button>
                         </form>

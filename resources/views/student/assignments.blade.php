@@ -76,12 +76,12 @@
                 @endphp
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
                     <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-lg font-bold text-gray-800">{{ $assignment->title }}</h3>
+                        <div class="flex flex-col gap-2 sm:flex-row sm:gap-4 sm:items-start mb-2 w-full">
+                            <h3 class="flex-1 min-w-0 text-lg font-bold text-gray-800 break-words overflow-hidden">{{ $assignment->title }}</h3>
                             @if($isOverdue && !$isSubmitted)
-                                <span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Overdue</span>
+                                <span class="flex-shrink-0 bg-red-100 text-red-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">Overdue</span>
                             @elseif($isSubmitted)
-                                <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Submitted</span>
+                                <span class="flex-shrink-0 bg-green-100 text-green-700 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">Submitted</span>
                             @endif
                         </div>
                         <p class="text-xs text-gray-400 mb-4">Assigned by: <span class="font-semibold">{{ $assignment->teacher->name }}</span></p>
@@ -163,7 +163,7 @@
                             @endphp
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4">
-                                    <span class="text-sm font-bold text-gray-800">{{ $submission->assignment->title }}</span>
+                                    <span class="text-sm font-bold text-gray-800 break-words overflow-hidden">{{ $submission->assignment->title }}</span>
                                 </td>
                                 <td class="px-6 py-4">
                                     <span class="text-sm text-gray-500">{{ \Carbon\Carbon::parse($submission->submitted_at)->format('M d, Y') }}</span>

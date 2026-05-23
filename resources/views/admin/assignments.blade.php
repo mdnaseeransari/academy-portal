@@ -100,11 +100,11 @@
                 
                 <div class="p-6 space-y-6">
                     @forelse($assignments as $assignment)
-                        <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition flex flex-col">
+                        <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition flex flex-col w-full overflow-hidden">
                             <!-- Top Header Row -->
-                            <div class="flex justify-between items-start gap-4 mb-2">
-                                <h4 class="text-2xl font-bold text-gray-800 tracking-tight leading-tight">{{ $assignment->title }}</h4>
-                                <span class="bg-blue-50/70 border border-blue-100 text-[#1e3a8a] text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap">
+                            <div class="flex flex-col gap-2 md:flex-row md:justify-between md:items-start mb-2 w-full">
+                                <h4 class="text-2xl font-bold text-gray-800 tracking-tight leading-tight break-all overflow-wrap-anywhere w-full">{{ $assignment->title }}</h4>
+                                <span class="flex-shrink-0 bg-blue-50/70 border border-blue-100 text-[#1e3a8a] text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap">
                                     {{ $assignment->submissions_count }} submissions
                                 </span>
                             </div>
@@ -126,25 +126,25 @@
                             @endif
 
                             <!-- Bottom Row with Actions -->
-                            <div class="flex items-center justify-between border-t border-gray-100 pt-5 mt-auto">
-                                <div class="flex items-center gap-3">
-                                    <a href="{{ route('admin.assignments.submissions', $assignment->id) }}" class="bg-[#2c3e80] text-white px-5 py-2.5 rounded-xl hover:bg-[#1e2d5e] transition text-xs font-bold shadow-sm flex items-center gap-2">
+                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-t border-gray-100 pt-5 mt-auto">
+                                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 w-full sm:w-auto">
+                                    <a href="{{ route('admin.assignments.submissions', $assignment->id) }}" class="bg-[#2c3e80] text-white px-5 py-2.5 rounded-xl hover:bg-[#1e2d5e] transition text-xs font-bold shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                         View Submissions
                                     </a>
 
                                     @if($assignment->file_path)
-                                        <a href="{{ $assignment->file_path }}" target="_blank" class="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                                        <a href="{{ $assignment->file_path }}" target="_blank" class="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center justify-center gap-1 px-5 py-2.5 bg-blue-50 rounded-xl hover:bg-blue-100 transition w-full sm:w-auto">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
                                             Attachment
                                         </a>
                                     @endif
                                 </div>
 
-                                <form action="{{ route('admin.assignments.delete', $assignment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this assignment and all its submissions?');">
+                                <form action="{{ route('admin.assignments.delete', $assignment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this assignment and all its submissions?');" class="w-full sm:w-auto">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-600 text-white px-5 py-2.5 rounded-xl hover:bg-red-400 transition text-xs font-bold shadow-sm">
+                                    <button type="submit" class="bg-red-600 text-white px-5 py-2.5 rounded-xl hover:bg-red-400 transition text-xs font-bold shadow-sm w-full">
                                         Delete
                                     </button>
                                 </form>
