@@ -4,10 +4,10 @@ Disallow: /admin/
 Disallow: /student/
 Disallow: /teacher/
 Disallow: /profile/
-Disallow: /pending-approval
-Disallow: /rejected
-Disallow: /health
-Disallow: /login
-Disallow: /register
+Disallow: /pending-approval/
+Disallow: /rejected/
+Disallow: /health/
+Disallow: /login/
+Disallow: /register/
 
 Sitemap: https://www.optimalclasses.in/sitemap.xml
