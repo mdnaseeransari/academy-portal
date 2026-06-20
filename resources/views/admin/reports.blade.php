@@ -79,7 +79,7 @@
                     <tr>
                         <th class="px-6 py-4">Student Name</th>
                         <th class="px-6 py-4">Roll No</th>
-                        <th class="px-6 py-4">Total Days</th>
+                        <th class="px-6 py-4">Total Classes</th>
                         <th class="px-6 py-4">Present</th>
                         <th class="px-6 py-4">Absent</th>
                         <th class="px-6 py-4">Late</th>

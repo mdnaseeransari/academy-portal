@@ -15,7 +15,7 @@
     <meta name="keywords" content="@yield('meta_keywords', 'coaching near kakarmatta, coaching near DLW varanasi, best coaching institute varanasi, IIT JEE coaching varanasi, NEET coaching varanasi, optimal classes varanasi, class 6 to 12 coaching varanasi')">
 
     {{-- Canonical URL --}}
-    <link rel="canonical" href="@yield('canonical', url()->current())">
+    <link rel="canonical" href="https://optimalclasses.in{{ request()->getPathInfo() }}">
 
     {{-- Robots --}}
     <meta name="robots" content="index, follow">
@@ -35,8 +35,8 @@
         "@@type": "EducationalOrganization",
         "name": "Optimal Classes",
         "description": "Top coaching institute near Kakarmatta and DLW Colony Varanasi. Class 6-12, IIT-JEE and NEET coaching.",
-        "url": "https://www.optimalclasses.in",
-        "logo": "https://www.optimalclasses.in/images/logo-optimal-classes.webp",
+        "url": "https://optimalclasses.in",
+        "logo": "https://optimalclasses.in/images/logo-optimal-classes.webp",
         "telephone": ["+919415228666", "+917380922230"],
         "email": "optimalclassesvns@gmail.com",
         "address": {

@@ -92,9 +92,9 @@
 
 <!-- Summary Cards Row -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <!-- Total Days -->
+    <!-- Total Classes -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 border-l-4 border-purple-500 summary-card">
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Days</p>
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Classes</p>
         <p class="text-3xl font-bold text-gray-800 mt-1">{{ $summary['total'] }}</p>
     </div>
 
