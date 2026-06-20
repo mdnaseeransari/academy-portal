@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    
+
     public function register(): void
     {
         //
@@ -18,10 +18,12 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
         try {
-            \Illuminate\Support\Facades\View::share(
-                'activeNotification',
-                \App\Models\Notification::where('is_active', true)->latest()->first()
+            $activeNotification = \Illuminate\Support\Facades\Cache::remember(
+                'active_notification',
+                10,
+                fn () => \App\Models\Notification::where('is_active', true)->latest()->first()
             );
+            \Illuminate\Support\Facades\View::share('activeNotification', $activeNotification);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\View::share('activeNotification', null);
         }
