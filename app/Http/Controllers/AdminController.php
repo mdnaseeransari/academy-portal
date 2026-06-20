@@ -1113,7 +1113,7 @@ class AdminController extends Controller
 
         $period_slot = trim($request->period_slot);
         $date = $request->date;
-
+        
         // Normalize target slot for matching
         $targetSubject = null;
         $targetStartTime = null;

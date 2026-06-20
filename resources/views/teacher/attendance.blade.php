@@ -300,7 +300,7 @@
                     <tbody class="divide-y divide-gray-100">
                         @forelse($students as $student)
                             @php
-                                $currentStatus = 'present'; // default
+                                $currentStatus = null; // default
                                 if ($already_marked && isset($existing_attendance[$student->id])) {
                                     $currentStatus = $existing_attendance[$student->id]->status;
                                 }
@@ -313,21 +313,21 @@
                                         <label class="flex items-center gap-2 cursor-pointer group">
                                             <input type="radio" name="attendance[{{ $student->id }}][status]" value="present" 
                                                 {{ $currentStatus == 'present' ? 'checked' : '' }}
-                                                class="w-4 h-4 text-green-600 focus:ring-green-500 border-gray-300">
+                                                class="w-4 h-4 text-green-600 focus:ring-green-500 border-gray-300" required>
                                             <span class="text-sm font-bold text-gray-700 group-hover:text-green-600 transition">Present</span>
                                         </label>
                                         
                                         <label class="flex items-center gap-2 cursor-pointer group">
                                         <input type="radio" name="attendance[{{ $student->id }}][status]" value="absent" 
                                                 {{ $currentStatus == 'absent' ? 'checked' : '' }}
-                                                class="w-4 h-4 text-red-600 focus:ring-red-500 border-gray-300">
+                                                class="w-4 h-4 text-red-600 focus:ring-red-500 border-gray-300" required>
                                             <span class="text-sm font-bold text-gray-700 group-hover:text-red-600 transition">Absent</span>
                                         </label>
                                         
                                         <label class="flex items-center gap-2 cursor-pointer group">
                                             <input type="radio" name="attendance[{{ $student->id }}][status]" value="late" 
                                                 {{ $currentStatus == 'late' ? 'checked' : '' }}
-                                                class="w-4 h-4 text-yellow-600 focus:ring-yellow-500 border-gray-300">
+                                                class="w-4 h-4 text-yellow-600 focus:ring-yellow-500 border-gray-300" required>
                                             <span class="text-sm font-bold text-gray-700 group-hover:text-yellow-600 transition">Late</span>
                                         </label>
                                     </div>
